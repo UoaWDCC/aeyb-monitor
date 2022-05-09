@@ -1,0 +1,28 @@
+name: 'New Feature'
+description: 'For describing new features for the AEYB project.'
+labels: ['enhancement']
+body:
+    - type: textarea
+      id: outcome
+      attributes:
+          label: 'Outcome'
+          description: 'What is the desired outcome? What are the user stories?'
+      validations:
+          required: true
+    - type: textarea
+      id: moment
+      attributes:
+          label: 'Moment'
+          description: 'Describe the minimum viable product.'
+      validations:
+          required: false
+    - type: textarea
+      id: results
+      attributes:
+          label: 'Key Results'
+          description: 'List the tasks that will need to be completed.'
+          placeholder: |
+              - [ ] Task 1...
+              - [ ] Task 2...
+      validations:
+          required: false

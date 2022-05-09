@@ -1,0 +1,19 @@
+name: 'Bug report'
+description: 'If you have found a bug, please report it here.'
+labels: ['bug']
+body:
+    - type: textarea
+      id: problem
+      attributes:
+          label: 'Problem'
+          description: 'Please describe the problem and if possible, how to recreate the issue.'
+      validations:
+          required: true
+    - type: textarea
+      id: solution
+      attributes:
+          label: 'Proposed Solution'
+          description: |
+              'Specify how you would like the solution to be developed. If you have a specific plan, please describe it here.'
+      validations:
+          required: false
