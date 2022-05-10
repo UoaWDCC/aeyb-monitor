@@ -3,6 +3,7 @@ Make sure that you're working in the backend directory :)
 ## Installation
 
 1. Install dependencies using npm (`npm install`) or yarn (`yarn`).
+2. Copy the `config.example.json` file and rename it to `config.json`. Update any of the fields if required.
 
 ## Scripts
 
