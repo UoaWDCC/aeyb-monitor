@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import UserRouter from '../routes/UserRoutes';
 import Config from '../types/Config';
+import mongoose, { ConnectOptions } from 'mongoose';
 
 export default class Server {
     private _app: Express;
@@ -26,6 +27,14 @@ export default class Server {
 
     private async connectDB() {
         // Connect to MonboDB database
+        mongoose
+            .connect(this.config.mongoURI, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            } as ConnectOptions)
+            .then(() => {
+                console.log('Connected to the Mongodb database.');
+            });
     }
 
     private configureApp() {
