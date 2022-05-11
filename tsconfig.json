@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "allowSyntheticDefaultImports": true,
+        "noFallthroughCasesInSwitch": true
+    },
+    "include": ["**/src/**/*.ts"],
+    "exclude": ["node_modules"]
+}
