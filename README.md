@@ -7,7 +7,7 @@ Prettier is being used to format your code on save.
 To setup prettier in VSCode:
 
 1. Make sure you have the prettier dependency installed by doing `npm install` or `yarn`.
-1. Install the [Prettier VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+2. Install the [Prettier VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 ## Developers and Team Members
 | Name          | Role                      |
