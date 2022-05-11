@@ -1,4 +1,5 @@
 {
     "port": 5000,
-    "nodeEnv": "development"
+    "nodeEnv": "development",
+    "mongoURI": "mongodb+srv://<username>:<password>@<cluster>.ewbpt.mongodb.net/<database>?retryWrites=true&w=majority"
 }
