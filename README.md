@@ -1,13 +1,20 @@
 # Auckland Eden Youth Board Attendance Tracker
 
-# Prettier
+Make sure you have the all the dependencies installed by doing either `npm install` or `yarn` within either the `frontend` or `backend` directories.
 
-Prettier is being used to format your code on save.
+## Eslint
+
+Eslint is a tool that helps indentify errors in your code.
+
+To setup eslint in VSCode:
+1. Install the [Eslint VSCode extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+## Prettier
+
+Prettier is used to format your code on save.
 
 To setup prettier in VSCode:
-
-1. Make sure you have the prettier dependency installed by doing `npm install` or `yarn`.
-2. Install the [Prettier VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+1. Install the [Prettier VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 ## Developers and Team Members
 | Name          | Role                      |
