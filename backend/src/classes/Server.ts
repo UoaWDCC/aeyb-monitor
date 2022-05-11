@@ -4,6 +4,7 @@ import RoleRouter from '../routes/RoleRoutes';
 import PermissionRouter from '../routes/PermissionRoutes';
 import Config from '../types/Config';
 import mongoose, { ConnectOptions } from 'mongoose';
+import ErrorHandler from '../middleware/ErrorMiddleware';
 
 export default class Server {
     private _app: Express;
@@ -48,6 +49,8 @@ export default class Server {
         this._app.use('/api/roles', RoleRouter);
         this._app.use('/api/permissions', PermissionRouter);
         console.log('Routers registered');
+
+        this._app.use(ErrorHandler); // Use error handler to catch any errors in routes
     }
 
     public get app(): Express {
