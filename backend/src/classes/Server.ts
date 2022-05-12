@@ -8,11 +8,11 @@ import ErrorHandler from '../middleware/ErrorMiddleware';
 
 export default class Server {
     private _app: Express;
-    private config: Config;
+    private _config: Config;
 
     constructor(config: Config) {
         config.port = config.port ?? 5000; // Default to port 5000 if not specified
-        this.config = config;
+        this._config = config;
         this._app = express();
 
         this._app.listen(this.config.port, () =>
@@ -29,7 +29,7 @@ export default class Server {
     }
 
     private async connectDB() {
-        // Connect to MonboDB database
+        // Connect to MongoDB database
         mongoose.connect(this.config.mongoURI).then(() => {
             console.log('Connected to the Mongodb database.');
         });
@@ -50,5 +50,9 @@ export default class Server {
 
     public get app(): Express {
         return this._app;
+    }
+
+    public get config(): Config {
+        return this._config;
     }
 }
