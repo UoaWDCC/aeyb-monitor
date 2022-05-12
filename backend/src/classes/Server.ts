@@ -3,7 +3,7 @@ import UserRouter from '../routes/UserRoutes';
 import RoleRouter from '../routes/RoleRoutes';
 import PermissionRouter from '../routes/PermissionRoutes';
 import Config from '../types/Config';
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 
 export default class Server {
@@ -30,14 +30,9 @@ export default class Server {
 
     private async connectDB() {
         // Connect to MonboDB database
-        mongoose
-            .connect(this.config.mongoURI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            } as ConnectOptions)
-            .then(() => {
-                console.log('Connected to the Mongodb database.');
-            });
+        mongoose.connect(this.config.mongoURI).then(() => {
+            console.log('Connected to the Mongodb database.');
+        });
     }
 
     private configureApp() {
