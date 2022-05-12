@@ -1,17 +1,20 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Role from '../models/Role';
-import { convertToObject } from 'typescript';
 
 /**
  * @desc 	Get all the roles
  * @route 	GET /api/roles/
  */
 const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
-    // TODO Fetch all roles
+    const roles = await Role.find();
 
     res.status(200).json({
-        message: 'Nice work, you just made a GET request! - getAllRoles',
+        status: 'success',
+        results: roles.length,
+        data: {
+            roles
+        }
     });
 });
 
