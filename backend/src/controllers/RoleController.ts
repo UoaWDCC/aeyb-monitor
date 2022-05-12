@@ -23,10 +23,13 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
  * @route 	GET /api/roles/:
  */
 const getRole = asyncHandler(async (req: Request, res: Response) => {
-    // TODO getRole
+    const role = await Role.findById(req.params.id);
 
     res.status(200).json({
-        message: 'Nice work, you just made a GET request! - getRole',
+        status: 'success',
+        data: {
+            role
+        }
     });
 });
 
