@@ -14,12 +14,13 @@ const client = new OAuth2Client(server.config.clientID);
  */
 const loginUser = asyncHandler(
     async (req: Request<undefined, undefined, LoginRequest>, res: Response) => {
-        const { credential } = req.body;
+        const credential = req.body.credential;
 
         if (typeof credential !== 'string') {
             res.status(400).json({
                 message: `The credential must be a string (got ${typeof credential})`,
             });
+            return;
         }
 
         const ticket = await client.verifyIdToken({
