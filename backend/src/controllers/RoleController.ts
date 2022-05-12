@@ -55,10 +55,11 @@ const addRole = asyncHandler(async (req: Request, res: Response) => {
  * @route 	DELETE /api/users/:
  */
 const deleteRole = asyncHandler(async (req: Request, res: Response) => {
-    // TODO delete role
+   await Role.findByIdAndDelete(req.params.id);
 
-    res.status(200).json({
-        message: 'Nice work, you just made a DELETE request! - deleteRole',
+    res.status(204).json({
+        status: 'success',
+        data: null
     });
 });
 
