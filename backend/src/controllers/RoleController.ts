@@ -1,5 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
+import Role from '../models/Role';
+import { convertToObject } from 'typescript';
 
 /**
  * @desc 	Get all the roles
@@ -30,10 +32,15 @@ const getRole = asyncHandler(async (req: Request, res: Response) => {
  * @route 	POST /api/roles/
  */
 const addRole = asyncHandler(async (req: Request, res: Response) => {
-    // TODO add role
 
-    res.status(200).json({
-        message: 'Nice work, you just made a POST request! - addRole',
+    const newRole = await Role.create(req.body)    
+
+    newRole.save()
+    await res.status(201).json({
+        status: 'success',
+        data: {
+            role: newRole
+        },
     });
 });
 
