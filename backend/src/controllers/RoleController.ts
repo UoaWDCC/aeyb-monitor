@@ -67,10 +67,16 @@ const deleteRole = asyncHandler(async (req: Request, res: Response) => {
  * @route 	PATCH /api/users/:
  */
 const updateRole = asyncHandler(async (req: Request, res: Response) => {
-    // Fetch users
+    const role = await Role.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
 
     res.status(200).json({
-        message: 'Nice work, you just made a PATCH request! - updateRole',
+        status: 'success',
+        data: {
+            role
+        }
     });
 });
 
