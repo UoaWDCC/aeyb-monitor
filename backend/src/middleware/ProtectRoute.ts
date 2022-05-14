@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Permission from '../types/Perm';
-
-type ExpressFunction = (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-) => void;
+import ExpressFunction from '../types/ExpressFunction';
 
 export default function protect(permission: Permission): ExpressFunction {
     return asyncHandler(
