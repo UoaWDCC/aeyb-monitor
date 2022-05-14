@@ -1,28 +1,13 @@
 import { ReactElement } from 'react';
-import { Profile, UserStatus, Roles } from './Interface';
+import { Profile, UserStatus } from './Interface';
+import React, { useState } from 'react';
 
 interface ProfileInformation {
     profile: Profile;
 }
 
-const getBGColour = (status: UserStatus): string => {
-    switch (status) {
-        case UserStatus.Available: {
-            return 'green';
-        }
-        case UserStatus.Idle: {
-            return 'yellow';
-        }
-        case UserStatus.Busy: {
-            return 'red';
-        }
-        default: {
-            return 'grey';
-        }
-    }
-};
-
 const ProfileInfo = (props: ProfileInformation): ReactElement => {
+    const [status, setStatus] = React.useState<UserStatus>(UserStatus.Idle);
     return (
         <body>
             <div id="title">
@@ -30,10 +15,12 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
             </div>
             <div id="profile">
                 <img src={props.profile.profilePictureUrl}></img>
-                <span
-                    id="status"
-                    style={{ backgroundColor: props.profile.status }}
-                ></span>
+                <span id="status" style={{ backgroundColor: status }}></span>
+                <button onClick={() => setStatus(UserStatus.Available)}>
+                    available
+                </button>
+                <button onClick={() => setStatus(UserStatus.Busy)}>busy</button>
+                <button onClick={() => setStatus(UserStatus.Idle)}>idle</button>
 
                 <h2>{props.profile.name}</h2>
             </div>
