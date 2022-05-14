@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+img {
+    border-radius: 50%; /*makes the profile picture circular*/
+    width: 5.5cm;
+}
+
+#status {
+    background-color: grey;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-block;
+
+    position: relative;
+    right: 50px;
+    bottom: 10px;
+}
