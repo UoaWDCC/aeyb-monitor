@@ -1,10 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import { OAuth2Client } from 'google-auth-library';
 import server from '..';
 import { LoginRequest } from '../types/UserTypes';
-
-const client = new OAuth2Client(server.config.clientID);
 
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
@@ -23,7 +20,7 @@ const loginUser = asyncHandler(
             return;
         }
 
-        const ticket = await client.verifyIdToken({
+        const ticket = await server.client.verifyIdToken({
             idToken: credential,
             audience: server.config.clientID,
         });

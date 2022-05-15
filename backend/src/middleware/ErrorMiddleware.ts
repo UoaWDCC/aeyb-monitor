@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import ValidationError from '../types/ValidationError';
 
@@ -6,6 +6,7 @@ function ErrorHandler(
     err: Error | mongoose.Error.ValidationError,
     req: Request,
     res: Response,
+    next: NextFunction,
 ) {
     // Check if the error was thrown due to invalid inputs for a model
     if (err instanceof mongoose.Error.ValidationError) {
