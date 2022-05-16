@@ -33,6 +33,7 @@ const loginUser = asyncHandler(
         res.status(200).json({
             id: userId,
             token: generateJWT(userId),
+            permissions: getPermissions(userId),
         });
     },
 );
