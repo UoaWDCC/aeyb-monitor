@@ -2,12 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import server from '..';
 import jwt from 'jsonwebtoken';
-import User, { UserModel } from '../models/UserModel';
+import User from '../models/UserModel';
 import { getUserPermissions } from '../controllers/UserController';
-
-interface AuthenticatedRequest {
-    user: UserModel;
-}
+import { AuthenticatedRequest } from '../types/RequestTypes';
 
 type AuthenticationFunction = (
     req: Request<AuthenticatedRequest>,
@@ -18,7 +15,7 @@ type AuthenticationFunction = (
 export default function auth(permissions: string[]): AuthenticationFunction {
     return asyncHandler(
         async (
-            req: Request<AuthenticatedRequest, AuthenticatedRequest>,
+            req: Request<AuthenticatedRequest>,
             res: Response,
             next: NextFunction,
         ) => {

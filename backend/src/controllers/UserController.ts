@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import server from '..';
-import { LoginRequest } from '../types/UserTypes';
+import { LoginRequest } from '../types/RequestTypes';
 import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 
