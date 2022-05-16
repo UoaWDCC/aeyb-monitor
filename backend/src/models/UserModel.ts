@@ -1,5 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
+// TODO: Replaces roles type with RoleModel[]
 export interface UserModel {
     _id: string;
     email: string;

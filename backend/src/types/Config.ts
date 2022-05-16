@@ -4,4 +4,5 @@ export default interface Config {
     mongoURI: string;
     googleDomain: string;
     clientID: string;
+    jwtSecret: string;
 }

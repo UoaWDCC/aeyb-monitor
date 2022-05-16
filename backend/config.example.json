@@ -3,5 +3,6 @@
     "nodeEnv": "development",
     "mongoURI": "mongodb+srv://<username>:<password>@<cluster>.ewbpt.mongodb.net/<database>?retryWrites=true&w=majority",
     "googleDomain": "albertedenyouth",
-    "clientID": "Google CLIENT ID"
+    "clientID": "Google CLIENT ID",
+    "jwtSecret": "Your JWT secret"
 }
