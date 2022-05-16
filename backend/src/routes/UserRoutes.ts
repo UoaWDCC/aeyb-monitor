@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { devLoginUser, getUsers, loginUser } from '../controllers/UserController';
+import auth from '../middleware/AuthMiddleware';
 import config from '../types/Config';
 
 const UserRouter = Router();
@@ -10,7 +11,7 @@ if (config.nodeEnv === 'development') {
 }
 
 UserRouter.post('/login', loginUser);
-UserRouter.get('/', getUsers);
+UserRouter.get('/', auth(), getUsers);
 // Add routes
 
 export default UserRouter;

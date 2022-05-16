@@ -4,12 +4,11 @@ import config from '../types/Config';
 import jwt from 'jsonwebtoken';
 import User from '../models/UserModel';
 import { getUserPermissions } from '../controllers/UserController';
-import { AuthenticatedRequest } from '../types/RequestTypes';
 
-type AuthenticationFunction = (req: Request<AuthenticatedRequest>, res: Response, next: NextFunction) => void;
+type AuthenticationFunction = (req: Request<Record<string, unknown>>, res: Response, next: NextFunction) => void;
 
 export default function auth(permissions: string[] = []): AuthenticationFunction {
-    return asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response, next: NextFunction) => {
+    return asyncHandler(async (req: Request<Record<string, unknown>>, res: Response, next: NextFunction) => {
         // The token will be in the format Bearer <token>
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
             res.status(404).json({
@@ -32,17 +31,21 @@ export default function auth(permissions: string[] = []): AuthenticationFunction
                 return;
             }
 
-            // Check that the user has all the required permissions:
-            const userPermissions = await getUserPermissions(user);
-            if (!permissions.every((permission) => userPermissions.has(permission))) {
-                res.status(404).json({
-                    status: 'error',
-                    message: 'You do not have all the required permissions to access this endpoint',
-                });
+            // Don't bother fetching the user permissions if they just need to be logged in
+            if (permissions.length !== 0) {
+                // Check that the user has all the required permissions:
+                const userPermissions = await getUserPermissions(user);
+                if (!permissions.every((permission) => userPermissions.has(permission))) {
+                    res.status(404).json({
+                        status: 'error',
+                        message: 'You do not have all the required permissions to access this endpoint',
+                    });
+                }
             }
 
             // Make the user accessible as a param of the request.
             req.params.user = user;
+
             next();
         } catch (error) {
             res.status(404).json({

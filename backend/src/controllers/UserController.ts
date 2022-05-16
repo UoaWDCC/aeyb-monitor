@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import { LoginRequest } from '../types/RequestTypes';
+import { AuthenticatedRequest, LoginRequest } from '../types/RequestTypes';
 import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
@@ -114,8 +114,10 @@ async function getUserPermissions(user: UserModel): Promise<Set<string>> {
  * @desc 	Get all the users
  * @route 	GET /api/users/
  */
-const getUsers = asyncHandler(async (req: Request, res: Response) => {
+const getUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response) => {
     // Fetch users
+
+    console.log(`User id: ${req.params.user}`);
 
     res.status(200).json({
         status: 'success',
