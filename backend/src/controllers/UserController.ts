@@ -2,10 +2,8 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import server from '..';
 import { LoginRequest } from '../types/UserTypes';
-import User from '../models/UserModel';
+import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
-
-// Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
 /**
  * @desc    Login and gain an access token
@@ -21,22 +19,31 @@ const loginUser = asyncHandler(
             });
             return;
         }
-        const userId = await validateIdToken(credential, res);
-        if (!userId) return;
 
-        let user = await User.findById(userId);
-        if (!user) {
-            user = await User.create({ _id: userId, email: 'TODO' });
+        try {
+            const userId = await validateIdToken(credential, res);
+            if (!userId) return;
+
+            let user = await User.findById(userId);
+            if (!user) {
+                user = await User.create({ _id: userId, email: 'TODO' });
+            }
+
+            // The returned token can then be used to authenticate additional requests
+            res.status(200).json({
+                id: userId,
+                token: generateJWT(userId),
+                permissions: await getUserPermissions(user),
+            });
+        } catch (error) {
+            res.status(400).json({
+                message: 'Something went wrong while validating id token',
+            });
         }
-
-        // The returned token can then be used to authenticate additional requests
-        res.status(200).json({
-            id: userId,
-            token: generateJWT(userId),
-            permissions: getPermissions(userId),
-        });
     },
 );
+
+// Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
 async function validateIdToken(
     credential: string,
@@ -70,14 +77,15 @@ async function validateIdToken(
 }
 
 function generateJWT(userId: string): string {
-    return jwt.sign({ id: userId }, server.config.jwtSecret, {
+    return jwt.sign({ sub: userId }, server.config.jwtSecret, {
         expiresIn: '30d',
     });
 }
 
-//TODO: Fetch users permissions from database
-async function getPermissions(userId: string): string[] {
-    return [];
+// TODO: Fetch users permissions from database
+// Maybe also move this to the permissions controller?
+async function getUserPermissions(user: UserModel): Promise<Set<string>> {
+    return new Set();
 }
 
 /**
@@ -92,4 +100,4 @@ const getUsers = asyncHandler(async (req: Request, res: Response) => {
     });
 });
 
-export { loginUser, getUsers };
+export { loginUser, getUsers, getUserPermissions };
