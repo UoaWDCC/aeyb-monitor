@@ -8,7 +8,7 @@ import { AuthenticatedRequest } from '../types/RequestTypes';
 
 type AuthenticationFunction = (req: Request<AuthenticatedRequest>, res: Response, next: NextFunction) => void;
 
-export default function auth(permissions: string[]): AuthenticationFunction {
+export default function auth(permissions: string[] = []): AuthenticationFunction {
     return asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response, next: NextFunction) => {
         // The token will be in the format Bearer <token>
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
