@@ -14,17 +14,28 @@ const client = new OAuth2Client(config.clientID);
  * @route   POST api/users/devlogin
  */
 const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, { userId: string }>, res: Response) => {
-    if (typeof req.body.userId !== 'string') {
+    const userId = req.body.userId;
+
+    if (typeof userId !== 'string') {
         res.status(400).json({
             status: 'error',
-            message: `The user id must be a string (got ${typeof req.body.userId})`,
+            message: `The user id must be a string (got ${typeof userId})`,
         });
         return;
     }
 
+    let user = await User.findById(userId);
+    if (!user) {
+        user = await User.create({ _id: userId, email: 'TODO' });
+    }
+
     res.status(200).json({
         status: 'success',
-        token: generateJWT(req.body.userId),
+        token: generateJWT(userId),
+        data: {
+            id: userId,
+            permissions: await getUserPermissions(user),
+        },
     });
 });
 
