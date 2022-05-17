@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Role from '../models/Role';
+import IdParam from '../types/RequestParams';
 
 /**
  * @desc 	Get all the roles
@@ -13,8 +14,8 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
         status: 'success',
         results: roles.length,
         data: {
-            roles
-        }
+            roles,
+        },
     });
 });
 
@@ -22,14 +23,14 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
  * @desc 	Get a specific role
  * @route 	GET /api/roles/:
  */
-const getRole = asyncHandler(async (req: Request, res: Response) => {
+const getRole = asyncHandler(async (req: Request<IdParam>, res: Response) => {
     const role = await Role.findById(req.params.id);
 
     res.status(200).json({
         status: 'success',
         data: {
-            role
-        }
+            role,
+        },
     });
 });
 
@@ -38,34 +39,34 @@ const getRole = asyncHandler(async (req: Request, res: Response) => {
  * @route 	POST /api/roles/
  */
 const addRole = asyncHandler(async (req: Request, res: Response) => {
+    const newRole = await Role.create(req.body);
 
-    const newRole = await Role.create(req.body)    
-
-    newRole.save()
     await res.status(201).json({
         status: 'success',
         data: {
-            role: newRole
+            role: newRole,
         },
     });
 });
 
 /**
  * @desc 	Delete a specific role
- * @route 	DELETE /api/users/:
+ * @route 	DELETE /api/users/:id
  */
-const deleteRole = asyncHandler(async (req: Request, res: Response) => {
-   await Role.findByIdAndDelete(req.params.id);
+const deleteRole = asyncHandler(
+    async (req: Request<IdParam>, res: Response) => {
+        await Role.findByIdAndDelete(req.params.id);
 
-    res.status(204).json({
-        status: 'success',
-        data: null
-    });
-});
+        res.status(204).json({
+            status: 'success',
+            data: null,
+        });
+    },
+);
 
 /**
  * @desc 	Edit a specific Role
- * @route 	PATCH /api/users/:
+ * @route 	PATCH /api/users/:id
  */
 const updateRole = asyncHandler(async (req: Request, res: Response) => {
     const role = await Role.findByIdAndUpdate(req.params.id, req.body, {
@@ -76,8 +77,8 @@ const updateRole = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json({
         status: 'success',
         data: {
-            role
-        }
+            role,
+        },
     });
 });
 

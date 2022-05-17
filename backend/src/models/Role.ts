@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const roleSchema = new mongoose.Schema({
     name: {
-        type: 'string',
+        type: String,
         required: [true, 'You must specify the role name'],
         unique: true,
         trim: true,
