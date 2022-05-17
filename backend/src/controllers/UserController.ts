@@ -5,8 +5,8 @@ import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
+import mongoose from 'mongoose';
 
-console.log(config);
 const client = new OAuth2Client(config.clientID);
 
 /**
@@ -20,6 +20,13 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, { us
         res.status(400).json({
             status: 'error',
             message: `The user id must be a string (got ${typeof userId})`,
+        });
+        return;
+    }
+    if (userId.length === 0) {
+        res.status(400).json({
+            status: 'error',
+            message: 'The user id cannot be empty',
         });
         return;
     }

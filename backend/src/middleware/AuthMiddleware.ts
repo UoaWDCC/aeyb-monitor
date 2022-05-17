@@ -41,6 +41,7 @@ export default function auth(permissions: string[] = []): AuthenticationFunction
                         status: 'error',
                         message: 'You do not have all the required permissions to access this endpoint',
                     });
+                    return;
                 }
             }
 
