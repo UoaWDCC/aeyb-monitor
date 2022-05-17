@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
-import UserProfile from './profiles/UserProfile';
+import UserProfile from './pages/profiles/UserProfile';
 
 import './App.css';
 

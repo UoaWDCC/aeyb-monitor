@@ -1,3 +1,8 @@
+/**
+ * This interface outlines the data for each user
+ */
+
+// represent the availability status (and ongoing meeting status) of the user
 export enum UserStatus {
     // the color of their status div
     Available = 'green',
@@ -5,11 +10,11 @@ export enum UserStatus {
     Busy = 'red',
 }
 
-// created roles will be appended here
+// list of roles that the user can have
 export enum Roles {
-    TeamLeader,
-    Member,
-    BoardLeader,
+    TeamLeader = 'team',
+    Member = 'member',
+    BoardLeader = 'board',
 }
 
 export interface Profile {

@@ -1,0 +1,182 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+
+    margin: 0;
+    padding: 0;
+}
+
+#title {
+    width: 100vw;
+    border-bottom: 1px solid;
+    border-color: red;
+}
+
+h1 {
+    margin-left: 10px;
+    color: rgb(90, 98, 117);
+}
+
+#mainbody {
+    display: flex;
+}
+
+img {
+    border-radius: 50%; /*makes the profile picture circular*/
+    height: 30vh;
+}
+
+#status {
+    background-color: grey;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-block;
+
+    position: relative;
+    right: 50px;
+    bottom: 10px;
+}
+
+#profile {
+    width: 600px;
+    height: 100vh;
+
+    align-items: center;
+    justify-content: center;
+    color: rgb(90, 98, 117);
+}
+
+#imageBox {
+    margin-left: 15vw;
+    margin-top: 15vh;
+
+    align-items: center;
+    justify-content: center;
+}
+
+#profile h2 {
+    margin-top: 5vh;
+    margin-left: 14vw;
+    width: 45vw;
+
+    font-size: 30px;
+}
+
+/*contains buttons to change status*/
+#edit {
+    border-radius: 1%;
+
+    float: right;
+    width: 35%;
+}
+
+#edit button {
+    border-right: 0.5px solid;
+    width: 70px;
+    height: 30px;
+    margin-top: 10px;
+
+    color: rgb(85, 85, 85);
+}
+
+#edit button:hover {
+    text-decoration: underline;
+}
+
+/*deals with the button to make #edit visible onclick*/
+#editButton {
+    float: right;
+    height: 50px;
+    width: 10%;
+}
+
+#profile .icon {
+    font-size: 20px;
+    color: red;
+}
+
+#profile .icon:hover {
+    color: rgb(240, 196, 196);
+}
+
+#roles {
+    height: 30%;
+    width: 50%;
+
+    margin-left: 23%;
+    text-align: center;
+}
+#roles span {
+    border: 1.5px solid;
+    border-radius: 5%;
+    border-color: red;
+    color: red;
+
+    padding: 5px;
+    margin: 1%;
+}
+
+/*General Button Design
+- remove default design
+*/
+
+button {
+    border: none;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0);
+
+    width: 100%;
+    height: 40px;
+}
+
+/*NAVIGATION BAR*/
+
+nav {
+    border-right: 1px solid;
+    border-color: rgb(90, 98, 117);
+    width: 250px;
+    height: 100vh;
+}
+
+nav button,
+nav .icon {
+    font-size: 25px;
+    height: 80px;
+
+    float: left;
+    color: rgb(147, 154, 169);
+}
+
+nav button :hover {
+    color: rgb(96, 96, 96);
+}
+
+#navi,
+nav h4 {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+/*SETTINGS*/
+#settings {
+    border-left: 1px solid;
+    border-color: rgb(90, 98, 117);
+    width: 500px;
+    height: 100vh;
+}
+
+#settings button {
+    border-left: 2px solid;
+    color: rgb(96, 96, 96);
+    text-align: left;
+    font-size: 20px;
+
+    margin-left: 30px;
+    margin-top: 50px;
+    padding: 5px;
+}
+
+#settings button:hover {
+    background-color: rgb(194, 199, 210);
+}

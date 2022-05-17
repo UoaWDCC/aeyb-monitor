@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Profile, UserStatus } from './Interface';
+import { Profile, UserStatus, Roles } from './Interface';
 import React, { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
 
@@ -8,8 +8,11 @@ interface ProfileInformation {
 }
 
 const ProfileInfo = (props: ProfileInformation): ReactElement => {
+    // updates the status during onclick events
     const [status, setStatus] = React.useState<UserStatus>(UserStatus.Idle);
+    // makes the nsub navigation for setStatus visibile during an on click event
     const [editClick, setEdit] = React.useState(false);
+
     return (
         <body>
             <div id="title">
@@ -17,8 +20,26 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
             </div>
             <div id="mainbody">
                 <nav>
-                    <button>button 1</button>
-                    <button>button2</button>
+                    <div id="navi">
+                        <button>
+                            <span className="icon">
+                                <IonIcon name="home" />
+                                <h4>HOME</h4>
+                            </span>
+                        </button>
+                        <button>
+                            <span className="icon">
+                                <IonIcon name="calendar-clear" />
+                                <h4>CALENDER</h4>
+                            </span>
+                        </button>
+                        <button>
+                            <span className="icon">
+                                <IonIcon name="heart" />
+                                <h4>STATS</h4>
+                            </span>
+                        </button>
+                    </div>
                 </nav>
                 <div id="profile">
                     <button id="editButton" onClick={() => setEdit(!editClick)}>
@@ -50,9 +71,14 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                     </div>
 
                     <h2>{props.profile.name}</h2>
+                    <div id="roles">
+                        {props.profile.roles.map((role) => {
+                            return <span>{role}</span>;
+                        })}
+                    </div>
                 </div>
                 <div id="settings">
-                    <button>button set</button>
+                    <button>Role Permissions</button>
                 </div>
             </div>
         </body>
