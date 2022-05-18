@@ -9,8 +9,8 @@ import Permission from '../types/Perm';
 const getAllPermissions = asyncHandler(async (req: Request, res: Response) => {
     const permissions = [];
     for (const enumMember in Permission) {
-        const isNumber = parseInt(enumMember) >= 0;
-        if (!isNumber) {
+        const val = parseInt(enumMember);
+        if (isNaN(val)) {
             permissions.push(enumMember);
         }
     }
