@@ -7,6 +7,7 @@ import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
 import { Doc } from '../types/UtilTypes';
+import IdParam from '../types/RequestParams';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -126,7 +127,24 @@ const getUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Re
     });
 });
 
-// TODO: Fetch users permissions from database
+/**
+ * @desc    Edit a specific User
+ * @route   PATH /api/users/:id
+ */
+const updateUser = asyncHandler(async (req: Request<IdParam>, res: Response) => {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user,
+        },
+    });
+});
+
 async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
     if (!user.populated('roles')) await user.populate('roles');
 
@@ -136,4 +154,4 @@ async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
         .map((permission) => Permission[permission as keyof typeof Permission]);
 }
 
-export { devLoginUser, loginUser, getUsers, getPermissions };
+export { devLoginUser, loginUser, getUsers, updateUser, getPermissions };
