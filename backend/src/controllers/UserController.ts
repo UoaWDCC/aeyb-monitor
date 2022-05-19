@@ -24,7 +24,7 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevL
         status: 'success',
         token: generateJWT(userId),
         data: {
-            id: userId,
+            id: user._id,
             name: user.name,
             permissions: await getUserPermissions(user),
         },
