@@ -1,9 +1,32 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import server from '..';
 import { LoginRequest } from '../types/RequestTypes';
 import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
+import config from '../types/Config';
+import { OAuth2Client } from 'google-auth-library';
+
+console.log(config);
+const client = new OAuth2Client(config.clientID);
+
+/**
+ * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
+ * @route   POST api/users/devlogin
+ */
+const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, { userId: string }>, res: Response) => {
+    if (typeof req.body.userId !== 'string') {
+        res.status(400).json({
+            status: 'error',
+            message: `The user id must be a string (got ${typeof req.body.userId})`,
+        });
+        return;
+    }
+
+    res.status(200).json({
+        status: 'success',
+        token: generateJWT(req.body.userId),
+    });
+});
 
 /**
  * @desc    Login and gain an access token
@@ -49,9 +72,9 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
 async function validateIdToken(credential: string, res: Response): Promise<string | undefined> {
-    const ticket = await server.client.verifyIdToken({
+    const ticket = await client.verifyIdToken({
         idToken: credential,
-        audience: server.config.clientID,
+        audience: config.clientID,
     });
 
     const payload = ticket.getPayload();
@@ -66,7 +89,7 @@ async function validateIdToken(credential: string, res: Response): Promise<strin
 
     const domain = payload.hd;
     // When not in development, make sure users logging in have the correct email domain
-    if (server.config.nodeEnv !== 'development' && domain !== server.config.googleDomain) {
+    if (config.nodeEnv !== 'development' && domain !== config.googleDomain) {
         res.status(404).json({
             status: 'error',
             message: 'Invalid google domain',
@@ -76,7 +99,7 @@ async function validateIdToken(credential: string, res: Response): Promise<strin
 }
 
 function generateJWT(userId: string): string {
-    return jwt.sign({ sub: userId }, server.config.jwtSecret, {
+    return jwt.sign({ sub: userId }, config.jwtSecret, {
         expiresIn: '30d',
     });
 }
@@ -100,4 +123,4 @@ const getUsers = asyncHandler(async (req: Request, res: Response) => {
     });
 });
 
-export { loginUser, getUsers, getUserPermissions };
+export { devLoginUser, loginUser, getUsers, getUserPermissions };

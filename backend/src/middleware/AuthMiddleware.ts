@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import server from '..';
+import config from '../types/Config';
 import jwt from 'jsonwebtoken';
 import User from '../models/UserModel';
 import { getUserPermissions } from '../controllers/UserController';
@@ -22,7 +22,7 @@ export default function auth(permissions: string[]): AuthenticationFunction {
             const token = req.headers.authorization.split(' ')[1];
 
             // Verify token:
-            const decoded = jwt.verify(token, server.config.jwtSecret);
+            const decoded = jwt.verify(token, config.jwtSecret);
             const user = await User.findById(decoded.sub ?? '');
             if (!user) {
                 res.status(404).json({

@@ -9,11 +9,6 @@ export interface UserModel {
 
 // The user id will be their google id, rather than a generated ObjectId
 const userSchema = new Schema<UserModel>({
-    _id: {
-        type: String,
-        required: [true, "You must specify the user's id"],
-        unique: true,
-    },
     email: {
         type: String,
         required: [true, "You must specify the user's email"],

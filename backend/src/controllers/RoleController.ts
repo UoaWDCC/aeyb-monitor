@@ -53,35 +53,31 @@ const addRole = asyncHandler(async (req: Request, res: Response) => {
  * @desc 	Delete a specific role
  * @route 	DELETE /api/users/:id
  */
-const deleteRole = asyncHandler(
-    async (req: Request<IdParam>, res: Response) => {
-        await Role.findByIdAndDelete(req.params.id);
+const deleteRole = asyncHandler(async (req: Request<IdParam>, res: Response) => {
+    await Role.findByIdAndDelete(req.params.id);
 
-        res.status(204).json({
-            status: 'success',
-            data: null,
-        });
-    },
-);
+    res.status(204).json({
+        status: 'success',
+        data: null,
+    });
+});
 
 /**
  * @desc 	Edit a specific Role
  * @route 	PATCH /api/users/:id
  */
-const updateRole = asyncHandler(
-    async (req: Request<IdParam>, res: Response) => {
-        const role = await Role.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-        });
+const updateRole = asyncHandler(async (req: Request<IdParam>, res: Response) => {
+    const role = await Role.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                role,
-            },
-        });
-    },
-);
+    res.status(200).json({
+        status: 'success',
+        data: {
+            role,
+        },
+    });
+});
 
 export { getAllRoles, getRole, deleteRole, addRole, updateRole };

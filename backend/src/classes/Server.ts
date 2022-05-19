@@ -2,26 +2,19 @@ import express, { Express } from 'express';
 import UserRouter from '../routes/UserRoutes';
 import RoleRouter from '../routes/RoleRoutes';
 import PermissionRouter from '../routes/PermissionRoutes';
-import Config from '../types/Config';
+import { Config } from '../types/Config';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
-import { OAuth2Client } from 'google-auth-library';
 
 export default class Server {
     private _app: Express;
-    private _config: Config;
-    private _client: OAuth2Client;
+    private config: Config;
 
     constructor(config: Config) {
-        config.port = config.port ?? 5000; // Default to port 5000 if not specified
-        this._config = config;
+        this.config = config;
         this._app = express();
 
-        this._app.listen(this.config.port, () =>
-            console.log(`Server started on port ${this.config.port}`),
-        );
-
-        this._client = new OAuth2Client(this.config.clientID);
+        this._app.listen(this.config.port, () => console.log(`Server started on port ${this.config.port}`));
 
         this.init();
     }
@@ -54,13 +47,5 @@ export default class Server {
 
     public get app(): Express {
         return this._app;
-    }
-
-    public get config(): Config {
-        return this._config;
-    }
-
-    public get client(): OAuth2Client {
-        return this._client;
     }
 }
