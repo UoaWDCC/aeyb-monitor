@@ -1,11 +1,11 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuthenticatedRequest, DevLoginRequest, LoginRequest } from '../types/RequestTypes';
-import User, { UserModel } from '../models/UserModel';
+import User from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import Permission from '../types/Perm';
+import { getPermissions } from './PermissionController';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -27,7 +27,7 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevL
         data: {
             id: user._id,
             name: user.name,
-            permissions: await getUserPermissions(user),
+            permissions: await getPermissions(user),
         },
     });
 });
@@ -64,7 +64,7 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
             data: {
                 id: user.id,
                 name: user.name,
-                permissions: await getUserPermissions(user),
+                permissions: await getPermissions(user),
             },
         });
     } catch (error) {
@@ -110,12 +110,6 @@ function generateJWT(userId: string): string {
     });
 }
 
-// TODO: Fetch users permissions from database
-// Maybe also move this to the permissions controller?
-async function getUserPermissions(user: UserModel): Promise<Permission[]> {
-    return [];
-}
-
 /**
  * @desc 	Get all the users
  * @route 	GET /api/users/
@@ -131,4 +125,4 @@ const getUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Re
     });
 });
 
-export { devLoginUser, loginUser, getUsers, getUserPermissions };
+export { devLoginUser, loginUser, getUsers };

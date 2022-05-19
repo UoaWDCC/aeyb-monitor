@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Permission from '../types/Perm';
+import UserModel from '../models/UserModel';
 
 /**
  * @desc 	Get all the roles
@@ -23,4 +24,9 @@ const getAllPermissions = asyncHandler(async (req: Request, res: Response) => {
     });
 });
 
-export { getAllPermissions };
+// TODO: Fetch users permissions from database
+async function getPermissions(user: UserModel): Promise<Permission[]> {
+    return [];
+}
+
+export { getAllPermissions, getPermissions };
