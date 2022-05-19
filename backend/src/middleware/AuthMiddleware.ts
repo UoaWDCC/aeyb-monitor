@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/UserModel';
 import { AuthenticatedRequest } from '../types/RequestTypes';
 import Permission from '../types/Perm';
-import { getPermissions } from '../controllers/PermissionController';
+import { getPermissions } from '../controllers/UserController';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 

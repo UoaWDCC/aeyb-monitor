@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { RoleModel } from './Role';
 
-// TODO: Replaces roles type with RoleModel[]
 export interface UserModel {
     _id: string;
     name: string;

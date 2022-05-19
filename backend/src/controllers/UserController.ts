@@ -1,11 +1,12 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import { AuthenticatedRequest, DevLoginRequest, LoginRequest } from '../types/RequestTypes';
-import User from '../models/UserModel';
+import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import { getPermissions } from './PermissionController';
+import Permission from '../types/Perm';
+import { Doc } from '../types/UtilTypes';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -125,4 +126,14 @@ const getUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Re
     });
 });
 
-export { devLoginUser, loginUser, getUsers };
+// TODO: Fetch users permissions from database
+async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
+    if (!user.populated('roles')) await user.populate('roles');
+
+    // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
+    return user.roles
+        .flatMap((role) => role.permissions)
+        .map((permission) => Permission[permission as keyof typeof Permission]);
+}
+
+export { devLoginUser, loginUser, getUsers, getPermissions };
