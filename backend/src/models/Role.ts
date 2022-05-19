@@ -1,12 +1,19 @@
 import mongoose from 'mongoose';
 
-const roleSchema = new mongoose.Schema({
+export interface Role {
+    _id: mongoose.Types.ObjectId;
+    name: string;
+    color: string;
+    permissions: string[];
+}
+
+const roleSchema = new mongoose.Schema<Role>({
     name: {
         type: String,
         required: [true, 'You must specify the role name'],
         unique: true,
         trim: true,
-        maxLength: 32,
+        maxLength: [32, 'The length of the role name cannot be greater than 32'],
     },
     color: {
         type: String,
