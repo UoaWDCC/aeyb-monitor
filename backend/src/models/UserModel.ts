@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { RoleModel } from './Role';
 
 // TODO: Replaces roles type with RoleModel[]

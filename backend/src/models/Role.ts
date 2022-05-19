@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
-export interface Role {
+export interface RoleModel {
     _id: mongoose.Types.ObjectId;
     name: string;
     color: string;
     permissions: string[];
 }
 
-const roleSchema = new mongoose.Schema<Role>({
+const roleSchema = new mongoose.Schema<RoleModel>({
     name: {
         type: String,
         required: [true, 'You must specify the role name'],

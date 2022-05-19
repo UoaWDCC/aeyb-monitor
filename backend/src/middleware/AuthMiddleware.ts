@@ -3,9 +3,9 @@ import asyncHandler from 'express-async-handler';
 import config from '../types/Config';
 import jwt from 'jsonwebtoken';
 import User from '../models/UserModel';
-import { getUserPermissions } from '../controllers/UserController';
 import { AuthenticatedRequest } from '../types/RequestTypes';
 import Permission from '../types/Perm';
+import { getPermissions } from '../controllers/PermissionController';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 
@@ -36,7 +36,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
             // Don't bother fetching the user permissions if they just need to be logged in
             if (permission) {
                 // Check that the user has the required permission
-                const userPermissions = await getUserPermissions(user);
+                const userPermissions = await getPermissions(user);
                 if (userPermissions.indexOf(permission) !== -1) {
                     res.status(401).json({
                         status: 'error',
