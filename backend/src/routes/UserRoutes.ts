@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { devLoginUser, getUsers, loginUser, updateUser } from '../controllers/UserController';
+import { devLoginUser, getAllUsers, loginUser, updateUser } from '../controllers/UserController';
 import protect from '../middleware/AuthMiddleware';
 import config from '../types/Config';
 import Permission from '../types/Perm';
@@ -13,7 +13,7 @@ if (config.nodeEnv === 'development') {
 
 UserRouter.post('/login', loginUser);
 
-UserRouter.route('/').get(protect(Permission.VIEW_USERS), getUsers);
+UserRouter.route('/').get(protect(Permission.VIEW_USERS), getAllUsers);
 UserRouter.route('/:id').patch(protect(Permission.UPDATE_USERS), updateUser);
 
 export default UserRouter;

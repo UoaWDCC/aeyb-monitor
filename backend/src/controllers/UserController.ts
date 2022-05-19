@@ -116,14 +116,15 @@ function generateJWT(userId: string): string {
  * @desc 	Get all the users
  * @route 	GET /api/users/
  */
-const getUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response) => {
-    // Fetch users
-
-    console.log(`User id: ${req.params.user}`);
+const getAllUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response) => {
+    const users = await User.find();
 
     res.status(200).json({
         status: 'success',
-        message: 'Nice work, you just made a GET request!',
+        results: users.length,
+        data: {
+            users,
+        },
     });
 });
 
@@ -154,4 +155,4 @@ async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
         .map((permission) => Permission[permission as keyof typeof Permission]);
 }
 
-export { devLoginUser, loginUser, getUsers, updateUser, getPermissions };
+export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions };
