@@ -5,6 +5,7 @@ import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
+import Permission from '../types/Perm';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -111,7 +112,7 @@ function generateJWT(userId: string): string {
 
 // TODO: Fetch users permissions from database
 // Maybe also move this to the permissions controller?
-async function getUserPermissions(user: UserModel): Promise<string[]> {
+async function getUserPermissions(user: UserModel): Promise<Permission[]> {
     return [];
 }
 

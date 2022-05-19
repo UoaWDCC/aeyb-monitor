@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import protect from '../middleware/ProtectRoute';
+import protect from '../middleware/AuthMiddleware';
 import Permission from '../types/Perm';
 
 import { getAllRoles, getRole, deleteRole, addRole, updateRole } from '../controllers/RoleController';

@@ -5,14 +5,15 @@ import jwt from 'jsonwebtoken';
 import User from '../models/UserModel';
 import { getUserPermissions } from '../controllers/UserController';
 import { AuthenticatedRequest } from '../types/RequestTypes';
+import Permission from '../types/Perm';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 
-export default function auth(permission?: string): AuthenticationFunction {
+export default function protect(permission?: Permission): AuthenticationFunction {
     return asyncHandler(async (req: Request<unknown>, res: Response, next: NextFunction) => {
         // The token will be in the format Bearer <token>
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
-            res.status(404).json({
+            res.status(401).json({
                 status: 'error',
                 message: 'You must specify a bearer token to access this endpoint',
             });
@@ -25,7 +26,7 @@ export default function auth(permission?: string): AuthenticationFunction {
             const decoded = jwt.verify(token, config.jwtSecret);
             const user = await User.findById(decoded.sub ?? '');
             if (!user) {
-                res.status(404).json({
+                res.status(401).json({
                     status: 'error',
                     message: 'Invalid bearer token',
                 });
@@ -37,7 +38,7 @@ export default function auth(permission?: string): AuthenticationFunction {
                 // Check that the user has the required permission
                 const userPermissions = await getUserPermissions(user);
                 if (userPermissions.indexOf(permission) !== -1) {
-                    res.status(404).json({
+                    res.status(401).json({
                         status: 'error',
                         message: 'You do not have all the required permissions to access this endpoint',
                     });
@@ -50,7 +51,7 @@ export default function auth(permission?: string): AuthenticationFunction {
 
             next();
         } catch (error) {
-            res.status(404).json({
+            res.status(401).json({
                 status: 'error',
                 message: 'Something went wrong while authenticating the request',
             });
