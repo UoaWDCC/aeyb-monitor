@@ -7,13 +7,7 @@ import Permission from '../types/Perm';
  * @route 	GET /api/permissions/
  */
 const getAllPermissions = asyncHandler(async (req: Request, res: Response) => {
-    const permissions = [];
-    for (const enumMember in Permission) {
-        const val = parseInt(enumMember);
-        if (isNaN(val)) {
-            permissions.push(enumMember);
-        }
-    }
+    const permissions = Object.values(Permission);
 
     res.status(200).json({
         status: 'success',
