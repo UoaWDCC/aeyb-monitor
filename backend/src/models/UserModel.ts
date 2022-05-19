@@ -3,7 +3,7 @@ import { Schema, model, Types } from 'mongoose';
 // TODO: Replaces roles type with RoleModel[]
 export interface UserModel {
     _id: string;
-    email: string;
+    name: string;
     roles: Types.ObjectId[];
 }
 
@@ -13,10 +13,9 @@ const userSchema = new Schema<UserModel>({
         type: String,
         required: [true, "You must specify a user's id"],
     },
-    email: {
+    name: {
         type: String,
-        required: [true, "You must specify the user's email"],
-        unique: true,
+        required: [true, "You must specify the user's name"],
         trim: true,
     },
     roles: {

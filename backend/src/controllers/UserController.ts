@@ -1,11 +1,10 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import { AuthenticatedRequest, LoginRequest } from '../types/RequestTypes';
+import { AuthenticatedRequest, DevLoginRequest, LoginRequest } from '../types/RequestTypes';
 import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import mongoose from 'mongoose';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -13,27 +12,12 @@ const client = new OAuth2Client(config.clientID);
  * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
  * @route   POST api/users/devlogin
  */
-const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, { userId: string }>, res: Response) => {
-    const userId = req.body.userId;
-
-    if (typeof userId !== 'string') {
-        res.status(400).json({
-            status: 'error',
-            message: `The user id must be a string (got ${typeof userId})`,
-        });
-        return;
-    }
-    if (userId.length === 0) {
-        res.status(400).json({
-            status: 'error',
-            message: 'The user id cannot be empty',
-        });
-        return;
-    }
+const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevLoginRequest>, res: Response) => {
+    const userId = req.body.id;
 
     let user = await User.findById(userId);
     if (!user) {
-        user = await User.create({ _id: userId, email: 'TODO' });
+        user = await User.create({ _id: userId, name: req.body.name });
     }
 
     res.status(200).json({
@@ -41,6 +25,7 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, { us
         token: generateJWT(userId),
         data: {
             id: userId,
+            name: user.name,
             permissions: await getUserPermissions(user),
         },
     });
@@ -66,8 +51,9 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
         if (!userId) return;
 
         let user = await User.findById(userId);
+        // TODO: Determine if name can be extracted from id token
         if (!user) {
-            user = await User.create({ _id: userId, email: 'TODO' });
+            user = await User.create({ _id: userId, name: 'TODO' });
         }
 
         // The returned token can then be used to authenticate additional requests
@@ -76,6 +62,7 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
             token: generateJWT(userId),
             data: {
                 id: userId,
+                name: user.name,
                 permissions: await getUserPermissions(user),
             },
         });
