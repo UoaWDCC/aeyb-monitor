@@ -34,13 +34,13 @@ export default function protect(permission?: Permission): AuthenticationFunction
             }
 
             // Don't bother fetching the user permissions if they just need to be logged in
-            if (permission) {
+            if (permission !== undefined) {
                 // Check that the user has the required permission
                 const userPermissions = await getPermissions(user);
-                if (userPermissions.indexOf(permission) !== -1) {
+                if (userPermissions.indexOf(permission) === -1) {
                     res.status(401).json({
                         status: 'error',
-                        message: 'You do not have all the required permissions to access this endpoint',
+                        message: `You require the ${permission} permission to access this endpoint`,
                     });
                     return;
                 }

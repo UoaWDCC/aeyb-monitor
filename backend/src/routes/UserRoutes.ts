@@ -14,6 +14,6 @@ if (config.nodeEnv === 'development') {
 UserRouter.post('/login', loginUser);
 
 UserRouter.route('/').get(protect(Permission.VIEW_USERS), getUsers);
-UserRouter.route('/:id').patch(protect(Permission.EDIT_USERS), updateUser);
+UserRouter.route('/:id').patch(protect(Permission.UPDATE_USERS), updateUser);
 
 export default UserRouter;
