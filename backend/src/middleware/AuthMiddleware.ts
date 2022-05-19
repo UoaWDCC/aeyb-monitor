@@ -8,7 +8,7 @@ import { AuthenticatedRequest } from '../types/RequestTypes';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 
-export default function auth(permissions: string[] = []): AuthenticationFunction {
+export default function auth(permission?: string): AuthenticationFunction {
     return asyncHandler(async (req: Request<unknown>, res: Response, next: NextFunction) => {
         // The token will be in the format Bearer <token>
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
@@ -33,10 +33,10 @@ export default function auth(permissions: string[] = []): AuthenticationFunction
             }
 
             // Don't bother fetching the user permissions if they just need to be logged in
-            if (permissions.length !== 0) {
-                // Check that the user has all the required permissions:
+            if (permission) {
+                // Check that the user has the required permission
                 const userPermissions = await getUserPermissions(user);
-                if (!permissions.every((permission) => userPermissions.has(permission))) {
+                if (userPermissions.indexOf(permission) !== -1) {
                     res.status(404).json({
                         status: 'error',
                         message: 'You do not have all the required permissions to access this endpoint',

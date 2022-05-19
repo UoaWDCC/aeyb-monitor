@@ -22,7 +22,7 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevL
 
     res.status(200).json({
         status: 'success',
-        token: generateJWT(userId),
+        token: generateJWT(user.id),
         data: {
             id: user._id,
             name: user.name,
@@ -59,9 +59,9 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
         // The returned token can then be used to authenticate additional requests
         res.status(200).json({
             status: 'success',
-            token: generateJWT(userId),
+            token: generateJWT(user.id),
             data: {
-                id: userId,
+                id: user.id,
                 name: user.name,
                 permissions: await getUserPermissions(user),
             },
@@ -111,8 +111,8 @@ function generateJWT(userId: string): string {
 
 // TODO: Fetch users permissions from database
 // Maybe also move this to the permissions controller?
-async function getUserPermissions(user: UserModel): Promise<Set<string>> {
-    return new Set();
+async function getUserPermissions(user: UserModel): Promise<string[]> {
+    return [];
 }
 
 /**
