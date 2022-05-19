@@ -3,14 +3,10 @@ import mongoose from 'mongoose';
 import ValidationError from '../types/ValidationError';
 
 type CastErrorValueType = mongoose.Error.CastError & { valueType?: string };
+type MongooseError = mongoose.Error.ValidationError | mongoose.Error.CastError;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ErrorHandler(
-    err: Error | mongoose.Error.ValidationError | mongoose.Error.CastError,
-    req: Request,
-    res: Response,
-    next: NextFunction,
-) {
+function ErrorHandler(err: Error | MongooseError, req: Request, res: Response, next: NextFunction) {
     // Check if the error was thrown due to invalid inputs for a model
     if (err instanceof mongoose.Error.ValidationError) {
         res.status(400).json({
