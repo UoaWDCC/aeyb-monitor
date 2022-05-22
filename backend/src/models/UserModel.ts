@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { RoleModel } from './Role';
+import { RoleModel } from './RoleModel';
 
 export interface UserModel {
     _id: string;

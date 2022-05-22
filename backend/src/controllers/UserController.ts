@@ -7,7 +7,8 @@ import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
 import { Doc } from '../types/UtilTypes';
-import IdParam from '../types/RequestParams';
+import { TypedRequest, UserIdParam } from '../types/RequestParams';
+import Role, { RoleModel } from '../models/RoleModel';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -129,11 +130,26 @@ const getAllUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res:
 });
 
 /**
- * @desc    Edit a specific User
- * @route   PATH /api/users/:id
+ * @desc 	Get a specific user
+ * @route 	GET /api/users/:userId
  */
-const updateUser = asyncHandler(async (req: Request<IdParam>, res: Response) => {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) => {
+    const user = await User.findById(req.params.userId);
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user,
+        },
+    });
+});
+
+/**
+ * @desc    Edit a specific User
+ * @route   PATCH /api/users/:userId
+ */
+const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>, res: Response) => {
+    const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
         new: true,
         runValidators: true,
     });
@@ -155,4 +171,79 @@ async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
         .map((permission) => Permission[permission as keyof typeof Permission]);
 }
 
-export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions };
+/**
+ * @desc 	Gives a user a role
+ * @route 	POST /api/users/:userId/roles/:roleId
+ */
+
+const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
+    // Check atleast one role specified
+    if (req.body.roles.length == 0) {
+        res.status(400).json({
+            status: 'error',
+            message: 'You must specify atleast one role',
+        });
+        return;
+    }
+
+    // Get the user
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+        res.status(400).json({
+            status: 'error',
+            message: 'User not found',
+        });
+        return;
+    }
+
+    const toAdd: RoleModel[] = [];
+
+    for (const roleId of req.body.roles) {
+        // Check if role exists
+        const role = await Role.findById(roleId);
+        if (!role) {
+            res.status(400).json({
+                status: 'error',
+                message: 'Role not found',
+            });
+            return;
+        }
+
+        // Check if the user already has the role
+        if (user.roles.includes(role.id)) {
+            res.status(400).json({
+                status: 'error',
+                message: 'User already has that role',
+            });
+            return;
+        }
+
+        // Check if trying to add the same role twice
+        if (toAdd.includes(role.id)) {
+            res.status(400).json({
+                status: 'error',
+                message: 'You cannot add the same role twice',
+            });
+            return;
+        }
+
+        toAdd.push(role);
+    }
+
+    // Give the roles to the user
+    for (const role of toAdd) {
+        user.roles.push(role);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user,
+            toAdd,
+        },
+    });
+});
+
+export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, giveRoles };
