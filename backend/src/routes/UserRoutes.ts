@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { devLoginUser, getAllUsers, loginUser, updateUser, getUser, giveRoles } from '../controllers/UserController';
+import {
+    devLoginUser,
+    getAllUsers,
+    loginUser,
+    updateUser,
+    getUser,
+    giveRoles,
+    removeRoles,
+} from '../controllers/UserController';
 import protect from '../middleware/AuthMiddleware';
 import config from '../types/Config';
 import Permission from '../types/Perm';
@@ -19,6 +27,8 @@ UserRouter.route('/:userId')
     .get(protect(Permission.VIEW_USERS), getUser)
     .patch(protect(Permission.UPDATE_USERS), updateUser);
 
-UserRouter.route('/:userId/roles/').post(protect(Permission.GIVE_ROLE), giveRoles);
+UserRouter.route('/:userId/roles/')
+    .post(protect(Permission.GIVE_ROLE), giveRoles)
+    .delete(protect(Permission.REMOVE_ROLE), removeRoles);
 
 export default UserRouter;
