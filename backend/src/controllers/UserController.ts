@@ -172,8 +172,8 @@ async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
 }
 
 /**
- * @desc 	Gives a user a role
- * @route 	POST /api/users/:userId/roles/:roleId
+ * @desc 	Gives user roles specified in request body
+ * @route 	POST /api/users/:userId/roles/
  */
 
 const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
@@ -196,7 +196,7 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
         return;
     }
 
-    const toAdd: RoleModel[] = [];
+    const addedRoles: RoleModel[] = [];
 
     for (const roleId of req.body.roles) {
         // Check if role exists
@@ -219,7 +219,7 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
         }
 
         // Check if trying to add the same role twice
-        if (toAdd.includes(role.id)) {
+        if (addedRoles.includes(role.id)) {
             res.status(400).json({
                 status: 'error',
                 message: 'You cannot add the same role twice',
@@ -227,11 +227,11 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
             return;
         }
 
-        toAdd.push(role);
+        addedRoles.push(role);
     }
 
     // Give the roles to the user
-    for (const role of toAdd) {
+    for (const role of addedRoles) {
         user.roles.push(role);
     }
 
@@ -239,11 +239,75 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
 
     res.status(200).json({
         status: 'success',
+        rolesAdded: addedRoles.length,
         data: {
             user,
-            toAdd,
+            addedRoles,
         },
     });
 });
 
-export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, giveRoles };
+/**
+ * @desc 	Removes roles specified in request body from a user
+ * @route 	DELETE /api/users/:userId/roles/
+ */
+
+const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
+    // Check atleast one role specified
+    if (req.body.roles.length == 0) {
+        res.status(400).json({
+            status: 'error',
+            message: 'You must specify atleast one role',
+        });
+        return;
+    }
+
+    // Get the user
+    const user = await User.findById(req.params.userId).populate('roles');
+    if (!user) {
+        res.status(400).json({
+            status: 'error',
+            message: 'User not found',
+        });
+        return;
+    }
+
+    const removedRoles: RoleModel[] = [];
+
+    for (const roleId of req.body.roles) {
+        // Check if role exists
+        const role = await Role.findById(roleId);
+        if (!role) {
+            res.status(400).json({
+                status: 'error',
+                message: 'Role not found',
+            });
+            return;
+        }
+
+        removedRoles.push(role);
+    }
+
+    // Remove the roles from the user or the removed list if the user doesn't have the role
+    for (const role of removedRoles) {
+        const index = user.roles.findIndex((r) => r.name == role.name);
+        if (index >= 0) {
+            user.roles.splice(index, 1);
+        } else {
+            removedRoles.splice(removedRoles.indexOf(role), 1);
+        }
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        status: 'success',
+        rolesRemoved: removedRoles.length,
+        data: {
+            user,
+            removedRoles,
+        },
+    });
+});
+
+export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, giveRoles, removeRoles };
