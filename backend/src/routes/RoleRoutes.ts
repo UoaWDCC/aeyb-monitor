@@ -4,10 +4,10 @@ import Permission from '../types/Perm';
 
 import { getAllRoles, getRole, deleteRole, addRole, updateRole } from '../controllers/RoleController';
 
-const RoleRouter = Router();
+const RoleRouter = Router({ mergeParams: true });
 
 RoleRouter.route('/').get(protect(Permission.VIEW_ROLES), getAllRoles).post(protect(Permission.ADD_ROLES), addRole);
-RoleRouter.route('/:id')
+RoleRouter.route('/:roleId')
     .get(protect(Permission.VIEW_ROLES), getRole)
     .delete(protect(Permission.DELETE_ROLES), deleteRole)
     .patch(protect(Permission.UPDATE_ROLES), updateRole);
