@@ -27,8 +27,11 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
 const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) => {
     const role = await Role.findById(req.params.roleId);
 
+    const userCount = await User.countDocuments({ roles: req.params.roleId });
+
     res.status(200).json({
         status: 'success',
+        userCount,
         data: {
             role,
         },
