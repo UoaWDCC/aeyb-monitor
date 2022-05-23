@@ -2,7 +2,8 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Role, { RoleModel } from '../models/RoleModel';
 import User from '../models/UserModel';
-import { TypedRequest, RoleIdParam } from '../types/RequestParams';
+import { RoleIdParam } from '../types/RequestParams';
+import { TypedRequest } from '../types/UtilTypes';
 
 /**
  * @desc 	Get all the roles
