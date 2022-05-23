@@ -7,7 +7,8 @@ import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
 import { Doc } from '../types/UtilTypes';
-import { TypedRequest, UserIdParam } from '../types/RequestParams';
+import { UserIdParam } from '../types/RequestParams';
+import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleModel } from '../models/RoleModel';
 
 const client = new OAuth2Client(config.clientID);
