@@ -240,9 +240,7 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
     }
 
     // Give the roles to the user
-    for (const role of addedRoles) {
-        user.roles.push(role);
-    }
+    user.roles = user.roles.concat(addedRoles);
 
     await user.save();
 
@@ -307,7 +305,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
 
     // Remove the roles from the user or the removed list if the user doesn't have the role
     for (const role of removedRoles) {
-        const index = user.roles.findIndex((r) => r._id == role._id);
+        const index = user.roles.findIndex((r) => r.name == role.name);
         if (index >= 0) {
             user.roles.splice(index, 1);
         } else {
