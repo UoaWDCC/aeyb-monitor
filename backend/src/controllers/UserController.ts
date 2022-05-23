@@ -288,7 +288,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
 
     // Remove the roles from the user or the removed list if the user doesn't have the role
     for (const role of removedRoles) {
-        const index = user.roles.findIndex((r) => r.name == role.name);
+        const index = user.roles.findIndex((r) => r._id == role._id);
         if (index >= 0) {
             user.roles.splice(index, 1);
         } else {
