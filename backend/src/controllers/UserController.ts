@@ -175,7 +175,6 @@ async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
  * @desc 	Gives user roles specified in request body
  * @route 	POST /api/users/:userId/roles/
  */
-
 const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
@@ -251,7 +250,6 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
  * @desc 	Removes roles specified in request body from a user
  * @route 	DELETE /api/users/:userId/roles/
  */
-
 const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
