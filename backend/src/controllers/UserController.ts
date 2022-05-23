@@ -177,6 +177,15 @@ async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
  * @route 	POST /api/users/:userId/roles/
  */
 const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
+    //Check roles is provided as an array
+    if (!Array.isArray(req.body.roles)) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Roles must be an array',
+        });
+        return;
+    }
+
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
         res.status(400).json({
@@ -252,6 +261,15 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
  * @route 	DELETE /api/users/:userId/roles/
  */
 const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
+    //Check roles is provided as an array
+    if (!Array.isArray(req.body.roles)) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Roles must be an array',
+        });
+        return;
+    }
+
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
         res.status(400).json({
