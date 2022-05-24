@@ -37,7 +37,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
             if (permission !== undefined) {
                 // Check that the user has the required permission
                 const userPermissions = await getPermissions(user);
-                if (userPermissions.indexOf(permission) === -1) {
+                if (!userPermissions.has(permission)) {
                     res.status(401).json({
                         status: 'error',
                         message: `You require the ${permission} permission to access this endpoint`,

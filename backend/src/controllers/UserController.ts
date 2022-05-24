@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
-import { Doc } from '../types/UtilTypes';
+import { Doc, TypedRequestBody } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleModel } from '../models/RoleModel';
@@ -17,21 +17,20 @@ const client = new OAuth2Client(config.clientID);
  * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
  * @route   POST api/users/devlogin
  */
-const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevLoginRequest>, res: Response) => {
+const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>, res: Response) => {
     const userId = req.body.id;
 
     let user = await User.findById(userId);
     if (!user) {
-        user = await User.create({ _id: userId, name: req.body.name });
+        user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
     }
 
     res.status(200).json({
         status: 'success',
         token: generateJWT(user.id),
         data: {
-            id: user._id,
-            name: user.name,
-            permissions: await getPermissions(user),
+            user,
+            permissions: [...(await getPermissions(user))], // Apparently it doesn't like sets
         },
     });
 });
@@ -40,7 +39,7 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevL
  * @desc    Login and gain an access token
  * @route   POST api/users/login
  */
-const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRequest>, res: Response) => {
+const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: Response) => {
     const credential = req.body.credential;
 
     if (typeof credential !== 'string') {
@@ -57,8 +56,11 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
 
         let user = await User.findById(userId);
         // TODO: Determine if name can be extracted from id token
+        // TODO: Profile picture
         if (!user) {
             user = await User.create({ _id: userId, name: 'TODO' });
+        } else {
+            // TODO: Check that the profile picture and name haven't been changed
         }
 
         // The returned token can then be used to authenticate additional requests
@@ -66,8 +68,7 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
             status: 'success',
             token: generateJWT(user.id),
             data: {
-                id: user.id,
-                name: user.name,
+                user,
                 permissions: await getPermissions(user),
             },
         });
@@ -163,13 +164,15 @@ const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>
     });
 });
 
-async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
+async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
     if (!user.populated('roles')) await user.populate('roles');
 
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
-    return user.roles
-        .flatMap((role) => role.permissions)
-        .map((permission) => Permission[permission as keyof typeof Permission]);
+    return new Set(
+        user.roles
+            .flatMap((role) => role.permissions)
+            .map((permission) => Permission[permission as keyof typeof Permission]),
+    );
 }
 
 /**
