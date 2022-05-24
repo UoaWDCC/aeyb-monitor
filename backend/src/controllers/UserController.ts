@@ -30,7 +30,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
         token: generateJWT(user.id),
         data: {
             user,
-            permissions: await getPermissions(user),
+            permissions: [...(await getPermissions(user))], // Apparently it doesn't like sets
         },
     });
 });
