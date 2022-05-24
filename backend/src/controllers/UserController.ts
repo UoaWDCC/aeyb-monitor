@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
-import { Doc } from '../types/UtilTypes';
+import { Doc, TypedRequestBody } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleModel } from '../models/RoleModel';
@@ -17,12 +17,12 @@ const client = new OAuth2Client(config.clientID);
  * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
  * @route   POST api/users/devlogin
  */
-const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevLoginRequest>, res: Response) => {
+const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>, res: Response) => {
     const userId = req.body.id;
 
     let user = await User.findById(userId);
     if (!user) {
-        user = await User.create({ _id: userId, name: req.body.name });
+        user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
     }
 
     res.status(200).json({
@@ -56,8 +56,11 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
 
         let user = await User.findById(userId);
         // TODO: Determine if name can be extracted from id token
+        // TODO: Profile picture
         if (!user) {
             user = await User.create({ _id: userId, name: 'TODO' });
+        } else {
+            // TODO: Check that the profile picture and name haven't been changed
         }
 
         // The returned token can then be used to authenticate additional requests
