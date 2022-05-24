@@ -29,8 +29,7 @@ const devLoginUser = asyncHandler(async (req: Request<undefined, undefined, DevL
         status: 'success',
         token: generateJWT(user.id),
         data: {
-            id: user._id,
-            name: user.name,
+            user,
             permissions: await getPermissions(user),
         },
     });
@@ -66,8 +65,7 @@ const loginUser = asyncHandler(async (req: Request<undefined, undefined, LoginRe
             status: 'success',
             token: generateJWT(user.id),
             data: {
-                id: user.id,
-                name: user.name,
+                user,
                 permissions: await getPermissions(user),
             },
         });
@@ -163,13 +161,15 @@ const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>
     });
 });
 
-async function getPermissions(user: Doc<UserModel>): Promise<Permission[]> {
+async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
     if (!user.populated('roles')) await user.populate('roles');
 
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
-    return user.roles
-        .flatMap((role) => role.permissions)
-        .map((permission) => Permission[permission as keyof typeof Permission]);
+    return new Set(
+        user.roles
+            .flatMap((role) => role.permissions)
+            .map((permission) => Permission[permission as keyof typeof Permission]),
+    );
 }
 
 /**
