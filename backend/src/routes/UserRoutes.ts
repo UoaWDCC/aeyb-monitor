@@ -7,6 +7,7 @@ import {
     getUser,
     giveRoles,
     removeRoles,
+    getSelf,
 } from '../controllers/UserController';
 import protect from '../middleware/AuthMiddleware';
 import config from '../types/Config';
@@ -22,6 +23,7 @@ if (config.nodeEnv === 'development') {
 UserRouter.post('/login', loginUser);
 
 UserRouter.route('/').get(protect(Permission.VIEW_USERS), getAllUsers);
+UserRouter.route('/@me').get(protect(), getSelf);
 UserRouter.route('/:userId')
     .get(protect(Permission.VIEW_USERS), getUser)
     .patch(protect(Permission.UPDATE_USERS), updateUser);

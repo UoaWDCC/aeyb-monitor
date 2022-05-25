@@ -132,6 +132,22 @@ const getAllUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res:
 });
 
 /**
+ * @desc    Get information about the currently logged in user
+ * @route   GET /api/users/@me
+ */
+const getSelf = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response) => {
+    const self = req.params.user;
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            self,
+            permissions: [...(await getPermissions(self))],
+        },
+    });
+});
+
+/**
  * @desc 	Get a specific user
  * @route 	GET /api/users/:userId
  */
@@ -328,4 +344,4 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
     });
 });
 
-export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, giveRoles, removeRoles };
+export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, getSelf, giveRoles, removeRoles };
