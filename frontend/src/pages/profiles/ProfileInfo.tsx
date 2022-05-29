@@ -14,7 +14,7 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
     const [editClick, setEdit] = React.useState(false);
 
     return (
-        <body>
+        <div>
             <div id="title">
                 <h1>Profile</h1>
             </div>
@@ -81,7 +81,7 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                     <button>Role Permissions</button>
                 </div>
             </div>
-        </body>
+        </div>
     );
 };
 
