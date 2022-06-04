@@ -7,6 +7,7 @@ enum Permission {
     UPDATE_USERS = 'UPDATE_USERS',
     GIVE_ROLE = 'GIVE_ROLE',
     REMOVE_ROLE = 'REMOVE_ROLE',
+    VIEW_EVENTS = 'VIEW_EVENTS',
 }
 
 export default Permission;
