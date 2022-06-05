@@ -25,7 +25,13 @@ const getAllEvents = asyncHandler(async (req: Request, res: Response) => {
  * @route   GET /api/events/:eventId
  */
 const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) => {
-    const event = await Role.findById(req.params.eventId);
+    const event = await Event.findById(req.params.eventId);
+    if (!event) {
+        res.status(404).json({
+            status: 'error',
+            message: `There is no event with the id ${req.params.eventId}`,
+        });
+    }
 
     res.status(200).json({
         status: 'success',
