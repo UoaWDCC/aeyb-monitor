@@ -158,6 +158,7 @@ const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) =>
             status: 'error',
             message: `There is no user with the id ${req.params.userId}`,
         });
+        return;
     }
 
     res.status(200).json({
