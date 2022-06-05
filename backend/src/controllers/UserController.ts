@@ -153,6 +153,12 @@ const getSelf = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Res
  */
 const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) => {
     const user = await User.findById(req.params.userId);
+    if (!user) {
+        res.status(404).json({
+            status: 'error',
+            message: `There is no user with the id ${req.params.userId}`,
+        });
+    }
 
     res.status(200).json({
         status: 'success',

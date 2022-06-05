@@ -27,6 +27,12 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
  */
 const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) => {
     const role = await Role.findById(req.params.roleId);
+    if (!role) {
+        res.status(404).json({
+            status: 'error',
+            message: `There is no role with the id ${req.params.roleId}`,
+        });
+    }
 
     const userCount = await User.countDocuments({ roles: req.params.roleId });
 
