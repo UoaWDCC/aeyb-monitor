@@ -31,6 +31,7 @@ const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) 
             status: 'error',
             message: `There is no event with the id ${req.params.eventId}`,
         });
+        return;
     }
 
     res.status(200).json({
