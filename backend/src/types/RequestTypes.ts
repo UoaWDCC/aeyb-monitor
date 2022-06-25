@@ -1,4 +1,5 @@
 import { UserModel } from '../models/UserModel';
+import { Doc } from './UtilTypes';
 
 export interface LoginRequest {
     credential: string;
@@ -11,5 +12,5 @@ export interface DevLoginRequest {
 }
 
 export interface AuthenticatedRequest {
-    user: UserModel;
+    user: Doc<UserModel>;
 }
