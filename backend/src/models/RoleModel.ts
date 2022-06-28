@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
+
 
 export interface RoleModel {
     _id: mongoose.Types.ObjectId;
@@ -29,6 +30,7 @@ const roleSchema = new mongoose.Schema<RoleModel>({
         type: Schema.Types.ObjectId,
         default: '62ba8ef3e5ba8885e2bffb41',
     },
+
     permissions: [String],
 });
 

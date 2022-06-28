@@ -4,6 +4,7 @@ import { RoleModel } from './RoleModel';
 export interface UserModel {
     _id: string;
     name: string;
+    profileUrl?: string;
     roles: RoleModel[];
 }
 
@@ -18,6 +19,7 @@ const userSchema = new Schema<UserModel>({
         required: [true, "You must specify the user's name"],
         trim: true,
     },
+    profileUrl: String,
     roles: {
         type: [{ type: Schema.Types.ObjectId, ref: 'Role' }],
         default: [],
