@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 export interface RoleModel {
     _id: mongoose.Types.ObjectId;
     name: string;
     color: string;
+    group: Schema.Types.ObjectId;
     permissions: string[];
 }
 
@@ -23,6 +24,10 @@ const roleSchema = new mongoose.Schema<RoleModel>({
             },
         },
         default: '#ffffff',
+    },
+    group: {
+        type: Schema.Types.ObjectId,
+        default: '62ba8ef3e5ba8885e2bffb41',
     },
     permissions: [String],
 });

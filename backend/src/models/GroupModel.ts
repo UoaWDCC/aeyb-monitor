@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
+import Role from './RoleModel';
 
 export interface GroupModel {
     _id: mongoose.Types.ObjectId;
     name: string;
     color: string;
-    permissions: string[];
 }
 
 const groupSchema = new mongoose.Schema<GroupModel>({

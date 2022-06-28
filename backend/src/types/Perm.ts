@@ -8,6 +8,9 @@ enum Permission {
     GIVE_ROLE = 'GIVE_ROLE',
     REMOVE_ROLE = 'REMOVE_ROLE',
     VIEW_GROUPS = 'VIEW_GROUPS',
+    DELETE_GROUP = 'DELETE_GROUP',
+    UPDATE_GROUP = 'UPDATE_GROUP',
+    ADD_GROUP = 'ADD_GROUP',
 }
 
 export default Permission;

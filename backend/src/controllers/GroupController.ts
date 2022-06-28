@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
+import Role, { RoleModel } from '../models/RoleModel';
 import Group, { GroupModel } from '../models/GroupModel';
 import { GroupIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
@@ -26,12 +27,21 @@ const getAllGroups = asyncHandler(async (req: Request, res: Response) => {
 const getGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Response) => {
     const group = await Group.findById(req.params.groupId);
 
-    //TODO return roles and users that link to group
+    let roles = [Object];
+
+    if (req.params.groupId == '62ba8ef3e5ba8885e2bffb41') {
+        // Default group
+        roles = await Role.find({ group: { $exists: false } });
+    } else {
+        // Group stored in DB
+        roles = await Role.find({ group: req.params.groupId });
+    }
 
     res.status(200).json({
         status: 'success',
         data: {
             group,
+            roles,
         },
     });
 });
