@@ -66,7 +66,30 @@ const addGroup = asyncHandler(async (req: TypedRequest<GroupModel, GroupIdParam>
  * @route 	DELETE /api/groups/:groupId
  */
 const deleteGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Response) => {
-    // TODO You cannot delete a group that is still linked to roles
+    // You cannot delete a group that is still linked to roles
+    let roles = [Object];
+
+    if (req.params.groupId == '62ba8ef3e5ba8885e2bffb41') {
+        // Default group
+        res.status(403).json({
+            status: 'error',
+            message: 'You cannot delete the default group',
+        });
+    } else {
+        // Group stored in DB
+        roles = await Role.find({ group: req.params.groupId });
+    }
+
+    if (roles.length > 0) {
+        const roleNames = roles.map((r) => r.name);
+        res.status(403).json({
+            status: 'error',
+            message: 'You cannot delete a group that is linked to roles',
+            roleNames,
+        });
+
+        return;
+    }
 
     // Delete the group
     await Group.findByIdAndDelete(req.params.groupId);
