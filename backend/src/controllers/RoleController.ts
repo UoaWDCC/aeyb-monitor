@@ -93,6 +93,14 @@ const updateRole = asyncHandler(async (req: TypedRequest<RoleModel, RoleIdParam>
         runValidators: true,
     });
 
+    if (!role) {
+        res.status(404).json({
+            status: 'error',
+            message: `There is no role with the id ${req.params.roleId}`,
+        });
+        return;
+    }
+
     res.status(200).json({
         status: 'success',
         data: {

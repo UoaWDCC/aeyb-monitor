@@ -84,6 +84,14 @@ const updateEvent = asyncHandler(async (req: TypedRequest<EventModel, EventIdPar
         runValidators: true,
     });
 
+    if (!event) {
+        res.status(404).json({
+            status: 'error',
+            message: `There is no event with the id ${req.params.eventId}`,
+        });
+        return;
+    }
+
     res.status(200).json({
         status: 'success',
         data: {
