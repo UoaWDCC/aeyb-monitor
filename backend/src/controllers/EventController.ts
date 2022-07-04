@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
-import { RoleModel } from '../models/RoleModel';
 
 /**
  * @desc    Get all the events
@@ -48,6 +47,7 @@ const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) 
  * @route   POST /api/events/
  */
 const addEvent = asyncHandler(async (req: TypedRequestBody<EventModel>, res: Response) => {
+    req.body.creator = req.body.requester;
     const newEvent = await Event.create(req.body);
 
     await res.status(201).json({
