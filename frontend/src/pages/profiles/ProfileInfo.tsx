@@ -18,7 +18,7 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
         <div>
             <div className="mainbody">
                 <NavBar/> 
-                
+                <NotifBar/>
             </div>
         </div>
     );
