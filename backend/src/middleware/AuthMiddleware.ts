@@ -53,7 +53,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
         } catch (error) {
             res.status(401).json({
                 status: 'error',
-                message: 'Something went wrong while authenticating the request',
+                message: 'Something went wrong while authenticating the request: ' + (error as Error).message,
             });
         }
     });

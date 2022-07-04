@@ -5,7 +5,7 @@ import Permission from '../types/Perm';
 
 const EventRouter = Router();
 
-EventRouter.route('/').get(getAllEvents).post(addEvent);
-EventRouter.route('/:eventId').get(getEvent).delete(deleteEvent).patch(updateEvent);
+EventRouter.route('/').get(protect(), getAllEvents).post(protect(), addEvent);
+EventRouter.route('/:eventId').get(protect(), getEvent).delete(protect(), deleteEvent).patch(protect(), updateEvent);
 
 export default EventRouter;
