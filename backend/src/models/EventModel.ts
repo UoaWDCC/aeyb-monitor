@@ -11,10 +11,6 @@ export interface EventModel {
 }
 
 const eventSchema = new Schema<EventModel>({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: [true, "You must specify the event's id"],
-    },
     name: {
         type: String,
         required: [true, 'You must specify the name of the event'],
