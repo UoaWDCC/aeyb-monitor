@@ -2,34 +2,14 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
-import { QueryType, TypedRequest, TypedRequestBody, TypedRequestQuery } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
-import { PaginationQuery } from '../types/QueryTypes';
-
-interface FilterQuery extends PaginationQuery {
-    name?: string;
-}
-
-function handleFilters(
-    query: QueryType<EventModel>,
-    req: TypedRequestQuery<FilterQuery>,
-    res: Response,
-): QueryType<EventModel> | undefined {
-    if (req.query.name) {
-        if (req.query.name === 'deny') {
-            res.status(400).json({ status: 'error', message: 'You said to deny this request??? ' });
-            return;
-        }
-        return query.where('name', new RegExp(`${req.query.name}`, 'i'));
-    }
-    return query;
-}
 
 /**
  * @desc    Get all the events
  * @route   GET /api/events
  */
-const getAllEvents = asyncHandler(new PaginationHandler(Event).pre(handleFilters).handle);
+const getAllEvents = asyncHandler(new PaginationHandler(Event).handle);
 
 /**
  * @desc    Get a specific event
