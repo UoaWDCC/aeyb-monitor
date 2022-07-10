@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Model } from 'mongoose';
 import { FilterCallback, PaginationOptions, ThenCallback } from '../types/PaginationTypes';
 import { PaginationQuery } from '../types/QueryTypes';
@@ -10,9 +10,12 @@ export default class PaginationHandler<T> {
     private filterCallback: FilterCallback<T> | null = null;
     private thenCallback: ThenCallback<T> | null = null;
 
-    constructor(model: Model<T>, defaultOptions: Required<PaginationOptions> = { limit: 30, page: 0 }) {
+    constructor(model: Model<T>, defaultOptions: PaginationOptions = {}) {
         this.model = model;
-        this.defaultOptions = defaultOptions;
+        this.defaultOptions = {
+            limit: defaultOptions.limit ?? 30,
+            page: defaultOptions.page ?? 0,
+        };
     }
 
     public filter(fn: FilterCallback<T>): this {
