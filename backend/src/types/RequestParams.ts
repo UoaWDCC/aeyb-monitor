@@ -9,3 +9,8 @@ export interface UserIdParam {
 export interface EventIdParam {
     eventId: string;
 }
+
+export interface PaginationParam {
+    limit?: string;
+    page?: string;
+}
