@@ -79,6 +79,7 @@ export default class PaginationHandler<T> {
         hasNext: boolean,
         hasPrev: boolean,
         totalPages: number,
+        totalResults: number,
         options: Required<PaginationOptions>,
     ) {
         const dataName = this.model.modelName.toLowerCase() + 's';
@@ -91,6 +92,7 @@ export default class PaginationHandler<T> {
             page: options.page,
             limit: options.limit,
             results: results.length,
+            totalResults,
             data: {
                 [dataName]: results,
             },
@@ -108,7 +110,7 @@ export default class PaginationHandler<T> {
 
         const documentCount = await query.countDocuments();
         if (documentCount === 0) {
-            this.createResponse(res, [], false, false, 0, options);
+            this.createResponse(res, [], false, false, 0, 0, options);
             return;
         }
 
@@ -133,6 +135,6 @@ export default class PaginationHandler<T> {
         const hasNext = options.page < totalPages - 1;
         const hasPrev = options.page !== 0;
 
-        this.createResponse(res, results, hasNext, hasPrev, totalPages, options);
+        this.createResponse(res, results, hasNext, hasPrev, totalPages, documentCount, options);
     }
 }
