@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { Model } from 'mongoose';
 import { FilterCallback, PaginationOptions, ThenCallback } from '../types/PaginationTypes';
-import { PaginationParam } from '../types/RequestParams';
-import { Doc } from '../types/UtilTypes';
+import { PaginationQuery } from '../types/QueryTypes';
+import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 
 export default class PaginationHandler<T> {
     private readonly model: Model<T>;
@@ -25,42 +25,45 @@ export default class PaginationHandler<T> {
         return this;
     }
 
-    private handlePagination(req: Request<PaginationParam>, res: Response): Required<PaginationOptions> | null {
+    private handlePagination(
+        req: TypedRequestQuery<PaginationQuery>,
+        res: Response,
+    ): Required<PaginationOptions> | null {
         let limit = this.defaultOptions.limit;
         let page = this.defaultOptions.page;
 
-        if (req.params.limit) {
-            const parsedLimit = parseInt(req.params.limit);
+        if (req.query.limit) {
+            const parsedLimit = parseInt(req.query.limit);
             if (isNaN(parsedLimit)) {
                 res.status(400).json({
                     status: 'error',
-                    message: `Expected the results parameter to be an integer (Got ${req.params.limit})`,
+                    message: `Expected the results parameter to be an integer (Got ${req.query.limit})`,
                 });
                 return null;
             }
             if (parsedLimit <= 0) {
                 res.status(400).json({
                     status: 'error',
-                    message: `Expected the results parameter to be greater than 0 (Got ${req.params.limit})`,
+                    message: `Expected the results parameter to be greater than 0 (Got ${req.query.limit})`,
                 });
                 return null;
             }
             limit = parsedLimit;
         }
 
-        if (req.params.page) {
-            const parsedPage = parseInt(req.params.page);
+        if (req.query.page) {
+            const parsedPage = parseInt(req.query.page);
             if (isNaN(parsedPage)) {
                 res.status(400).json({
                     status: 'error',
-                    message: `Expected the page parameter to be an integer (Got ${req.params.page})`,
+                    message: `Expected the page parameter to be an integer (Got ${req.query.page})`,
                 });
                 return null;
             }
             if (parsedPage < 0) {
                 res.status(400).json({
                     status: 'error',
-                    message: `Expected the page parameter to be positive (Got ${req.params.page})`,
+                    message: `Expected the page parameter to be positive (Got ${req.query.page})`,
                 });
                 return null;
             }
@@ -87,13 +90,14 @@ export default class PaginationHandler<T> {
             totalPages,
             page: options.page,
             limit: options.limit,
+            results: results.length,
             data: {
                 [dataName]: results,
             },
         });
     }
 
-    public async handle(req: Request<PaginationParam>, res: Response) {
+    public async handle(req: TypedRequestQuery<PaginationQuery>, res: Response) {
         const options = this.handlePagination(req, res);
         if (!options) return;
 
