@@ -112,11 +112,11 @@ export default class PaginationHandler<T> {
             return;
         }
 
-        const totalPages = Math.floor(documentCount / options.limit);
-        if (options.page > totalPages) {
+        const totalPages = Math.ceil(documentCount / options.limit);
+        if (options.page >= totalPages) {
             res.status(400).json({
                 status: 'error',
-                message: `The page parameter ${options.page} is out of bounds. (Max page is ${totalPages})`,
+                message: `The page parameter ${options.page} is out of bounds. (Max page is ${totalPages - 1})`,
             });
             return;
         }
@@ -130,7 +130,7 @@ export default class PaginationHandler<T> {
 
         if (this.thenCallback) results = this.thenCallback(results, options);
 
-        const hasNext = options.page < totalPages;
+        const hasNext = options.page < totalPages - 1;
         const hasPrev = options.page !== 0;
 
         this.createResponse(res, results, hasNext, hasPrev, totalPages, options);
