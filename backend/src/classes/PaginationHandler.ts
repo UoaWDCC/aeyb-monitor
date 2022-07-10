@@ -1,13 +1,13 @@
 import { Response } from 'express';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { FilterCallback, PaginationOptions, ThenCallback } from '../types/PaginationTypes';
 import { PaginationQuery } from '../types/QueryTypes';
 import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 
-export default class PaginationHandler<T> {
+export default class PaginationHandler<T, TQuery extends PaginationQuery = PaginationQuery> {
     private readonly model: Model<T>;
     private readonly defaultOptions: Required<PaginationOptions>;
-    private filterCallback: FilterCallback<T> | null = null;
+    private filterCallback: FilterCallback<T, TQuery> | null = null;
     private thenCallback: ThenCallback<T> | null = null;
 
     constructor(model: Model<T>, defaultOptions: PaginationOptions = {}) {
@@ -22,7 +22,7 @@ export default class PaginationHandler<T> {
         this.handle = this.handle.bind(this);
     }
 
-    public filter(fn: FilterCallback<T>): this {
+    public filter(fn: FilterCallback<T, TQuery>): this {
         this.filterCallback = fn;
         return this;
     }
@@ -32,10 +32,7 @@ export default class PaginationHandler<T> {
         return this;
     }
 
-    private handlePagination(
-        req: TypedRequestQuery<PaginationQuery>,
-        res: Response,
-    ): Required<PaginationOptions> | null {
+    private handlePagination(req: TypedRequestQuery<TQuery>, res: Response): Required<PaginationOptions> | null {
         let limit = this.defaultOptions.limit;
         let page = this.defaultOptions.page;
 
@@ -106,16 +103,14 @@ export default class PaginationHandler<T> {
         });
     }
 
-    public async handle(req: TypedRequestQuery<PaginationQuery>, res: Response) {
+    public async handle(req: TypedRequestQuery<TQuery>, res: Response) {
         const options = this.handlePagination(req, res);
         if (!options) return;
 
-        let query = this.model.find<Doc<T>>();
-        if (this.filterCallback) {
-            query = this.filterCallback(query);
-        }
+        const filter: FilterQuery<T> = this.filterCallback ? this.filterCallback(req) : {};
 
-        const documentCount = await query.countDocuments();
+        const documentCount = await this.model.countDocuments(filter);
+
         if (documentCount === 0) {
             this.createResponse(res, [], false, false, 0, 0, options);
             return;
@@ -130,12 +125,10 @@ export default class PaginationHandler<T> {
             return;
         }
 
-        query = this.model.find<Doc<T>>();
-        if (this.filterCallback) {
-            query = this.filterCallback(query);
-        }
-
-        let results = await query.limit(options.limit).skip(options.page * options.limit);
+        let results = await this.model
+            .find<Doc<T>>(filter)
+            .limit(options.limit)
+            .skip(options.page * options.limit);
 
         if (this.thenCallback) results = this.thenCallback(results, options);
 
