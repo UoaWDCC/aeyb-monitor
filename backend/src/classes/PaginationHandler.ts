@@ -6,12 +6,14 @@ import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 
 export default class PaginationHandler<T, TQuery extends PaginationQuery = PaginationQuery> {
     private readonly model: Model<T>;
+    private readonly dataName: string;
     private readonly defaultOptions: Required<PaginationOptions>;
     private filterCallback: FilterCallback<T, TQuery> | null = null;
     private thenCallback: ThenCallback<T> | null = null;
 
     constructor(model: Model<T>, defaultOptions: PaginationOptions = {}) {
         this.model = model;
+        this.dataName = model.modelName.toLowerCase() + 's';
         this.defaultOptions = {
             limit: defaultOptions.limit ?? 30,
             page: defaultOptions.page ?? 0,
@@ -86,8 +88,6 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         totalResults: number,
         options: Required<PaginationOptions>,
     ) {
-        const dataName = this.model.modelName.toLowerCase() + 's';
-
         res.status(200).json({
             status: 'success',
             hasNext,
@@ -98,7 +98,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
             results: results.length,
             totalResults,
             data: {
-                [dataName]: results,
+                [this.dataName]: results,
             },
         });
     }
