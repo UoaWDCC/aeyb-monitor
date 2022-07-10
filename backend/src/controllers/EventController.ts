@@ -1,15 +1,20 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
-import { EventIdParam } from '../types/RequestParams';
+import { EventIdParam, PaginationParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
+import { handlePagination } from '../utility/Helpers';
 
 /**
  * @desc    Get all the events
  * @route   GET /api/events
  */
-const getAllEvents = asyncHandler(async (req: Request, res: Response) => {
+const getAllEvents = asyncHandler(async (req: Request<PaginationParam>, res: Response) => {
     const events = await Event.find().sort({ time: 'ascending' });
+
+    const i = Event.find();
+
+    Event.find();
 
     res.status(200).json({
         status: 'success',
