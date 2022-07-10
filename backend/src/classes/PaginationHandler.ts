@@ -16,6 +16,10 @@ export default class PaginationHandler<T> {
             limit: defaultOptions.limit ?? 30,
             page: defaultOptions.page ?? 0,
         };
+
+        // When the handle function is used as a parameter, 'this' becomes undefined. Binding the value of 'this' to this instance
+        // prevents that from occuring. See: https://www.w3schools.com/js/js_function_bind.asp
+        this.handle = this.handle.bind(this);
     }
 
     public filter(fn: FilterCallback<T>): this {
