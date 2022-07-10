@@ -10,8 +10,16 @@ interface FilterQuery extends PaginationQuery {
     name?: string;
 }
 
-function handleFilters(query: QueryType<EventModel>, req: TypedRequestQuery<FilterQuery>): QueryType<EventModel> {
+function handleFilters(
+    query: QueryType<EventModel>,
+    req: TypedRequestQuery<FilterQuery>,
+    res: Response,
+): QueryType<EventModel> | undefined {
     if (req.query.name) {
+        if (req.query.name === 'deny') {
+            res.status(400).json({ status: 'error', message: 'You said to deny this request??? ' });
+            return;
+        }
         return query.where('name', new RegExp(`${req.query.name}`, 'i'));
     }
     return query;

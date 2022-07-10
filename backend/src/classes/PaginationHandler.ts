@@ -109,9 +109,12 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         if (!options) return;
 
         let query = this.model.find<Doc<T>>();
-        this.preCallbacks.forEach((callback) => {
-            query = callback(query, req);
-        });
+        for (let i = 0; i < this.preCallbacks.length; i++) {
+            const callback = this.preCallbacks[i];
+            const tempQuery = callback(query, req, res);
+            if (tempQuery) query = tempQuery;
+            else return;
+        }
 
         const documentCount = await query.countDocuments();
         if (documentCount === 0) {
@@ -128,12 +131,11 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
             return;
         }
 
-        query = this.model.find<Doc<T>>();
-        this.preCallbacks.forEach((callback) => {
-            query = callback(query, req);
-        });
-
-        let results = await query.limit(options.limit).skip(options.page * options.limit);
+        let results = await this.model
+            .find<Doc<T>>()
+            .merge(query)
+            .limit(options.limit)
+            .skip(options.page * options.limit);
         this.postCallbacks.forEach((callback) => {
             results = callback(results, options);
         });
