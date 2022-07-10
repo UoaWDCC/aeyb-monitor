@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
-import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
+import { QueryType, TypedRequest, TypedRequestBody, TypedRequestQuery } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
 import { PaginationQuery } from '../types/QueryTypes';
 
@@ -10,18 +10,18 @@ interface FilterQuery extends PaginationQuery {
     name?: string;
 }
 
+function handleFilters(query: QueryType<EventModel>, req: TypedRequestQuery<FilterQuery>): QueryType<EventModel> {
+    if (req.query.name) {
+        return query.where('name', new RegExp(`${req.query.name}`, 'i'));
+    }
+    return query;
+}
+
 /**
  * @desc    Get all the events
  * @route   GET /api/events
  */
-const getAllEvents = asyncHandler(
-    new PaginationHandler<EventModel, FilterQuery>(Event).pre((query, req) => {
-        if (req.query.name) {
-            return query.where('name', new RegExp(`${req.query.name}`, 'i'));
-        }
-        return query;
-    }).handle,
-);
+const getAllEvents = asyncHandler(new PaginationHandler(Event).pre(handleFilters).handle);
 
 /**
  * @desc    Get a specific event

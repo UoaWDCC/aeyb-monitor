@@ -9,8 +9,8 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
     private readonly dataName: string;
     private readonly defaultOptions: Required<PaginationOptions>;
 
-    private preCallback: PreCallback<T, TQuery> | null = null;
-    private postCallback: PostCallback<T> | null = null;
+    private preCallbacks: PreCallback<T, TQuery>[] = [];
+    private postCallbacks: PostCallback<T>[] = [];
 
     constructor(model: Model<T>, defaultOptions: PaginationOptions = {}) {
         this.model = model;
@@ -26,12 +26,12 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
     }
 
     public pre(fn: PreCallback<T, TQuery>): this {
-        this.preCallback = fn;
+        this.preCallbacks.push(fn);
         return this;
     }
 
     public post(fn: PostCallback<T>): this {
-        this.postCallback = fn;
+        this.postCallbacks.push(fn);
         return this;
     }
 
@@ -109,9 +109,9 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         if (!options) return;
 
         let query = this.model.find<Doc<T>>();
-        if (this.preCallback) {
-            query = this.preCallback(query, req);
-        }
+        this.preCallbacks.forEach((callback) => {
+            query = callback(query, req);
+        });
 
         const documentCount = await query.countDocuments();
         if (documentCount === 0) {
@@ -129,14 +129,14 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         }
 
         query = this.model.find<Doc<T>>();
-        if (this.preCallback) {
-            query = this.preCallback(query, req);
-        }
+        this.preCallbacks.forEach((callback) => {
+            query = callback(query, req);
+        });
 
         let results = await query.limit(options.limit).skip(options.page * options.limit);
-        if (this.postCallback) {
-            results = this.postCallback(results, options);
-        }
+        this.postCallbacks.forEach((callback) => {
+            results = callback(results, options);
+        });
 
         const hasNext = options.page < totalPages - 1;
         const hasPrev = options.page !== 0;
