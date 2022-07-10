@@ -1,11 +1,11 @@
-import { FilterQuery } from 'mongoose';
-import { Doc, TypedRequestQuery } from './UtilTypes';
+import { FilterQuery, Query } from 'mongoose';
+import { Doc, QueryType, TypedRequestQuery } from './UtilTypes';
 
 export interface PaginationOptions {
     limit?: number;
     page?: number;
 }
 
-export type FilterCallback<T, TQuery> = (req: TypedRequestQuery<TQuery>) => FilterQuery<T>;
+export type PreCallback<T, TQuery> = (query: QueryType<T>, req: TypedRequestQuery<TQuery>) => QueryType<T>;
 
-export type ThenCallback<T> = (results: Doc<T>[], options: Required<PaginationOptions>) => Doc<T>[];
+export type PostCallback<T> = (results: Doc<T>[], options: Required<PaginationOptions>) => Doc<T>[];
