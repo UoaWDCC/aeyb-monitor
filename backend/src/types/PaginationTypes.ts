@@ -10,6 +10,6 @@ export type PreCallback<T, TQuery> = (
     query: TypedQuery<T>,
     req: TypedRequestQuery<TQuery>,
     res: Response,
-) => TypedQuery<T> | undefined;
+) => TypedQuery<T> | void;
 
 export type PostCallback<T> = (results: Doc<T>[], options: Required<PaginationOptions>) => Doc<T>[];

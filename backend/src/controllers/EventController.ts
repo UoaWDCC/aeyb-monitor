@@ -9,7 +9,9 @@ import PaginationHandler from '../classes/PaginationHandler';
  * @desc    Get all the events
  * @route   GET /api/events
  */
-const getAllEvents = asyncHandler(new PaginationHandler(Event).handle);
+const getAllEvents = asyncHandler(
+    new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handle,
+);
 
 /**
  * @desc    Get a specific event
