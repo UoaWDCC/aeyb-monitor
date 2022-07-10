@@ -2,19 +2,14 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
-import { TypedRequest, TypedRequestBody, TypedRequestQuery } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
-import { PaginationQuery } from '../types/QueryTypes';
-
-const paginationHandler = new PaginationHandler(Event);
 
 /**
  * @desc    Get all the events
  * @route   GET /api/events
  */
-const getAllEvents = asyncHandler(async (req: TypedRequestQuery<PaginationQuery>, res: Response) => {
-    paginationHandler.handle(req, res);
-});
+const getAllEvents = asyncHandler(new PaginationHandler(Event).handle);
 
 /**
  * @desc    Get a specific event
