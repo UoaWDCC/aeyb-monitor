@@ -9,7 +9,7 @@ import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
  * @route   GET /api/events
  */
 const getAllEvents = asyncHandler(async (req: Request, res: Response) => {
-    const events = await Event.find();
+    const events = await Event.find().sort({ time: 'ascending' });
 
     res.status(200).json({
         status: 'success',
