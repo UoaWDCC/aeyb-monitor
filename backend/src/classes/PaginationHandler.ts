@@ -125,7 +125,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      * Adds another post-callback to the list. Post-callbacks are run in order after the paginated results have been fetched.
      * Post-callbacks can take up to 2 parameters and should return the results that will be used in the response.
      * ```ts
-     * function (results: Doc<T>[], options: PaginationOptions) => Doc<T>[];
+     * async function (results: Doc<T>[], options: PaginationOptions) => Promise<Doc<T>[]>;
      * ```
      *
      * @param fn The post-callback to add
