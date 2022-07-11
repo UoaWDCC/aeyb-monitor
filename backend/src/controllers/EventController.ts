@@ -4,7 +4,7 @@ import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
-import { EventFilterQuery } from '../types/QueryTypes';
+import { EventFilterQuery, PaginationQuery } from '../types/QueryTypes';
 
 /**
  * @desc    Get all the events
@@ -13,9 +13,13 @@ import { EventFilterQuery } from '../types/QueryTypes';
 const getAllEvents = asyncHandler(
     new PaginationHandler<EventModel, EventFilterQuery>(Event)
         .pre((query, req) => {
-            const filterHandlers: Record<string, (value: string) => void> = {
+            const filterHandlers: Record<keyof Exclude<EventFilterQuery, PaginationQuery>, (value: string) => void> = {
                 before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
                 after: (value) => (query = query.where({ time: { $gt: new Date(value) } })),
+                time: (value) => (query = query.where('time').equals(new Date(value))),
+                creator: (value) => (query = query.where('creator').equals(value)),
+                location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
+                name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
             };
 
             Object.entries(req.query)
@@ -23,12 +27,13 @@ const getAllEvents = asyncHandler(
                 .forEach(([query, value]: [string, string]) => filterHandlers[query](value));
 
             if (!req.query.passed || req.query.passed !== 'true') {
-                query = query.where('time').gte(Date.now());
+                query = query.where('time').gte(Date.now()); // Only get events that haven't passed
             }
 
             return query;
         })
-        .pre((query) => query.sort({ time: 'ascending' })).handler, // Only get events that haven't passed
+        .pre((query) => query.sort({ time: 'ascending' }))
+        .post(async (events) => await Promise.all(events.map((event) => event.populate('creator')))).handler,
 );
 
 /**
@@ -45,6 +50,7 @@ const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) 
         return;
     }
 
+    await event.populate('creator');
     res.status(200).json({
         status: 'success',
         data: {
@@ -58,10 +64,9 @@ const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) 
  * @route   POST /api/events/
  */
 const addEvent = asyncHandler(async (req: TypedRequestBody<EventModel>, res: Response) => {
-    req.body.creator = req.body.requester;
-    const newEvent = await Event.create(req.body);
+    const newEvent = await Event.create({ ...req.body, creator: req.body.requester });
 
-    await res.status(201).json({
+    res.status(200).json({
         status: 'success',
         data: {
             event: newEvent,
