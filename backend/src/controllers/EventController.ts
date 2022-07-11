@@ -10,7 +10,7 @@ import PaginationHandler from '../classes/PaginationHandler';
  * @route   GET /api/events
  */
 const getAllEvents = asyncHandler(
-    new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handle,
+    new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handler,
 );
 
 /**
