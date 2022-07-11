@@ -1,10 +1,10 @@
 import asyncHandler from 'express-async-handler';
-import { query, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
-import { EventFilterQuery, PaginationQuery } from '../types/QueryTypes';
+import { EventFilterQuery } from '../types/QueryTypes';
 
 /**
  * @desc    Get all the events
@@ -13,7 +13,7 @@ import { EventFilterQuery, PaginationQuery } from '../types/QueryTypes';
 const getAllEvents = asyncHandler(
     new PaginationHandler<EventModel, EventFilterQuery>(Event)
         .pre((query, req) => {
-            const filterHandlers: Record<keyof Exclude<EventFilterQuery, PaginationQuery>, (value: string) => void> = {
+            const filterHandlers: Record<string, (value: string) => void> = {
                 before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
                 after: (value) => (query = query.where({ time: { $gt: new Date(value) } })),
                 time: (value) => (query = query.where('time').equals(new Date(value))),
