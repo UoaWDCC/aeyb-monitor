@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { Model } from 'mongoose';
-import { PreCallback, PaginationOptions, PostCallback } from '../types/PaginationTypes';
+import { PreCallback, PaginationOptions, PostCallback, PaginationConfig } from '../types/PaginationTypes';
 import { PaginationQuery } from '../types/QueryTypes';
 import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 
@@ -31,27 +31,39 @@ import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 export default class PaginationHandler<T, TQuery extends PaginationQuery = PaginationQuery> {
     private readonly model: Model<T>;
     private readonly dataName: string;
-    private readonly defaultOptions: Required<PaginationOptions>;
+    private readonly options: PaginationConfig;
 
     private preCallbacks: PreCallback<T, TQuery>[] = [];
     private postCallbacks: PostCallback<T>[] = [];
 
     /**
      * Constructs a `PaginationHandler` for the specified model. Unless you override them, the default pagination options
-     * are: `limit=30` and `page=0`
+     * are: `maxLimit=Number.MAX_SAFE_INTEGER`, `defaultLimit=30`, `minLimit=1` and `defaultPage=0`. Note that the `defaultLimit`
+     * will automatically adjust to fit within the bounds of `minLimit` and `maxLimit`.
      *
      * @param model The mongoose model that will be paginated
-     * @param defaultOptions The default pagination options that should be used if the query parameters aren't specified.
+     * @param options The pagination config that should be used.
      */
-    constructor(model: Model<T>, defaultOptions: PaginationOptions = {}) {
+    constructor(model: Model<T>, options: Partial<PaginationConfig> = {}) {
         this.model = model;
 
         // The name of the field that should be used when the results are returned in the response
         this.dataName = model.modelName.toLowerCase() + 's';
 
-        this.defaultOptions = {
-            limit: defaultOptions.limit ?? 30,
-            page: defaultOptions.page ?? 0,
+        const maxLimit = options.maxLimit ?? Number.MAX_SAFE_INTEGER;
+        const minLimit = options.minLimit ?? 1;
+        if (maxLimit < minLimit) throw new Error('The max limit cannot be less than the min limit');
+
+        if (options.defaultLimit && (options.defaultLimit < minLimit || options.defaultLimit > maxLimit))
+            throw new Error(`The default limit is not within the specified bounds of ${minLimit} to ${maxLimit}`);
+
+        // Make sure the defaultLimit is within the bounds of the minLimit and maxLimit
+        const defaultLimit = options.defaultLimit ?? Math.min(Math.max(30, minLimit), maxLimit);
+        this.options = {
+            maxLimit: maxLimit,
+            defaultLimit: defaultLimit,
+            minLimit: minLimit,
+            defaultPage: options.defaultPage ?? 0,
         };
 
         // When the handler function is used as a parameter, 'this' becomes undefined. Binding the value of 'this' to this
@@ -113,7 +125,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      * Adds another post-callback to the list. Post-callbacks are run in order after the paginated results have been fetched.
      * Post-callbacks can take up to 2 parameters and should return the results that will be used in the response.
      * ```ts
-     * function (results: Doc<T>[], options: Required<PaginationOptions>) => Doc<T>[];
+     * function (results: Doc<T>[], options: PaginationOptions) => Doc<T>[];
      * ```
      *
      * @param fn The post-callback to add
@@ -132,23 +144,30 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      * @param res The response
      * @returns Either the parsed `PaginationOptions` or `void` if the request was invalid
      */
-    private handlePagination(req: TypedRequestQuery<TQuery>, res: Response): Required<PaginationOptions> | void {
-        let limit = this.defaultOptions.limit;
-        let page = this.defaultOptions.page;
+    private handlePagination(req: TypedRequestQuery<TQuery>, res: Response): PaginationOptions | void {
+        let limit = this.options.defaultLimit;
+        let page = this.options.defaultPage;
 
         if (req.query.limit) {
             const parsedLimit = parseInt(req.query.limit);
             if (isNaN(parsedLimit)) {
                 res.status(400).json({
                     status: 'error',
-                    message: `Expected the results parameter to be an integer (Got ${req.query.limit})`,
+                    message: `Expected the limit parameter to be an integer (Got ${req.query.limit})`,
                 });
                 return;
             }
-            if (parsedLimit <= 0) {
+            if (parsedLimit < this.options.minLimit) {
                 res.status(400).json({
                     status: 'error',
-                    message: `Expected the results parameter to be greater than 0 (Got ${req.query.limit})`,
+                    message: `Expected the limit parameter to be greater than or equal to ${this.options.minLimit} (Got ${parsedLimit})`,
+                });
+                return;
+            }
+            if (parsedLimit > this.options.maxLimit) {
+                res.status(400).json({
+                    status: 'error',
+                    message: `Expected the limit parameter to be less than or equal to ${this.options.maxLimit} (Got ${parsedLimit})`,
                 });
                 return;
             }
@@ -195,7 +214,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         hasPrev: boolean,
         totalPages: number,
         totalResults: number,
-        options: Required<PaginationOptions>,
+        options: PaginationOptions,
     ) {
         res.status(200).json({
             status: 'success',
