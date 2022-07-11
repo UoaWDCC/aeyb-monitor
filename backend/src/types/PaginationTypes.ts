@@ -2,8 +2,15 @@ import { Response } from 'express';
 import { Doc, TypedQuery, TypedRequestQuery } from './UtilTypes';
 
 export interface PaginationOptions {
-    limit?: number;
-    page?: number;
+    limit: number;
+    page: number;
+}
+
+export interface PaginationConfig {
+    maxLimit: number;
+    defaultLimit: number;
+    minLimit: number;
+    defaultPage: number;
 }
 
 export type PreCallback<T, TQuery> = (
@@ -12,4 +19,4 @@ export type PreCallback<T, TQuery> = (
     res: Response,
 ) => TypedQuery<T> | void;
 
-export type PostCallback<T> = (results: Doc<T>[], options: Required<PaginationOptions>) => Doc<T>[];
+export type PostCallback<T> = (results: Doc<T>[], options: PaginationOptions) => Doc<T>[];
