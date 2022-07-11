@@ -5,25 +5,26 @@ import { PaginationQuery } from '../types/QueryTypes';
 import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 
 /**
- * The `PaginationHandler` manages the number of results (`limit` query) and the page (`page` query) automatically. It's possible
- * to run functions before the pagination using the pre-callbacks to modify the query being paginated. This is particularly
- * useful if you want to filter results by some condition before paginating the results.
+ * The `PaginationHandler` manages the number of results (`limit` query) and the page (`page` query) automatically. It is a
+ * zero-based paging system, hence the first page is page 0. Additionally, it's possible to run functions before the
+ * pagination using the pre-callbacks to modify the query being paginated. This is particularly useful if you want to filter
+ * results by some condition before paginating the results.
  *
  * Examples:
  *
  * - Default pagination handler:
  * ```ts
- * const getAllEvents = asyncHandler(new PaginationHandler(Event).handle);
+ * const getAllEvents = asyncHandler(new PaginationHandler(Event).handler);
  * ```
  *
  * - Customing default number of results:
  * ```ts
- * const getAllEvents = asyncHandler(new PaginationHandler(Event, { limit: 10 }).handle);
+ * const getAllEvents = asyncHandler(new PaginationHandler(Event, { limit: 10 }).handler);
  * ```
  *
  * - Using pre-callbacks to sort events by ascending order:
  * ```ts
- * const getAllEvents = asyncHandler(new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handle);
+ * const getAllEvents = asyncHandler(new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handler);
  * ```
  * @see PaginationHandler.pre
  */
@@ -53,9 +54,9 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
             page: defaultOptions.page ?? 0,
         };
 
-        // When the handle function is used as a parameter, 'this' becomes undefined. Binding the value of 'this' to this
+        // When the handler function is used as a parameter, 'this' becomes undefined. Binding the value of 'this' to this
         // instance prevents that from occuring. See: https://www.w3schools.com/js/js_function_bind.asp
-        this.handle = this.handle.bind(this);
+        this.handler = this.handler.bind(this);
     }
 
     /**
@@ -64,13 +65,13 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      * ```ts
      * function (query: TypedQuery<EventModel>, req: TypedRequestQuery<PaginationQuery>, res: Response);
      * ```
-     * If your pre-callback needs to cancel the pagination, for example if an invalid request is found, then you can `return`
-     *  nothing. Do note, this means responding to the request becomes your responsibility:
+     * If your pre-callback needs to cancel the pagination, for example if an invalid request is found, then you can return
+     *  `void`. Do note, this means responding to the request becomes your responsibility:
      * ```ts
      * const getAllEvents = asyncHandler(
      *      new PaginationHandler(Event).pre((query, req, res) => {
      *          res.status(400).json({ status: 'error', message: 'Nothing is being accepted today >:)' });
-     *      }).handle,
+     *      }).handler,
      * );
      * ```
      *
@@ -82,7 +83,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      * }
      *
      * const getAllEvents = asyncHandler(
-     *      new PaginationHandler<EventModel, FilterQuery>(Event).pre((query, req) => handleFilters(query, req)).handle,
+     *      new PaginationHandler<EventModel, FilterQuery>(Event).pre((query, req) => handleFilters(query, req)).handler,
      * );
      * ```
      *
@@ -97,7 +98,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      *      return query;
      * }
      *
-     * const getAllEvents = asyncHandler(new PaginationHandler(Event).pre(handleFilters).handle);
+     * const getAllEvents = asyncHandler(new PaginationHandler(Event).pre(handleFilters).handler);
      * ```
      *
      * @param fn The pre-callback to add
@@ -108,6 +109,16 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         return this;
     }
 
+    /**
+     * Adds another post-callback to the list. Post-callbacks are run in order after the paginated results have been fetched.
+     * Post-callbacks can take up to 2 parameters and should return the results that will be used in the response.
+     * ```ts
+     * function (results: Doc<T>[], options: Required<PaginationOptions>) => Doc<T>[];
+     * ```
+     *
+     * @param fn The post-callback to add
+     * @returns Itself for chaining
+     */
     public post(fn: PostCallback<T>): this {
         this.postCallbacks.push(fn);
         return this;
@@ -119,7 +130,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
      *
      * @param req The request
      * @param res The response
-     * @returns Either the parsed `PaginationOptions` or nothing if the request was invalid
+     * @returns Either the parsed `PaginationOptions` or `void` if the request was invalid
      */
     private handlePagination(req: TypedRequestQuery<TQuery>, res: Response): Required<PaginationOptions> | void {
         let limit = this.defaultOptions.limit;
@@ -166,6 +177,17 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         return { limit, page };
     }
 
+    /**
+     * A helper method used to create the pagination response.
+     *
+     * @param res The response
+     * @param results The paginated data to return
+     * @param hasNext If there is a page after the current one
+     * @param hasPrev If there is a page before the current one
+     * @param totalPages The total number of pages
+     * @param totalResults The total number of results across all pages
+     * @param options The pagination options used
+     */
     private createResponse(
         res: Response,
         results: Doc<T>[],
@@ -190,7 +212,15 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         });
     }
 
-    public async handle(req: TypedRequestQuery<TQuery>, res: Response) {
+    /**
+     * The handler is the entry point that enables the `PaginationHandler` to automatically handle the pagination of the
+     * query. It can either be passed directly to the `asyncHandler` or it can be called indirectly with the request and
+     * response parameters.
+     *
+     * @param req The request
+     * @param res The response
+     */
+    public async handler(req: TypedRequestQuery<TQuery>, res: Response) {
         const options = this.handlePagination(req, res);
         if (!options) return;
 
