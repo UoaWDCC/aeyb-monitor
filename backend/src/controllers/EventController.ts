@@ -1,16 +1,34 @@
 import asyncHandler from 'express-async-handler';
-import { Request, Response } from 'express';
+import { query, Request, Response } from 'express';
 import Event, { EventModel } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
+import { EventFilterQuery } from '../types/QueryTypes';
 
 /**
  * @desc    Get all the events
  * @route   GET /api/events
  */
 const getAllEvents = asyncHandler(
-    new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handler,
+    new PaginationHandler<EventModel, EventFilterQuery>(Event)
+        .pre((query, req) => {
+            const filterHandlers: Record<string, (value: string) => void> = {
+                before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
+                after: (value) => (query = query.where({ time: { $gt: new Date(value) } })),
+            };
+
+            Object.entries(req.query)
+                .filter(([query]) => filterHandlers[query])
+                .forEach(([query, value]: [string, string]) => filterHandlers[query](value));
+
+            if (!req.query.passed || req.query.passed !== 'true') {
+                query = query.where('time').gte(Date.now());
+            }
+
+            return query;
+        })
+        .pre((query) => query.sort({ time: 'ascending' })).handler, // Only get events that haven't passed
 );
 
 /**
