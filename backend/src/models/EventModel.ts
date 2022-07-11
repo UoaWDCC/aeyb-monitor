@@ -17,7 +17,7 @@ const eventSchema = new Schema<EventModel>({
         trim: true,
     },
     creator: {
-        type: Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: [true, 'You must specify the user who created the event'],
     },
