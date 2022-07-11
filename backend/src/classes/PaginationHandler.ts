@@ -271,9 +271,11 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
             .merge(query)
             .limit(options.limit)
             .skip(options.page * options.limit);
-        this.postCallbacks.forEach((callback) => {
-            results = callback(results, options);
-        });
+
+        for (let i = 0; i < this.postCallbacks.length; i++) {
+            const callback = this.postCallbacks[i];
+            results = await callback(results, options);
+        }
 
         const hasNext = options.page < totalPages - 1;
         const hasPrev = options.page !== 0;
