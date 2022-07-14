@@ -13,17 +13,44 @@ import { MeetingFilterQuery } from '../types/QueryTypes';
  * @desc 	Get all the meetings
  * @route 	GET /api/meetings/
  */
-const getAllMeetings = asyncHandler(async (req: Request, res: Response) => {
-    const meetings = await Meeting.find();
+const getAllMeetings = asyncHandler(
+    new PaginationHandler<MeetingModel, MeetingFilterQuery>(Meeting)
+        .pre((query, req) => {
+            const filterHandlers: Record<string, (value: string) => void> = {
+                before: (value) =>
+                    (query = query.where({ time: { $lt: new Date(value) } })),
+                after: (value) =>
+                    (query = query.where({ time: { $gt: new Date(value) } })),
+                time: (value) =>
+                    (query = query.where('time').equals(new Date(value))),
+                creator: (value) =>
+                    (query = query.where('creator').equals(value)),
+                location: (value) =>
+                    (query = query.where('location', new RegExp(value, 'i'))),
+                name: (value) =>
+                    (query = query.where('name', new RegExp(value, 'i'))),
+            };
 
-    res.status(200).json({
-        status: 'success',
-        results: meetings.length,
-        data: {
-            meetings,
-        },
-    });
-});
+            Object.entries(req.query)
+                .filter(([query]) => filterHandlers[query])
+                .forEach(([query, value]: [string, string]) =>
+                    filterHandlers[query](value),
+                );
+
+            if (!req.query.passed || req.query.passed !== 'true') {
+                query = query.where('time').gte(Date.now()); // Only get events that haven't passed
+            }
+
+            return query;
+        })
+        .pre((query) => query.sort({ time: 'ascending' }))
+        .post(
+            async (events) =>
+                await Promise.all(
+                    events.map((event) => event.populate('creator')),
+                ),
+        ).handler,
+);
 
 /**
  * @desc    Get a specific meeting
