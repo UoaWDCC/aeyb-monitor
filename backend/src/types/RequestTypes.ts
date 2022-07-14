@@ -18,9 +18,10 @@ export interface MeetingRequest {
     id: string;
     name: string;
     creator: string;
+    time: string;
     invited: {
-        "userId": string[],
-        "roleName": string[]
+        userId: string[];
+        roleName: string[];
     };
     where: string;
     attended: string[];

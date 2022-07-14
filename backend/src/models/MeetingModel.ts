@@ -28,6 +28,7 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     },
     time: {
         type: Date,
+        required: [true, 'You must specify when the event starts'],
     },
     invited: {
         type: Map,
@@ -40,6 +41,7 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     },
     attendance: {
         type: Schema.Types.ObjectId,
+        required: [true, 'You must specify the attendance reference'],
     },
     description: {
         type: String,
