@@ -3,7 +3,7 @@ import './Login.css';
 
 function Login() {
     const onFailure = (error) => {
-        alert(error);
+        console.log('Invalid account entered');
     };
     const onSuccess = (googleData: GoogleLoginResponse | GoogleLoginResponseOffline) => {
         console.log(googleData);
