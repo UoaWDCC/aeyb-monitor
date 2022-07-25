@@ -1,14 +1,23 @@
 import React from 'react';
-import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import GoogleLogin from 'react-google-login';
 import './Login.css';
+import axios from 'axios';
 
 function Login() {
     const onFailure = () => {
-        console.log('Invalid account entered');
+        console.log('Invalid account');
     };
-    const onSuccess = (googleData: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-        console.log(googleData);
+
+    const onSuccess = (googleData) => {
+        axios
+            .post('http://localhost:5000/api/users/login', {
+                credential: googleData.tokenId,
+            })
+            .then(function (response) {
+                console.log(response.data);
+            });
     };
+
     return (
         <div className="loginPage">
             <header className="loginPageHeader">
@@ -19,6 +28,7 @@ function Login() {
                     onSuccess={onSuccess}
                     onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
+                    isSignedIn={true}
                 >
                     Sign in with Google
                 </GoogleLogin>

@@ -5,6 +5,7 @@ import PermissionRouter from '../routes/PermissionRoutes';
 import { Config } from '../types/Config';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
+import cors from 'cors';
 
 export default class Server {
     private _app: Express;
@@ -36,6 +37,8 @@ export default class Server {
         // Allow express to access the body of requests
         this._app.use(express.json());
         this._app.use(express.urlencoded({ extended: false }));
+
+        this._app.use(cors());
 
         this._app.use('/api/users', UserRouter);
         this._app.use('/api/roles', RoleRouter);
