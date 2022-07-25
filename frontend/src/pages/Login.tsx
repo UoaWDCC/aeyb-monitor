@@ -1,8 +1,9 @@
+import React from 'react';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import './Login.css';
 
 function Login() {
-    const onFailure = (error) => {
+    const onFailure = () => {
         console.log('Invalid account entered');
     };
     const onSuccess = (googleData: GoogleLoginResponse | GoogleLoginResponseOffline) => {
