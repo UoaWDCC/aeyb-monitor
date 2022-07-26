@@ -10,6 +10,7 @@ import { Doc, TypedRequestBody } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleModel } from '../models/RoleModel';
+import GooglePayload from '../types/GooglePayload';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -51,16 +52,30 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
     }
 
     try {
-        const userId = await validateIdToken(credential, res);
-        if (!userId) return;
+        const payload = await validateIdToken(credential, res);
+        if (!payload) return; // The error json will already have been set in validateIdToken
 
-        let user = await User.findById(userId);
-        // TODO: Determine if name can be extracted from id token
-        // TODO: Profile picture
+        let user = await User.findById(payload.userId);
         if (!user) {
-            user = await User.create({ _id: userId, name: 'TODO' });
-        } else {
-            // TODO: Check that the profile picture and name haven't been changed
+            user = await User.create({ _id: payload.profileUrl, name: payload.name, profileUrl: payload.profileUrl });
+        } else if (user.name !== payload.name || user.profileUrl !== payload.profileUrl) {
+            // If the profile picture or name doesn't match, it must have been updated so we need to update our internal record
+            const tempUser = await User.findByIdAndUpdate(
+                payload.userId,
+                { name: payload.name, profileUrl: payload.profileUrl },
+                {
+                    new: true,
+                    runValidators: true,
+                },
+            );
+            if (!tempUser) {
+                res.status(400).json({
+                    status: 'error',
+                    message: 'There was an issue trying to update your user name and profile internally',
+                });
+                return;
+            }
+            user = tempUser;
         }
 
         // The returned token can then be used to authenticate additional requests
@@ -82,7 +97,7 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
 
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
-async function validateIdToken(credential: string, res: Response): Promise<string | undefined> {
+async function validateIdToken(credential: string, res: Response): Promise<GooglePayload | undefined> {
     const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: config.clientID,
@@ -90,7 +105,10 @@ async function validateIdToken(credential: string, res: Response): Promise<strin
 
     const payload = ticket.getPayload();
     const userId = payload?.sub;
-    if (!userId) {
+    const name = payload?.name;
+    const profileUrl = payload?.picture;
+
+    if (!(userId && name && profileUrl)) {
         res.status(400).json({
             status: 'error',
             message: 'The id token provided was malformed',
@@ -99,14 +117,16 @@ async function validateIdToken(credential: string, res: Response): Promise<strin
     }
 
     const domain = payload.hd;
-    // When not in development, make sure users logging in have the correct email domain
-    if (config.nodeEnv !== 'development' && domain !== config.googleDomain) {
+    // Make sure users logging in have the correct email domain
+    if (domain !== config.googleDomain) {
         res.status(404).json({
             status: 'error',
             message: 'Invalid google domain',
         });
+        return;
     }
-    return userId;
+
+    return { userId, name, profileUrl };
 }
 
 function generateJWT(userId: string): string {
