@@ -1,11 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting, { MeetingModel } from '../models/MeetingModel';
 import Attendance from '../models/AttendanceModel';
 import { MeetingRequest } from '../types/RequestTypes';
 import { TypedRequestBody, TypedRequest } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
-import mongoose from 'mongoose';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
 
@@ -60,6 +59,7 @@ const getMeeting = asyncHandler(
     async (req: Request<MeetingIdParam>, res: Response) => {
         const meeting = await Meeting.findById(req.params.meetingId);
         if (meeting) {
+            await meeting.populate('creator');
             res.status(200).json({
                 status: 'success',
                 data: {
@@ -90,21 +90,18 @@ const addMeeting = asyncHandler(
                 message: `There is already a meeting with the id ${req.body.id}`,
             });
         } else {
-            const attendenceId = new mongoose.Types.ObjectId();
             const newAttendance = await Attendance.create({
-                _id: attendenceId,
                 attendedUsers: req.body.attended,
                 absentUsers: req.body.absent,
             });
 
             const newMeeting = await Meeting.create({
-                _id: req.body.id,
                 name: req.body.name,
-                creator: req.body.creator,
+                creator: req.body.requester,
                 time: new Date(req.body.time),
                 invited: req.body.invited,
                 where: req.body.where,
-                attendance: attendenceId,
+                attendance: newAttendance,
                 description: req.body.description,
             });
 
@@ -112,7 +109,6 @@ const addMeeting = asyncHandler(
                 status: 'success',
                 data: {
                     meeting: newMeeting,
-                    attendance: newAttendance,
                 },
             });
         }
@@ -130,9 +126,7 @@ const deleteMeeting = asyncHandler(
             const attendance = await Attendance.findByIdAndDelete(
                 meeting.attendance,
             );
-            const remove = await Meeting.deleteOne({
-                _id: req.params.meetingId,
-            });
+            await meeting.deleteOne();
             res.status(204).json({
                 status: 'success',
             });

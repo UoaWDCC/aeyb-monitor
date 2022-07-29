@@ -16,15 +16,10 @@ export interface TypedRequest<BodyType, ParamsType, QueryType = unknown>
     query: QueryType;
 }
 
-export interface TypedRequestBody<Type> extends Express.Request {
-    body: Type;
-}
-
-export interface TypedRequestParams<Type> extends Express.Request {
-    params: Type;
-}
+export interface TypedRequestBody<Type> extends TypedRequest<Type, unknown> {}
 
 export interface TypedRequestParams<Type> extends TypedRequest<unknown, Type> {}
 
-export interface TypedRequestQuery<Type>
-    extends TypedRequest<unknown, unknown, Type> {}
+export interface TypedRequestQuery<Type> extends TypedRequest<unknown, unknown, Type> {}
+
+export interface AuthenticatedRequest extends TypedRequest<unknown, unknown> {}
