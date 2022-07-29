@@ -15,9 +15,7 @@ export interface AuthenticatedRequest {
 }
 
 export interface MeetingRequest {
-    id: string;
     name: string;
-    creator: string;
     time: string;
     invited: {
         userId: string[];

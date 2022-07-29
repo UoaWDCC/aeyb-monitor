@@ -83,36 +83,29 @@ const getMeeting = asyncHandler(
 //TODO: Check if user exists and to add by roles
 const addMeeting = asyncHandler(
     async (req: TypedRequestBody<MeetingRequest>, res: Response) => {
-        const meeting = await Meeting.findById(req.body.id);
-        if (meeting) {
-            res.status(404).json({
-                status: 'error',
-                message: `There is already a meeting with the id ${req.body.id}`,
-            });
-        } else {
-            const newAttendance = await Attendance.create({
-                attendedUsers: req.body.attended,
-                absentUsers: req.body.absent,
-            });
 
-            const newMeeting = await Meeting.create({
-                name: req.body.name,
-                creator: req.body.requester,
-                time: new Date(req.body.time),
-                invited: req.body.invited,
-                where: req.body.where,
-                attendance: newAttendance,
-                description: req.body.description,
-            });
+        const newAttendance = await Attendance.create({
+            attendedUsers: req.body.attended,
+            absentUsers: req.body.absent,
+        });
 
-            await res.status(200).json({
-                status: 'success',
-                data: {
-                    meeting: newMeeting,
-                },
-            });
-        }
-    },
+        const newMeeting = await Meeting.create({
+            name: req.body.name,
+            creator: req.body.requester,
+            time: new Date(req.body.time),
+            invited: req.body.invited,
+            where: req.body.where,
+            attendance: newAttendance,
+            description: req.body.description,
+        });
+
+        await res.status(200).json({
+            status: 'success',
+            data: {
+                meeting: newMeeting,
+            },
+        });
+    }
 );
 
 /**
@@ -143,7 +136,6 @@ const deleteMeeting = asyncHandler(
  * @desc    Edit a specific meeting
  * @route   PATCH /api/meetings/:meetingId
  */
-
 const updateMeeting = asyncHandler(
     async (req: TypedRequest<MeetingModel, MeetingIdParam>, res: Response) => {
         const meeting = await Meeting.findByIdAndUpdate(
