@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import Roles from './pages/Roles/Roles';
 
 import './App.css';
 
@@ -12,6 +13,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
+                    <Route path="roles" element={<Roles />} />
                 </Routes>
             </Router>
         </div>
