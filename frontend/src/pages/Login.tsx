@@ -13,7 +13,7 @@ function Login() {
             .post('http://localhost:5000/api/users/login', {
                 credential: googleData.tokenId,
             })
-            .then(function (response) {
+            .then((response) => {
                 console.log(response.data);
             });
     };
