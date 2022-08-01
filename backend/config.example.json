@@ -6,5 +6,6 @@
     "clientID": "Google CLIENT ID",
     "jwtSecret": "Your JWT secret",
     "globalGroupId": "62bab2a2127e49e5b6bc0890",
-    "defaultGroupId": "62ba8ef3e5ba8885e2bffb41"
+    "defaultGroupId": "62ba8ef3e5ba8885e2bffb41",
+    "adminRoleId": "62e780e333a75ce3ac249ffa"
 }
