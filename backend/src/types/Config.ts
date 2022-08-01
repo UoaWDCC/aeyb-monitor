@@ -7,6 +7,7 @@ export interface Config {
     jwtSecret: string;
     defaultGroupId: string;
     globalGroupId: string;
+    adminRoleId: string;
 }
 
 // Use require here just so that we can type the config

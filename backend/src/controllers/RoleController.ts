@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import Role, { RoleModel } from '../models/RoleModel';
 import User from '../models/UserModel';
 import { RoleIdParam } from '../types/RequestParams';
+import config from '../types/Config';
 import { TypedRequest } from '../types/UtilTypes';
 
 /**
@@ -59,6 +60,14 @@ const addRole = asyncHandler(async (req: TypedRequest<RoleModel, RoleIdParam>, r
  * @route 	DELETE /api/roles/:roleId
  */
 const deleteRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) => {
+    // Admin role cannot be deleted
+    if (req.params.roleId == config.adminRoleId) {
+        res.status(403).json({
+            status: 'error',
+            message: 'You cannot delete the admin role',
+        });
+    }
+
     // Remove the role from any users that had it
     let modCount = 0;
     await User.updateMany({ roles: req.params.roleId }, { $pull: { roles: req.params.roleId } }, { new: true }).then(
@@ -81,6 +90,14 @@ const deleteRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response)
  * @route 	PATCH /api/roles/:roleId
  */
 const updateRole = asyncHandler(async (req: TypedRequest<RoleModel, RoleIdParam>, res: Response) => {
+    // Admin role cannot be edited
+    if (req.params.roleId == config.adminRoleId) {
+        res.status(403).json({
+            status: 'error',
+            message: 'You cannot edit the admin role',
+        });
+    }
+
     const role = await Role.findByIdAndUpdate(req.params.roleId, req.body, {
         new: true,
         runValidators: true,
