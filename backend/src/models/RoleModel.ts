@@ -5,6 +5,7 @@ import config from '../types/Config';
 export interface RoleModel {
     _id: mongoose.Types.ObjectId;
     name: string;
+    rank: number;
     color: string;
     group: mongoose.Schema.Types.ObjectId;
     permissions: [PermissionObj];
@@ -17,6 +18,11 @@ const roleSchema = new mongoose.Schema<RoleModel>({
         unique: true,
         trim: true,
         maxLength: [32, 'The length of the role name cannot be greater than 32'],
+    },
+    rank: {
+        type: Number,
+        unique: true,
+        required: [true, 'You must provide a role rank'],
     },
     color: {
         type: String,
