@@ -67,21 +67,16 @@ const addGroup = asyncHandler(async (req: TypedRequest<GroupModel, GroupIdParam>
  * @route 	DELETE /api/groups/:groupId
  */
 const deleteGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Response) => {
-    // You cannot delete a group that is still linked to roles
-    let roles = [Object];
-
-    //TODO prevent deleting global group
-
-    if (req.params.groupId == '62ba8ef3e5ba8885e2bffb41') {
-        // Default group
+    // You cannot delete the global or default group
+    if (req.params.groupId == config.defaultGroupId || req.params.groupId == config.globalGroupId) {
         res.status(403).json({
             status: 'error',
-            message: 'You cannot delete the default group',
+            message: 'You cannot delete that group',
         });
-    } else {
-        // Group stored in DB
-        roles = await Role.find({ group: req.params.groupId });
     }
+
+    // You cannot delete a group that is still linked to roles
+    const roles = await Role.find({ group: req.params.groupId });
 
     if (roles.length > 0) {
         const roleNames = roles.map((r) => r.name);
@@ -107,7 +102,14 @@ const deleteGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Respons
  * @route 	PATCH /api/group/:groupId
  */
 const updateGroup = asyncHandler(async (req: TypedRequest<GroupModel, GroupIdParam>, res: Response) => {
-    //TODO prevent deleting global/default group
+    // You cannot edit the global or default group
+    if (req.params.groupId == config.defaultGroupId || req.params.groupId == config.globalGroupId) {
+        res.status(403).json({
+            status: 'error',
+            message: 'You cannot edit that group',
+        });
+    }
+
     const role = await Group.findByIdAndUpdate(req.params.groupId, req.body, {
         new: true,
         runValidators: true,
