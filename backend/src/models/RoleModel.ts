@@ -21,6 +21,7 @@ const roleSchema = new mongoose.Schema<RoleModel>({
     },
     rank: {
         type: Number,
+        max: [99999999999998, 'No role can be ranked more than the admin role'],
         unique: true,
         required: [true, 'You must provide a role rank'],
     },
