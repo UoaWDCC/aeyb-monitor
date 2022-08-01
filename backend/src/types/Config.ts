@@ -5,6 +5,8 @@ export interface Config {
     googleDomain: string;
     clientID: string;
     jwtSecret: string;
+    defaultGroupId: string;
+    globalGroupId: string;
 }
 
 // Use require here just so that we can type the config

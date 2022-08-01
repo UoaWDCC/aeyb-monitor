@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import Role, { RoleModel } from '../models/RoleModel';
+import config from '../types/Config';
+import Role from '../models/RoleModel';
 import Group, { GroupModel } from '../models/GroupModel';
 import { GroupIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
@@ -29,7 +30,7 @@ const getGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Response) 
 
     let roles = [Object];
 
-    if (req.params.groupId == '62ba8ef3e5ba8885e2bffb41') {
+    if (req.params.groupId == config.defaultGroupId) {
         // Default group
         roles = await Role.find({ group: { $exists: false } });
     } else {
@@ -69,6 +70,8 @@ const deleteGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Respons
     // You cannot delete a group that is still linked to roles
     let roles = [Object];
 
+    //TODO prevent deleting global group
+
     if (req.params.groupId == '62ba8ef3e5ba8885e2bffb41') {
         // Default group
         res.status(403).json({
@@ -104,6 +107,7 @@ const deleteGroup = asyncHandler(async (req: Request<GroupIdParam>, res: Respons
  * @route 	PATCH /api/group/:groupId
  */
 const updateGroup = asyncHandler(async (req: TypedRequest<GroupModel, GroupIdParam>, res: Response) => {
+    //TODO prevent deleting global/default group
     const role = await Group.findByIdAndUpdate(req.params.groupId, req.body, {
         new: true,
         runValidators: true,

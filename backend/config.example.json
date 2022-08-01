@@ -4,5 +4,7 @@
     "mongoURI": "mongodb+srv://<username>:<password>@<cluster>.ewbpt.mongodb.net/<database>?retryWrites=true&w=majority",
     "googleDomain": "albertedenyouth",
     "clientID": "Google CLIENT ID",
-    "jwtSecret": "Your JWT secret"
+    "jwtSecret": "Your JWT secret",
+    "globalGroupId": "62bab2a2127e49e5b6bc0890",
+    "defaultGroupId": "62ba8ef3e5ba8885e2bffb41"
 }

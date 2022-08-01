@@ -5,7 +5,7 @@ import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import Permission from '../types/Perm';
+import { PermissionObj } from '../types/Perm';
 import { Doc, TypedRequestBody } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
@@ -181,15 +181,12 @@ const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>
     });
 });
 
-async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
+async function getPermissions(user: Doc<UserModel>): Promise<Set<PermissionObj>> {
     if (!user.populated('roles')) await user.populate('roles');
 
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
-    return new Set(
-        user.roles
-            .flatMap((role) => role.permissions)
-            .map((permission) => Permission[permission as keyof typeof Permission]),
-    );
+    const permissions = new Set(user.roles.flatMap((role) => role.permissions));
+    return permissions;
 }
 
 /**

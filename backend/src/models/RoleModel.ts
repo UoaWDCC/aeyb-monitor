@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
-
+import { PermissionObj } from '../types/Perm';
+import config from '../types/Config';
 
 export interface RoleModel {
     _id: mongoose.Types.ObjectId;
     name: string;
     color: string;
-    group: Schema.Types.ObjectId;
-    permissions: string[];
+    group: mongoose.Schema.Types.ObjectId;
+    permissions: [PermissionObj];
 }
 
 const roleSchema = new mongoose.Schema<RoleModel>({
@@ -27,11 +28,13 @@ const roleSchema = new mongoose.Schema<RoleModel>({
         default: '#ffffff',
     },
     group: {
-        type: Schema.Types.ObjectId,
-        default: '62ba8ef3e5ba8885e2bffb41',
+        type: mongoose.Schema.Types.ObjectId,
+        default: config.defaultGroupId,
     },
 
-    permissions: [String],
+    permissions: {
+        type: [],
+    },
 });
 
 const Role = mongoose.model('Role', roleSchema);

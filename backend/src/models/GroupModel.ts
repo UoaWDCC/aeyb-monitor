@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Role from './RoleModel';
 
 export interface GroupModel {
     _id: mongoose.Types.ObjectId;
