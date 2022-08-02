@@ -1,6 +1,5 @@
 body {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial,
-        Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
 .loginPageHeader {
@@ -18,5 +17,13 @@ h1 {
 }
 
 .loginBox {
+    transition: all 0.2s;
+    position: relative;
     justify-content: center;
+    box-shadow: 0 1 10px rgba(0, 0, 0, 0.75);
+}
+
+.loginBox:active {
+    left: 1px;
+    top: 1px;
 }
