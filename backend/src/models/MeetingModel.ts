@@ -8,7 +8,6 @@ export interface MeetingModel {
     name: string;
     creator: UserModel;
     time: Date;
-    invited: Map<string, string[]>;
     where: string;
     attendance: AttendanceModel;
     description: string;
@@ -28,11 +27,6 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     time: {
         type: Date,
         required: [true, 'You must specify when the event starts'],
-    },
-    invited: {
-        type: Map,
-        of: [String],
-        required: [true, "You must specify the invited users' id"],
     },
     where: {
         type: String,
