@@ -7,6 +7,7 @@ import { TypedRequestBody, TypedRequest } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
+import Invited, { InvitedModel } from '../models/InvitedModel';
 
 /**
  * @desc 	Get all the meetings
@@ -79,21 +80,19 @@ const getMeeting = asyncHandler(
  * @desc 	Add a new meetings
  * @route 	POST /api/meetings/
  */
-
-//TODO: Check if user exists and to add by roles
 const addMeeting = asyncHandler(
-    async (req: TypedRequestBody<MeetingRequest>, res: Response) => {
+    async (req: TypedRequestBody<MeetingModel>, res: Response) => {
 
         const newAttendance = await Attendance.create({
-            attendedUsers: req.body.attended,
-            absentUsers: req.body.absent,
+            attendedUsers: req.body.attendance.attendedUsers,
+            absentUsers: req.body.attendance.absentUsers,
+            invited: await Invited.create({...req.body.attendance.invited}),
         });
 
         const newMeeting = await Meeting.create({
             name: req.body.name,
             creator: req.body.requester,
             time: new Date(req.body.time),
-            invited: req.body.invited,
             where: req.body.where,
             attendance: newAttendance,
             description: req.body.description,
@@ -116,9 +115,13 @@ const deleteMeeting = asyncHandler(
     async (req: Request<MeetingIdParam>, res: Response) => {
         const meeting = await Meeting.findById(req.params.meetingId);
         if (meeting) {
-            const attendance = await Attendance.findByIdAndDelete(
+            const attendance = await Attendance.findById(
                 meeting.attendance,
             );
+            if (attendance){
+                const invited = await Invited.findByIdAndDelete(attendance.invited);
+                await attendance.deleteOne();
+            }
             await meeting.deleteOne();
             res.status(204).json({
                 status: 'success',
@@ -137,7 +140,7 @@ const deleteMeeting = asyncHandler(
  * @route   PATCH /api/meetings/:meetingId
  */
 const updateMeeting = asyncHandler(
-    async (req: TypedRequest<MeetingModel, MeetingIdParam>, res: Response) => {
+    async (req: TypedRequest<MeetingRequest, MeetingIdParam>, res: Response) => {
         const meeting = await Meeting.findByIdAndUpdate(
             req.params.meetingId,
             req.body,

@@ -1,4 +1,5 @@
 import { UserModel } from '../models/UserModel';
+import { MeetingModel } from '../models/MeetingModel';
 
 export interface LoginRequest {
     credential: string;
@@ -14,15 +15,6 @@ export interface AuthenticatedRequest {
     user: UserModel;
 }
 
-export interface MeetingRequest {
-    name: string;
+export interface MeetingRequest extends Omit<MeetingModel, 'time' | '_id' | 'attendance'> {
     time: string;
-    invited: {
-        userId: string[];
-        roleName: string[];
-    };
-    where: string;
-    attended: string[];
-    absent: Map<String, String>;
-    description?: string;
 }
