@@ -82,20 +82,9 @@ const getMeeting = asyncHandler(
  */
 const addMeeting = asyncHandler(
     async (req: TypedRequestBody<MeetingModel>, res: Response) => {
-
-        const newAttendance = await Attendance.create({
-            attendedUsers: req.body.attendance.attendedUsers,
-            absentUsers: req.body.attendance.absentUsers,
-            invited: await Invited.create({...req.body.attendance.invited}),
-        });
-
         const newMeeting = await Meeting.create({
-            name: req.body.name,
+            ...req.body,
             creator: req.body.requester,
-            time: new Date(req.body.time),
-            where: req.body.where,
-            attendance: newAttendance,
-            description: req.body.description,
         });
 
         await res.status(200).json({
@@ -104,7 +93,7 @@ const addMeeting = asyncHandler(
                 meeting: newMeeting,
             },
         });
-    }
+    },
 );
 
 /**
@@ -113,16 +102,8 @@ const addMeeting = asyncHandler(
  */
 const deleteMeeting = asyncHandler(
     async (req: Request<MeetingIdParam>, res: Response) => {
-        const meeting = await Meeting.findById(req.params.meetingId);
+        const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
         if (meeting) {
-            const attendance = await Attendance.findById(
-                meeting.attendance,
-            );
-            if (attendance){
-                const invited = await Invited.findByIdAndDelete(attendance.invited);
-                await attendance.deleteOne();
-            }
-            await meeting.deleteOne();
             res.status(204).json({
                 status: 'success',
             });
@@ -140,7 +121,10 @@ const deleteMeeting = asyncHandler(
  * @route   PATCH /api/meetings/:meetingId
  */
 const updateMeeting = asyncHandler(
-    async (req: TypedRequest<MeetingRequest, MeetingIdParam>, res: Response) => {
+    async (
+        req: TypedRequest<MeetingRequest, MeetingIdParam>,
+        res: Response,
+    ) => {
         const meeting = await Meeting.findByIdAndUpdate(
             req.params.meetingId,
             req.body,
