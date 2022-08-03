@@ -1,13 +1,11 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting, { MeetingModel } from '../models/MeetingModel';
-import Attendance from '../models/AttendanceModel';
 import { MeetingRequest } from '../types/RequestTypes';
 import { TypedRequestBody, TypedRequest } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
-import Invited, { InvitedModel } from '../models/InvitedModel';
 
 /**
  * @desc 	Get all the meetings
