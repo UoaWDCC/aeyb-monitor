@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import { Schema } from 'mongoose';
-import { AttendanceModel } from './AttendanceModel';
 import { UserModel } from './UserModel';
+import { AttendanceSchema, Attendance } from './AttendanceModel';
 
 export interface MeetingModel {
     _id: mongoose.Types.ObjectId;
@@ -9,7 +8,7 @@ export interface MeetingModel {
     creator: UserModel;
     time: Date;
     where: string;
-    attendance: AttendanceModel;
+    attendance: Attendance;
     description: string;
 }
 
@@ -33,9 +32,9 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
         required: [true, 'You must specify the where the meeting was held'],
     },
     attendance: {
-        type: Schema.Types.ObjectId,
+        type: AttendanceSchema,
         ref: 'Attendance',
-        required: [true, 'You must specify the attendance reference'],
+        required: [true, 'You must specify the attendance'],
     },
     description: {
         type: String,

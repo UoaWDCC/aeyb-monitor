@@ -1,37 +1,29 @@
-import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 import { UserModel } from './UserModel';
-import { InvitedModel } from './InvitedModel';
+import { RoleModel } from './RoleModel';
 
-export interface AttendanceModel {
-    _id: Schema.Types.ObjectId;
+export interface Attendance {
     attendedUsers: UserModel[];
     absentUsers: Map<string, string>;
-    invited: InvitedModel;
+    invited: [UserModel[], RoleModel[]];
 }
 
-const attendanceSchema = new mongoose.Schema<AttendanceModel>({
-    attendedUsers: {
-        type: [{type: String, ref: 'User'}],
-        required: [
-            true,
-            "You must specify the users' ids of those who attended",
-        ],
+export const AttendanceSchema = new Schema(
+    {
+        attendedUsers: {
+            type: [{ type: String, ref: 'User' }],
+        },
+        absentUsers: {
+            type: Map,
+            of: String,
+        },
+        invited: {
+            users: [{ type: String, ref: 'User' }],
+            roles: {
+                type: [{ type: String, ref: 'Role' }],
+                required: [true, 'You must specify the roles invited'],
+            },
+        },
     },
-    absentUsers: {
-        type: Map,
-        of: String
-    },
-    invited: {
-        type: Schema.Types.ObjectId,
-        ref: "Invited",
-        required: [
-            true,
-            "You must specify who was invited",
-        ]
-    }
-});
-
-const Attendance = mongoose.model('Attendance', attendanceSchema);
-
-export default Attendance;
+    { _id: false },
+);
