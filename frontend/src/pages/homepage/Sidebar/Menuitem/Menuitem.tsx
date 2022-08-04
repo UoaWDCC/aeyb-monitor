@@ -9,6 +9,8 @@ export default function Menuitem(prop) {
     const icons = [faCalendar, faHouse, faUser]
 
     return (
-        <FontAwesomeIcon icon={icons[prop.iconIndex]} />
+        <div className='iconBox'>
+            <FontAwesomeIcon icon={icons[prop.iconIndex]} size="2x" className='icon' />
+        </div>
     )
 }

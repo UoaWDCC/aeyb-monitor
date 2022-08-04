@@ -1,0 +1,17 @@
+.logoBox {
+    margin-bottom: 16vh;
+}
+
+.logo {
+    position: relative;
+    aspect-ratio: 1/1;
+    height: 8vh;
+    object-fit: cover;
+    margin: 2vh;
+    transition: 0.2s all;
+}
+
+.logo:active {
+    left: 0.5px;
+    top: 0.5px;
+}
