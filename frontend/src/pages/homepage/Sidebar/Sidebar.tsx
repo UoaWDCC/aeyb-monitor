@@ -10,9 +10,9 @@ export default function sidebar(prop) {
             <div className='logoBox' onClick={prop.toggleMenu}>
                 <Mainlogo />
             </div>
-            <Menuitem iconIndex={0} />
-            <Menuitem iconIndex={1} />
-            <Menuitem iconIndex={2} />
+            <Menuitem index={0} isClicked={prop.isClicked} />
+            <Menuitem index={1} isClicked={prop.isClicked} />
+            <Menuitem index={2} isClicked={prop.isClicked} />
         </div>
     )
 }
