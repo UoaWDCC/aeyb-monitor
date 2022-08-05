@@ -32,4 +32,9 @@
 .iconTitle {
     margin-left: 20px;
     font-size: 20px;
+    transition: margin-left 0.5s;
+}
+
+.visibleText {
+    margin-left: -300px;
 }
