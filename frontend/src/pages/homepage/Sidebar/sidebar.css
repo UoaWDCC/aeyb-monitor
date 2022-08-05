@@ -6,6 +6,7 @@ body {
 }
 
 .sidebar {
+    z-index: 100;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     position: fixed;
     left: 0;
@@ -13,12 +14,21 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
-    width: 12vh;
-    height: 100vh;
+    align-items: flex-start;
+    width: 90px;
+    height: 100%;
     background-color: white;
+    transition: width 0.5s;
 }
 
 .sidebar>* {
     margin-bottom: 15vh;
+}
+
+.logoBox {
+    margin-bottom: 14vh;
+}
+
+.menuOpen {
+    width: 250px;
 }

@@ -1,13 +1,9 @@
-.logoBox {
-    margin-bottom: 16vh;
-}
-
 .logo {
     position: relative;
     aspect-ratio: 1/1;
-    height: 8vh;
+    height: 60px;
     object-fit: cover;
-    margin: 2vh;
+    margin: 15px;
     transition: 0.2s all;
 }
 

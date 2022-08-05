@@ -1,6 +1,10 @@
 .iconBox {
-    padding: 10px;
+    aspect-ratio: 1/1;
+    width: 90px;
     transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .icon {

@@ -1,0 +1,5 @@
+p {
+    position: relative;
+    left: 100px;
+    width: -webkit-calc(100% - 100px);
+}
