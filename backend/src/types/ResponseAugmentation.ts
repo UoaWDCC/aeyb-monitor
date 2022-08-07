@@ -10,6 +10,7 @@ declare module 'express-serve-static-core' {
         unauthorized(message: string): void;
         notFound(message: string): void;
         invalid(message: string): void;
+        success<T>(status: number, data: T): void;
         ok<T>(data: T): void;
     }
 }
@@ -35,6 +36,13 @@ response.notFound = function (message) {
 
 response.invalid = function (message) {
     return this.error(400, message);
+};
+
+response.success = function (status, data) {
+    this.status(status).json({
+        status: 'success',
+        data,
+    });
 };
 
 response.ok = function (data) {
