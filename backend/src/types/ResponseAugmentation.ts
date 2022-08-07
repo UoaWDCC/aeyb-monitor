@@ -6,16 +6,17 @@ import { response } from 'express';
 
 declare module 'express-serve-static-core' {
     export interface Response {
-        invalid(message: string): void;
-        unauthorized(message: string): void;
         error(status: number, message: string): void;
+        unauthorized(message: string): void;
+        notFound(message: string): void;
+        invalid(message: string): void;
         ok<T>(data: T): void;
     }
 }
 
 // For some reason 'this' is undefined if I try and use an arrow functions.
-response.invalid = function (message) {
-    this.status(400).json({
+response.error = function (status, message) {
+    this.status(status).json({
         status: 'error',
         message,
     });
@@ -28,11 +29,12 @@ response.unauthorized = function (message) {
     });
 };
 
-response.error = function (status, message) {
-    this.status(status).json({
-        status: 'error',
-        message,
-    });
+response.notFound = function (message) {
+    return this.error(404, message);
+};
+
+response.invalid = function (message) {
+    return this.error(400, message);
 };
 
 response.ok = function (data) {
