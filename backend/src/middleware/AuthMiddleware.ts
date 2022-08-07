@@ -51,10 +51,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
 
             next();
         } catch (error) {
-            res.status(401).json({
-                status: 'error',
-                message: 'Something went wrong while authenticating the request: ' + (error as Error).message,
-            });
+            res.unauthorized('Something went wrong while authenticating the request: ' + (error as Error).message);
         }
     });
 }
