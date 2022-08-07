@@ -7,11 +7,12 @@ import { response } from 'express';
 declare module 'express-serve-static-core' {
     export interface Response {
         error(status: number, message: string): void;
+        invalid(message: string): void;
         unauthorized(message: string): void;
         notFound(message: string): void;
-        invalid(message: string): void;
         success<T>(status: number, data: T): void;
         ok<T>(data: T): void;
+        created<T>(data: T): void;
     }
 }
 
@@ -21,6 +22,10 @@ response.error = function (status, message) {
         status: 'error',
         message,
     });
+};
+
+response.invalid = function (message) {
+    return this.error(400, message);
 };
 
 response.unauthorized = function (message) {
@@ -34,10 +39,6 @@ response.notFound = function (message) {
     return this.error(404, message);
 };
 
-response.invalid = function (message) {
-    return this.error(400, message);
-};
-
 response.success = function (status, data) {
     this.status(status).json({
         status: 'success',
@@ -46,8 +47,9 @@ response.success = function (status, data) {
 };
 
 response.ok = function (data) {
-    this.status(200).json({
-        status: 'success',
-        data,
-    });
+    this.success(200, data);
+};
+
+response.created = function (data) {
+    this.success(201, data);
 };
