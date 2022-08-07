@@ -151,25 +151,17 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         if (req.query.limit) {
             const parsedLimit = parseInt(req.query.limit);
             if (isNaN(parsedLimit)) {
-                res.status(400).json({
-                    status: 'error',
-                    message: `Expected the limit parameter to be an integer (Got ${req.query.limit})`,
-                });
-                return;
+                return res.invalid(`Expected the limit parameter to be an integer (Got ${req.query.limit})`);
             }
             if (parsedLimit < this.options.minLimit) {
-                res.status(400).json({
-                    status: 'error',
-                    message: `Expected the limit parameter to be greater than or equal to ${this.options.minLimit} (Got ${parsedLimit})`,
-                });
-                return;
+                return res.invalid(
+                    `Expected the limit parameter to be greater than or equal to ${this.options.minLimit} (Got ${parsedLimit})`,
+                );
             }
             if (parsedLimit > this.options.maxLimit) {
-                res.status(400).json({
-                    status: 'error',
-                    message: `Expected the limit parameter to be less than or equal to ${this.options.maxLimit} (Got ${parsedLimit})`,
-                });
-                return;
+                return res.invalid(
+                    `Expected the limit parameter to be less than or equal to ${this.options.maxLimit} (Got ${parsedLimit})`,
+                );
             }
             limit = parsedLimit;
         }
@@ -177,18 +169,10 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
         if (req.query.page) {
             const parsedPage = parseInt(req.query.page);
             if (isNaN(parsedPage)) {
-                res.status(400).json({
-                    status: 'error',
-                    message: `Expected the page parameter to be an integer (Got ${req.query.page})`,
-                });
-                return;
+                return res.invalid(`Expected the page parameter to be an integer (Got ${req.query.page})`);
             }
             if (parsedPage < 0) {
-                res.status(400).json({
-                    status: 'error',
-                    message: `Expected the page parameter to be positive (Got ${req.query.page})`,
-                });
-                return;
+                return res.invalid(`Expected the page parameter to be positive (Got ${req.query.page})`);
             }
             page = parsedPage;
         }
@@ -259,11 +243,7 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
 
         const totalPages = Math.ceil(documentCount / options.limit);
         if (options.page >= totalPages) {
-            res.status(400).json({
-                status: 'error',
-                message: `The page parameter ${options.page} is out of bounds. (Max page is ${totalPages - 1})`,
-            });
-            return;
+            return res.invalid(`The page parameter ${options.page} is out of bounds. (Max page is ${totalPages - 1})`);
         }
 
         let results = await this.model
