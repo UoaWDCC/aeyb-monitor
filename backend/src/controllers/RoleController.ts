@@ -49,7 +49,7 @@ const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) =>
 const addRole = asyncHandler(async (req: TypedRequestBody<RoleModel>, res: Response) => {
     const newRole = await Role.create(req.body);
 
-    res.success(201, { role: newRole });
+    res.created({ role: newRole });
 });
 
 /**
