@@ -8,6 +8,7 @@ declare module 'express-serve-static-core' {
     export interface Response {
         invalid(message: string): void;
         unauthorized(message: string): void;
+        error(status: number, message: string): void;
         ok<T>(data: T): void;
     }
 }
@@ -23,6 +24,13 @@ response.invalid = function (message) {
 response.unauthorized = function (message) {
     this.status(404).json({
         status: 'unauthorized',
+        message,
+    });
+};
+
+response.error = function (status, message) {
+    this.status(status).json({
+        status: 'error',
         message,
     });
 };
