@@ -22,7 +22,7 @@ response.invalid = function (message) {
 };
 
 response.unauthorized = function (message) {
-    this.status(404).json({
+    this.status(401).json({
         status: 'unauthorized',
         message,
     });
