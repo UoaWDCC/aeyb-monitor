@@ -18,22 +18,77 @@ enum Permissions {
     ADD_EVENTS = 'ADD_EVENTS',
 }
 
+const PermissionsArray = Object.keys(Permissions) as Array<keyof typeof Permissions>;
+
+const PermissionsLists = {
+    roles: [0, 1, 2, 3, 4, 5],
+    users: [6, 7],
+    events: [8, 9, 10, 11],
+};
+
 export default function PermissionList() {
     const [allChecked, setAllChecked] = useState(false);
+    const [allRolesChecked, setAllRolesChecked] = useState(false);
+    const [allUsersChecked, setAllUsersChecked] = useState(false);
+    const [allEventsChecked, setAllEventsChecked] = useState(false);
+
     const [checked, setChecked] = useState(new Array(Object.keys(Permissions).length).fill(false));
     console.log(checked);
 
     return (
         <>
             <h1 className="text-3xl text-white">Permissions</h1>
-            <Switch
-                onChange={() => {
-                    setChecked(checked.map((value, index) => !allChecked));
-                    setAllChecked(!allChecked);
-                }}
-            />
-            <div className="grid grid-cols-2 gap-2">
-                {(Object.keys(Permissions) as Array<keyof typeof Permissions>).map((permission, key) => {
+            <div className="flex justify-end">
+                <h2 className="text-2xl text-white">Select all</h2>
+                <Switch
+                    onChange={() => {
+                        setChecked(checked.map((value, index) => !allChecked));
+                        setAllChecked(!allChecked);
+                    }}
+                />
+            </div>
+
+            <div className="flex flex-col overflow-scroll">
+                {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
+                    ([key, value]) => {
+                        return (
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="col-span-2 flex">
+                                    <h1 className="text-3xl text-white ">
+                                        {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
+                                    </h1>
+                                    <Switch onChange={() => {}} />
+                                </div>
+                                {value.map((index) => {
+                                    return (
+                                        <div className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom">
+                                            <p>
+                                                {(
+                                                    PermissionsArray[index].charAt(0).toUpperCase() +
+                                                    PermissionsArray[index].slice(1).toLowerCase()
+                                                ).replace('_', ' ')}
+                                            </p>
+                                            <Switch
+                                                color="secondary"
+                                                checked={checked[index]}
+                                                onClick={() =>
+                                                    setChecked((oldArray) => {
+                                                        const newArray = [...oldArray];
+                                                        newArray[index] = !newArray[index];
+                                                        return newArray;
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    );
+                                })}
+                                ;
+                            </div>
+                        );
+                    },
+                )}
+
+                {/* {(Object.keys(Permissions) as Array<keyof typeof Permissions>).map((permission, key) => {
                     return (
                         <div className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom">
                             <p>
@@ -55,7 +110,7 @@ export default function PermissionList() {
                             />
                         </div>
                     );
-                })}
+                })} */}
             </div>
         </>
     );
