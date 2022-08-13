@@ -26,8 +26,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
         user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
     }
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         token: generateJWT(user.id),
         data: {
             user,
@@ -75,8 +74,7 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
         }
 
         // The returned token can then be used to authenticate additional requests
-        res.status(200).json({
-            status: 'success',
+        res.ok({
             token: generateJWT(user.id),
             data: {
                 user,
@@ -135,8 +133,7 @@ function generateJWT(userId: string): string {
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     const users = await User.find();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         results: users.length,
         data: {
             users,
@@ -239,8 +236,7 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
 
     await user.save();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         rolesAdded: addedRoles.length,
         data: {
             user,
@@ -294,8 +290,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
 
     await user.save();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         rolesRemoved: removedRoles.length,
         data: {
             user,
