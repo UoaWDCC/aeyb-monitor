@@ -1,5 +1,7 @@
 import { response } from 'express';
 
+type DataType = Record<string, unknown> & { data?: Record<string, unknown> };
+
 // Response Utilities using 'Module augmentation'
 // More info at: https://www.digitalocean.com/community/tutorials/typescript-module-augmentation
 // and https://joeflateau.net/posts/extending-express-request-response-objects-in-typescript
@@ -10,9 +12,9 @@ declare module 'express-serve-static-core' {
         invalid(message: string): void;
         unauthorized(message: string): void;
         notFound(message: string): void;
-        success<T>(status: number, data: T): void;
-        ok<T>(data: T): void;
-        created<T>(data: T): void;
+        success(status: number, data: DataType): void;
+        ok(data: DataType): void;
+        created(data: DataType): void;
     }
 }
 
@@ -40,9 +42,10 @@ response.notFound = function (message) {
 };
 
 response.success = function (status, data) {
+    const responseData = data['data'] ? data : { data };
     this.status(status).json({
         status: 'success',
-        data,
+        ...responseData,
     });
 };
 
