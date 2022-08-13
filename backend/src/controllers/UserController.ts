@@ -64,11 +64,7 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
                 },
             );
             if (!tempUser) {
-                res.status(400).json({
-                    status: 'error',
-                    message: 'There was an issue trying to update your user name and profile internally',
-                });
-                return;
+                return res.invalid('There was an issue trying to update your user name and profile internally');
             }
             user = tempUser;
         }
@@ -100,21 +96,13 @@ async function validateIdToken(credential: string, res: Response): Promise<Googl
     const profileUrl = payload?.picture;
 
     if (!(userId && name && profileUrl)) {
-        res.status(400).json({
-            status: 'error',
-            message: 'The id token provided was malformed',
-        });
-        return;
+        return res.invalid('The id token provided was malformed');
     }
 
     const domain = payload.hd;
     // Make sure users logging in have the correct email domain
     if (domain !== config.googleDomain) {
-        res.status(404).json({
-            status: 'error',
-            message: 'Invalid google domain',
-        });
-        return;
+        return res.unauthorized('Invalid google domain');
     }
 
     return { userId, name, profileUrl };
