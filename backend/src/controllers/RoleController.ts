@@ -12,8 +12,7 @@ import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
     const roles = await Role.find();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         results: roles.length,
         data: {
             roles,
@@ -33,8 +32,7 @@ const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) =>
 
     const userCount = await User.countDocuments({ roles: req.params.roleId });
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         userCount,
         data: {
             role,
