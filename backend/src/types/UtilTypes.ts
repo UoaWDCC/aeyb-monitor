@@ -9,8 +9,7 @@ export type Doc<T> = mongoose.Document<unknown, any, T> &
 
 export type TypedQuery<T> = Query<Doc<T>[], Doc<T>>;
 
-export interface TypedRequest<BodyType, ParamsType, QueryType = unknown>
-    extends Express.Request {
+export interface TypedRequest<BodyType, ParamsType, QueryType = unknown> extends Express.Request {
     body: BodyType & { requester: Doc<UserModel> };
     params: ParamsType;
     query: QueryType;

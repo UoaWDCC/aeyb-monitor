@@ -1,11 +1,6 @@
 import { Response } from 'express';
 import { Model } from 'mongoose';
-import {
-    PreCallback,
-    PaginationOptions,
-    PostCallback,
-    PaginationConfig,
-} from '../types/PaginationTypes';
+import { PreCallback, PaginationOptions, PostCallback, PaginationConfig } from '../types/PaginationTypes';
 import { PaginationQuery } from '../types/QueryTypes';
 import { Doc, TypedRequestQuery } from '../types/UtilTypes';
 
@@ -32,12 +27,8 @@ import { Doc, TypedRequestQuery } from '../types/UtilTypes';
  * const getAllEvents = asyncHandler(new PaginationHandler(Event).pre((query) => query.sort({ time: 'ascending' })).handler);
  * ```
  * @see PaginationHandler.pre
- *
  */
-export default class PaginationHandler<
-    T,
-    TQuery extends PaginationQuery = PaginationQuery,
-> {
+export default class PaginationHandler<T, TQuery extends PaginationQuery = PaginationQuery> {
     private readonly model: Model<T>;
     private readonly dataName: string;
     private readonly options: PaginationConfig;
@@ -61,20 +52,13 @@ export default class PaginationHandler<
 
         const maxLimit = options.maxLimit ?? Number.MAX_SAFE_INTEGER;
         const minLimit = options.minLimit ?? 1;
-        if (maxLimit < minLimit)
-            throw new Error('The max limit cannot be less than the min limit');
+        if (maxLimit < minLimit) throw new Error('The max limit cannot be less than the min limit');
 
-        if (
-            options.defaultLimit &&
-            (options.defaultLimit < minLimit || options.defaultLimit > maxLimit)
-        )
-            throw new Error(
-                `The default limit is not within the specified bounds of ${minLimit} to ${maxLimit}`,
-            );
+        if (options.defaultLimit && (options.defaultLimit < minLimit || options.defaultLimit > maxLimit))
+            throw new Error(`The default limit is not within the specified bounds of ${minLimit} to ${maxLimit}`);
 
         // Make sure the defaultLimit is within the bounds of the minLimit and maxLimit
-        const defaultLimit =
-            options.defaultLimit ?? Math.min(Math.max(30, minLimit), maxLimit);
+        const defaultLimit = options.defaultLimit ?? Math.min(Math.max(30, minLimit), maxLimit);
         this.options = {
             maxLimit: maxLimit,
             defaultLimit: defaultLimit,
@@ -160,10 +144,7 @@ export default class PaginationHandler<
      * @param res The response
      * @returns Either the parsed `PaginationOptions` or `void` if the request was invalid
      */
-    private handlePagination(
-        req: TypedRequestQuery<TQuery>,
-        res: Response,
-    ): PaginationOptions | void {
+    private handlePagination(req: TypedRequestQuery<TQuery>, res: Response): PaginationOptions | void {
         let limit = this.options.defaultLimit;
         let page = this.options.defaultPage;
 
@@ -280,9 +261,7 @@ export default class PaginationHandler<
         if (options.page >= totalPages) {
             res.status(400).json({
                 status: 'error',
-                message: `The page parameter ${
-                    options.page
-                } is out of bounds. (Max page is ${totalPages - 1})`,
+                message: `The page parameter ${options.page} is out of bounds. (Max page is ${totalPages - 1})`,
             });
             return;
         }
@@ -300,15 +279,6 @@ export default class PaginationHandler<
 
         const hasNext = options.page < totalPages - 1;
         const hasPrev = options.page !== 0;
-
-        this.createResponse(
-            res,
-            results,
-            hasNext,
-            hasPrev,
-            totalPages,
-            documentCount,
-            options,
-        );
+        this.createResponse(res, results, hasNext, hasPrev, totalPages, documentCount, options);
     }
 }

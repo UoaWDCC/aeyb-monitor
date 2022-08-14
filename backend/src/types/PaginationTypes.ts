@@ -19,7 +19,4 @@ export type PreCallback<T, TQuery> = (
     res: Response,
 ) => TypedQuery<T> | void;
 
-export type PostCallback<T> = (
-    results: Doc<T>[],
-    options: PaginationOptions,
-) => Promise<Doc<T>[]> | Doc<T>[];
+export type PostCallback<T> = (results: Doc<T>[], options: PaginationOptions) => Promise<Doc<T>[]> | Doc<T>[];

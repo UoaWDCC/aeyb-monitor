@@ -9,3 +9,7 @@ export interface UserIdParam {
 export interface MeetingIdParam {
     meetingId: string;
 }
+
+export interface EventIdParam {
+    eventId: string;
+}

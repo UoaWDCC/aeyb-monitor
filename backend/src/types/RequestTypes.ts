@@ -11,10 +11,6 @@ export interface DevLoginRequest {
     profileUrl?: string;
 }
 
-export interface AuthenticatedRequest {
-    user: UserModel;
-}
-
 export interface MeetingRequest extends Omit<MeetingModel, 'time' | '_id' | 'attendance'> {
     time: string;
 }
