@@ -279,7 +279,6 @@ export default class PaginationHandler<T, TQuery extends PaginationQuery = Pagin
 
         const hasNext = options.page < totalPages - 1;
         const hasPrev = options.page !== 0;
-
         this.createResponse(res, results, hasNext, hasPrev, totalPages, documentCount, options);
     }
 }
