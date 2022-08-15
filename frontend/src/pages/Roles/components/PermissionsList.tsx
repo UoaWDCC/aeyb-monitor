@@ -32,9 +32,31 @@ export default function PermissionList() {
     const [allUsersChecked, setAllUsersChecked] = useState(false);
     const [allEventsChecked, setAllEventsChecked] = useState(false);
 
+    const sectionStates = {
+        allRolesChecked,
+        setAllRolesChecked,
+        allUsersChecked,
+        setAllUsersChecked,
+        allEventsChecked,
+        setAllEventsChecked,
+    };
+
     const [checked, setChecked] = useState(new Array(Object.keys(Permissions).length).fill(false));
     console.log(checked);
 
+    function toggleSection(key, value) {
+        let keyName = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+
+        setChecked(
+            checked.map((item, index) => {
+                if (value.includes(index)) {
+                    return !sectionStates[`all${keyName}Checked`];
+                }
+                return item;
+            }),
+        );
+        sectionStates[`setAll${keyName}Checked`](!sectionStates[`all${keyName}Checked`]);
+    }
     return (
         <>
             <h1 className="text-3xl text-white">Permissions</h1>
@@ -42,7 +64,8 @@ export default function PermissionList() {
                 <h2 className="text-2xl text-white">Select all</h2>
                 <Switch
                     onChange={() => {
-                        setChecked(checked.map((value, index) => !allChecked));
+                        setChecked(checked.map((item) => !allChecked));
+
                         setAllChecked(!allChecked);
                     }}
                 />
@@ -57,7 +80,11 @@ export default function PermissionList() {
                                     <h1 className="text-3xl text-white ">
                                         {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
                                     </h1>
-                                    <Switch onChange={() => {}} />
+                                    <Switch
+                                        onChange={() => {
+                                            toggleSection(key, value);
+                                        }}
+                                    />
                                 </div>
                                 {value.map((index) => {
                                     return (
