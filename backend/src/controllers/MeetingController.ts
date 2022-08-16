@@ -43,20 +43,12 @@ const getAllMeetings = asyncHandler(
  */
 const getMeeting = asyncHandler(async (req: Request<MeetingIdParam>, res: Response) => {
     const meeting = await Meeting.findById(req.params.meetingId);
-    if (meeting) {
-        await meeting.populate('creator');
-        res.status(200).json({
-            status: 'success',
-            data: {
-                meeting,
-            },
-        });
-    } else {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no meeting with the id ${req.params.meetingId}`,
-        });
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
     }
+
+    await meeting.populate('creator');
+    res.ok({ meeting });
 });
 
 /**
@@ -69,12 +61,7 @@ const addMeeting = asyncHandler(async (req: TypedRequestBody<MeetingModel>, res:
         creator: req.body.requester,
     });
 
-    await res.status(200).json({
-        status: 'success',
-        data: {
-            meeting: newMeeting,
-        },
-    });
+    res.ok({ meeting: newMeeting });
 });
 
 /**
@@ -83,16 +70,10 @@ const addMeeting = asyncHandler(async (req: TypedRequestBody<MeetingModel>, res:
  */
 const deleteMeeting = asyncHandler(async (req: Request<MeetingIdParam>, res: Response) => {
     const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
-    if (meeting) {
-        res.status(204).json({
-            status: 'success',
-        });
-    } else {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no meeting with the id ${req.params.meetingId}`,
-        });
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
     }
+    res.status(204);
 });
 
 /**
@@ -105,19 +86,10 @@ const updateMeeting = asyncHandler(async (req: TypedRequest<MeetingRequest, Meet
         runValidators: true,
     });
 
-    if (meeting) {
-        res.status(200).json({
-            status: 'success',
-            data: {
-                meeting,
-            },
-        });
-    } else {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no meeting with the id ${req.params.meetingId}`,
-        });
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
     }
+    res.ok({ meeting });
 });
 
 export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };
