@@ -1,4 +1,3 @@
-import { UserModel } from '../models/UserModel';
 import { MeetingModel } from '../models/MeetingModel';
 
 export interface LoginRequest {

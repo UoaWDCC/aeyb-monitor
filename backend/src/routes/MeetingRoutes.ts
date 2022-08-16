@@ -1,13 +1,7 @@
 import { Router } from 'express';
-import protect from '../middleware/AuthMiddleware'
+import protect from '../middleware/AuthMiddleware';
 
-import {
-    getAllMeetings,
-    getMeeting,
-    addMeeting,
-    deleteMeeting,
-    updateMeeting,
-} from '../controllers/MeetingController';
+import { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting } from '../controllers/MeetingController';
 
 const MeetingRouter = Router();
 
