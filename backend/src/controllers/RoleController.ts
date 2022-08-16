@@ -12,8 +12,7 @@ import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
     const roles = await Role.find();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         results: roles.length,
         data: {
             roles,
@@ -28,17 +27,12 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
 const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) => {
     const role = await Role.findById(req.params.roleId);
     if (!role) {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no role with the id ${req.params.roleId}`,
-        });
-        return;
+        return res.notFound(`There is no role with the id ${req.params.roleId}`);
     }
 
     const userCount = await User.countDocuments({ roles: req.params.roleId });
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         userCount,
         data: {
             role,
@@ -53,12 +47,7 @@ const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) =>
 const addRole = asyncHandler(async (req: TypedRequestBody<RoleModel>, res: Response) => {
     const newRole = await Role.create(req.body);
 
-    await res.status(201).json({
-        status: 'success',
-        data: {
-            role: newRole,
-        },
-    });
+    res.created({ role: newRole });
 });
 
 /**
@@ -75,12 +64,12 @@ const deleteRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response)
     );
 
     // Delete the role
-    await Role.findByIdAndDelete(req.params.roleId);
+    const response = await Role.findByIdAndDelete(req.params.roleId);
+    if (!response) {
+        return res.notFound(`There is no role with the id ${req.params.roleId}`);
+    }
 
-    res.status(200).json({
-        status: 'success',
-        modifiedUserCount: modCount,
-    });
+    res.ok({ modifiedUserCount: modCount });
 });
 
 /**
@@ -94,19 +83,10 @@ const updateRole = asyncHandler(async (req: TypedRequest<RoleModel, RoleIdParam>
     });
 
     if (!role) {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no role with the id ${req.params.roleId}`,
-        });
-        return;
+        return res.notFound(`There is no role with the id ${req.params.roleId}`);
     }
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            role,
-        },
-    });
+    res.ok({ role });
 });
 
 export { getAllRoles, getRole, deleteRole, addRole, updateRole };
