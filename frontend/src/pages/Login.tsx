@@ -2,11 +2,14 @@ import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const onFailure = () => {
         console.log('Invalid account');
     };
+
+    const navigate = useNavigate();
 
     const onSuccess = (googleData: GoogleLoginResponse) => {
         axios
@@ -16,6 +19,8 @@ function Login() {
             .then((response) => {
                 console.log(response.data);
             });
+
+        navigate('placeholder', { replace: true });
     };
 
     return (

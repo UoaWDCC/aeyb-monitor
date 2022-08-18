@@ -2,11 +2,12 @@ import express, { Express } from 'express';
 import UserRouter from '../routes/UserRoutes';
 import RoleRouter from '../routes/RoleRoutes';
 import PermissionRouter from '../routes/PermissionRoutes';
+import MeetingRouter from '../routes/MeetingRoutes';
+import EventRouter from '../routes/EventRoutes';
 import { Config } from '../types/Config';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
-import EventRouter from '../routes/EventRoutes';
 
 export default class Server {
     private _app: Express;
@@ -44,6 +45,7 @@ export default class Server {
         this._app.use('/api/users', UserRouter);
         this._app.use('/api/roles', RoleRouter);
         this._app.use('/api/permissions', PermissionRouter);
+        this._app.use('/api/meetings', MeetingRouter);
         this._app.use('/api/events', EventRouter);
         console.log('Routers registered');
 

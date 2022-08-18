@@ -13,11 +13,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
     return asyncHandler(async (req: Request<unknown>, res: Response, next: NextFunction) => {
         // The token will be in the format Bearer <token>
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
-            res.status(401).json({
-                status: 'error',
-                message: 'You must specify a bearer token to access this endpoint',
-            });
-            return;
+            return res.unauthorized('You must specify a bearer token to access this endpoint');
         }
         try {
             const token = req.headers.authorization.split(' ')[1];
@@ -26,11 +22,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
             const decoded = jwt.verify(token, config.jwtSecret);
             const user = await User.findById(decoded.sub ?? '');
             if (!user) {
-                res.status(401).json({
-                    status: 'error',
-                    message: 'Invalid bearer token',
-                });
-                return;
+                return res.unauthorized('Invalid bearer token');
             }
 
             // Don't bother fetching the user permissions if they just need to be logged in
@@ -38,11 +30,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
                 // Check that the user has the required permission
                 const userPermissions = await getPermissions(user);
                 if (!userPermissions.has(permission)) {
-                    res.status(401).json({
-                        status: 'error',
-                        message: `You require the ${permission} permission to access this endpoint`,
-                    });
-                    return;
+                    return res.unauthorized(`You require the ${permission} permission to access this endpoint`);
                 }
             }
 
@@ -51,10 +39,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
 
             next();
         } catch (error) {
-            res.status(401).json({
-                status: 'error',
-                message: 'Something went wrong while authenticating the request: ' + (error as Error).message,
-            });
+            res.unauthorized('Something went wrong while authenticating the request: ' + (error as Error).message);
         }
     });
 }

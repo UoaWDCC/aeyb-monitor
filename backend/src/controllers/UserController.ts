@@ -26,8 +26,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
         user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
     }
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         token: generateJWT(user.id),
         data: {
             user,
@@ -44,11 +43,7 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
     const credential = req.body.credential;
 
     if (typeof credential !== 'string') {
-        res.status(400).json({
-            status: 'error',
-            message: `The credential must be a string (got ${typeof credential})`,
-        });
-        return;
+        return res.invalid(`The credential must be a string (got ${typeof credential})`);
     }
 
     try {
@@ -69,18 +64,13 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
                 },
             );
             if (!tempUser) {
-                res.status(400).json({
-                    status: 'error',
-                    message: 'There was an issue trying to update your user name and profile internally',
-                });
-                return;
+                return res.invalid('There was an issue trying to update your user name and profile internally');
             }
             user = tempUser;
         }
 
         // The returned token can then be used to authenticate additional requests
-        res.status(200).json({
-            status: 'success',
+        res.ok({
             token: generateJWT(user.id),
             data: {
                 user,
@@ -88,16 +78,13 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
             },
         });
     } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            message: 'Something went wrong while validating id token',
-        });
+        return res.invalid('Something went wrong while validating id token');
     }
 });
 
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
-async function validateIdToken(credential: string, res: Response): Promise<GooglePayload | undefined> {
+async function validateIdToken(credential: string, res: Response): Promise<GooglePayload | void> {
     const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: config.clientID,
@@ -109,21 +96,13 @@ async function validateIdToken(credential: string, res: Response): Promise<Googl
     const profileUrl = payload?.picture;
 
     if (!(userId && name && profileUrl)) {
-        res.status(400).json({
-            status: 'error',
-            message: 'The id token provided was malformed',
-        });
-        return;
+        return res.invalid('The id token provided was malformed');
     }
 
     const domain = payload.hd;
     // Make sure users logging in have the correct email domain
     if (domain !== config.googleDomain) {
-        res.status(404).json({
-            status: 'error',
-            message: 'Invalid google domain',
-        });
-        return;
+        return res.unauthorized('Invalid google domain');
     }
 
     return { userId, name, profileUrl };
@@ -142,8 +121,7 @@ function generateJWT(userId: string): string {
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     const users = await User.find();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         results: users.length,
         data: {
             users,
@@ -158,13 +136,7 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
 const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     const self = req.body.requester;
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            self,
-            permissions: [...(await getPermissions(self))],
-        },
-    });
+    res.ok({ self, permissions: [...(await getPermissions(self))] });
 });
 
 /**
@@ -174,19 +146,10 @@ const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) =>
 const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) => {
     const user = await User.findById(req.params.userId);
     if (!user) {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no user with the id ${req.params.userId}`,
-        });
-        return;
+        return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user,
-        },
-    });
+    res.ok({ user, permissions: [...(await getPermissions(user))] });
 });
 
 /**
@@ -199,12 +162,7 @@ const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>
         runValidators: true,
     });
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user,
-        },
-    });
+    res.ok({ user });
 });
 
 async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
@@ -225,30 +183,18 @@ async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
 const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
     //Check roles is provided as an array
     if (!Array.isArray(req.body.roles)) {
-        res.status(400).json({
-            status: 'error',
-            message: 'Roles must be an array',
-        });
-        return;
+        return res.invalid('The roles must be an array');
     }
 
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
-        res.status(400).json({
-            status: 'error',
-            message: 'You must specify atleast one role',
-        });
-        return;
+        return res.invalid('You must specify atleast one role');
     }
 
     // Get the user
     const user = await User.findById(req.params.userId);
     if (!user) {
-        res.status(400).json({
-            status: 'error',
-            message: 'User not found',
-        });
-        return;
+        return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
     const addedRoles: RoleModel[] = [];
@@ -257,29 +203,17 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
         // Check if role exists
         const role = await Role.findById(roleId);
         if (!role) {
-            res.status(400).json({
-                status: 'error',
-                message: 'Role not found',
-            });
-            return;
+            return res.notFound(`There is no role with the id ${roleId}`);
         }
 
         // Check if the user already has the role
         if (user.roles.includes(role.id)) {
-            res.status(400).json({
-                status: 'error',
-                message: 'User already has that role',
-            });
-            return;
+            return res.invalid(`The user already has the role ${role.id}`);
         }
 
         // Check if trying to add the same role twice
         if (addedRoles.includes(role.id)) {
-            res.status(400).json({
-                status: 'error',
-                message: 'You cannot add the same role twice',
-            });
-            return;
+            return res.invalid(`You cannot add the same role twice. ${role.id} has already been added`);
         }
 
         addedRoles.push(role);
@@ -290,8 +224,7 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
 
     await user.save();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         rolesAdded: addedRoles.length,
         data: {
             user,
@@ -307,30 +240,18 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
 const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
     //Check roles is provided as an array
     if (!Array.isArray(req.body.roles)) {
-        res.status(400).json({
-            status: 'error',
-            message: 'Roles must be an array',
-        });
-        return;
+        return res.invalid('The roles must be an array');
     }
 
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
-        res.status(400).json({
-            status: 'error',
-            message: 'You must specify atleast one role',
-        });
-        return;
+        return res.invalid('You must specify atleast one role');
     }
 
     // Get the user
     const user = await User.findById(req.params.userId).populate('roles');
     if (!user) {
-        res.status(400).json({
-            status: 'error',
-            message: 'User not found',
-        });
-        return;
+        return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
     const removedRoles: RoleModel[] = [];
@@ -339,11 +260,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
         // Check if role exists
         const role = await Role.findById(roleId);
         if (!role) {
-            res.status(400).json({
-                status: 'error',
-                message: 'Role not found',
-            });
-            return;
+            return res.notFound(`There is no role with the id ${roleId}`);
         }
 
         removedRoles.push(role);
@@ -361,8 +278,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
 
     await user.save();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         rolesRemoved: removedRoles.length,
         data: {
             user,

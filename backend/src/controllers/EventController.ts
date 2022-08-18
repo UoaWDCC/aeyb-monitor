@@ -43,20 +43,11 @@ const getAllEvents = asyncHandler(
 const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) => {
     const event = await Event.findById(req.params.eventId);
     if (!event) {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no event with the id ${req.params.eventId}`,
-        });
-        return;
+        return res.notFound(`There is no event with the id ${req.params.eventId}`);
     }
 
     await event.populate('creator');
-    res.status(200).json({
-        status: 'success',
-        data: {
-            event,
-        },
-    });
+    res.ok({ event });
 });
 
 /**
@@ -66,12 +57,7 @@ const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) 
 const addEvent = asyncHandler(async (req: TypedRequestBody<EventModel>, res: Response) => {
     const newEvent = await Event.create({ ...req.body, creator: req.body.requester });
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            event: newEvent,
-        },
-    });
+    res.created({ event: newEvent });
 });
 
 /**
@@ -80,14 +66,11 @@ const addEvent = asyncHandler(async (req: TypedRequestBody<EventModel>, res: Res
  */
 const deleteEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) => {
     const response = await Event.findByIdAndDelete(req.params.eventId);
-    if (response) {
-        res.status(204);
-        return;
+    if (!response) {
+        return res.notFound(`There is no event with the id ${req.params.eventId}`);
     }
-    res.status(404).json({
-        status: 'error',
-        message: `There is no event with the id ${req.params.eventId}`,
-    });
+
+    res.status(204);
 });
 
 /**
@@ -101,19 +84,11 @@ const updateEvent = asyncHandler(async (req: TypedRequest<EventModel, EventIdPar
     });
 
     if (!event) {
-        res.status(404).json({
-            status: 'error',
-            message: `There is no event with the id ${req.params.eventId}`,
-        });
-        return;
+        return res.notFound(`There is no event with the id ${req.params.eventId}`);
     }
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            event,
-        },
-    });
+    await event.populate('creator');
+    res.ok({ event });
 });
 
 export { getAllEvents, getEvent, addEvent, deleteEvent, updateEvent };

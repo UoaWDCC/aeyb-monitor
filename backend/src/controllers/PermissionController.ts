@@ -9,12 +9,7 @@ import Permission from '../types/Perm';
 const getAllPermissions = asyncHandler(async (req: Request, res: Response) => {
     const permissions = Object.values(Permission);
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            permissions,
-        },
-    });
+    res.ok({ permissions });
 });
 
 export { getAllPermissions };
