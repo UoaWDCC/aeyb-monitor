@@ -7,15 +7,14 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons'
 
 export default function Menuitem(prop) {
 
-    const icons = [faCalendar, faHouse, faUser]
+    const icons = [faHouse, faCalendar, faUser]
     const names = ['HOME', 'CALENDAR', 'PROFILE']
 
     return (
-        <div className='menuItem'>
+        <div className={prop.isSelected ? 'menuItem selectedItem' : 'menuItem'}>
             <div className='iconBox'>
                 <FontAwesomeIcon icon={icons[prop.index]} size="2x" className='icon' />
             </div >
-            {/* <p className='iconTitle' style={{ 'visibility': prop.isClicked ? 'visible' : 'hidden' }} > {names[prop.index]}</p> */}
             <p className={prop.isClicked ? 'iconTitle' : 'iconTitle visibleText'} > {names[prop.index]}</p>
         </div >
 

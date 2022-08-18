@@ -40,3 +40,7 @@
 .visibleText {
     margin-left: -300px;
 }
+
+.selectedItem {
+    opacity: 1;
+}
