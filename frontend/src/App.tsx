@@ -12,6 +12,8 @@ function App() {
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="homepage" element={<Homepage />} />
+                    {/* <Route path="calendar" element={<calendar />} />
+                    <Route path="profile" element={<profile />} /> */}
                 </Routes>
             </Router>
         </div>
