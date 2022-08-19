@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import Sidebar from '../Homepage_Components/Sidebar'
+import Sidebar from '../Sidebar_Components/Sidebar'
+import LiveMeeting from './Meeting_Components/Live_Meeting/LiveMeeting';
 import './homepage.css'
 
 export default function Homepage() {
@@ -18,8 +19,7 @@ export default function Homepage() {
       <div className='pageComponent'>
         <div className="containerAll">
           <div id="liveContainer">
-            <div className="live">LIVEMEETINGPLACEHOLDER</div>
-            <div className="live">LIVEMEETINGPLACEHOLDER</div>
+            <LiveMeeting title={`Meeting with board members`} startTime={new Date()} endTime={new Date(2022, 7, 19, 16, 30, 0)} />
           </div>
           <div id='meetingContainer'>
             <div id="upcomingContainer" className='mContainer'>

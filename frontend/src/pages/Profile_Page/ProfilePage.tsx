@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Sidebar from '../Homepage_Components/Sidebar'
+import Sidebar from '../Sidebar_Components/Sidebar'
 import './profilepage.css'
 
 export default function ProfilePage() {
