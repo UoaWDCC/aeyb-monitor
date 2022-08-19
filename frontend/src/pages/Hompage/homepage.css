@@ -2,4 +2,35 @@
     position: relative;
     left: 100px;
     width: -webkit-calc(100% - 100px);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerAll {
+    width: 85%;
+    height: 85%;
+    margin: auto;
+}
+
+#liveContainer {
+    width: 100%;
+    background-color: aliceblue;
+}
+
+#meetingContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.mContainer {
+    width: 100%;
+    background-color: aliceblue;
+}
+
+.containerTtl {
+    margin-left: 20px;
 }
