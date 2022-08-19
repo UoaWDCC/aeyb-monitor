@@ -1,8 +1,8 @@
 .liveMeeting {
-    border: 3px solid red;
-    margin-bottom: 2%;
+    border: 3px solid #FF0201;
     background-color: white;
     transition: all 0.2s;
+    border-radius: 10px;
 }
 
 .liveMeeting:hover {
@@ -19,7 +19,7 @@
 }
 
 .liveStatus {
-    color: red
+    color: #FF0201;
 }
 
 .liveBall {
@@ -35,6 +35,7 @@
     }
 }
 
-.liveMeetingTitle {
+.meetingTitle {
     font-size: 24px;
+    font-weight: bold;
 }

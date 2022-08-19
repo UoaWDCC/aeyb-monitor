@@ -32,7 +32,7 @@ export default function LiveMeeting(prop: { title: string; startTime: Date; endT
     return (
         <div className='liveMeeting' onClick={openMeetingPage}>
             <div className='liveStatus'><span className='liveBall'>&#x25cf;</span> LIVE</div>
-            <div className='liveMeetingTitle'>{meeting.title}</div>
+            <div className='meetingTitle'>{meeting.title}</div>
             <div className='timeleft'>{timeLeft > 0 ? `${timeLeft} minutes left` : `Meeting Finished`}</div>
         </div>
     )

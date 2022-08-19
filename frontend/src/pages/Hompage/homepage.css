@@ -24,6 +24,15 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+
+#upcomingContainer {
+    margin-right: 5%;
+}
+
+#postmeetingContainer {
+    margin-left: 5%;
 }
 
 .mContainer {
@@ -31,5 +40,30 @@
 }
 
 .containerTtl {
+    margin: 12px;
     margin-left: 20px;
+    font-size: 24px;
+}
+
+@media (max-width: 768px) {
+    .pageComponent {
+        left: 0px;
+        width: 100%;
+    }
+    #meetingContainer {
+        flex-direction: column;
+    }
+    .meetingTitle {
+        font-size: 16px;
+    }
+    .containerTtl {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+    #upcomingContainer {
+        margin-right: 0%;
+    }
+    #postmeetingContainer {
+        margin-left: 0%;
+    }
 }

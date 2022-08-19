@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Sidebar from '../Sidebar_Components/Sidebar'
 import LiveMeeting from './Meeting_Components/Live_Meeting/LiveMeeting';
+import UpcomingMeeting from './Meeting_Components/Upcoming_Meeting/UpcomingMeeting';
 import './homepage.css'
 
 export default function Homepage() {
@@ -24,12 +25,12 @@ export default function Homepage() {
           <div id='meetingContainer'>
             <div id="upcomingContainer" className='mContainer'>
               <p className='containerTtl'>Upcoming meetings:</p>
-              <div className="upcoming">UPCOMINGPLACEHOLDER</div>
-              <div className="upcoming">UPCOMINGPLACEHOLDER</div>
-              <div className="upcoming">UPCOMINGPLACEHOLDER</div>
+              <UpcomingMeeting title={`Meeting A - with Group B`} startTime={new Date(2022, 7, 20, 16, 30, 0)}></UpcomingMeeting>
+              <UpcomingMeeting title={`Meeting B - with Group C`} startTime={new Date(2022, 7, 25, 16, 30, 0)}></UpcomingMeeting>
+              <UpcomingMeeting title={`Meeting C - with Group E`} startTime={new Date(2022, 7, 19, 20, 30, 0)}></UpcomingMeeting>
             </div>
             <div id="postmeetingContainer" className='mContainer'>
-              <p className='containerTtl'>post meetings:</p>
+              <p className='containerTtl'>Post-meetings stats:</p>
               <div className="postMeeting">POSTMEETINGPLACEHOLDER</div>
               <div className="postMeeting">POSTMEETINGPLACEHOLDER</div>
               <div className="postMeeting">POSTMEETINGPLACEHOLDER</div>
