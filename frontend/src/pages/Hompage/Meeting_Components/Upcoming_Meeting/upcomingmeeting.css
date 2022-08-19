@@ -5,9 +5,18 @@
     flex-direction: column;
     justify-content: center;
     border-radius: 10px;
+    transition: all 0.2s
+}
+
+.upcomingMeeting:hover {
+    background-color: #d5ccea;
+}
+
+.upcomingMeeting:active {
+    background-color: #d2c8e9;
 }
 
 .upcomingMeeting>div {
     margin: 2.5%;
-    margin-left: 2.5%;
+    margin-left: 5%;
 }

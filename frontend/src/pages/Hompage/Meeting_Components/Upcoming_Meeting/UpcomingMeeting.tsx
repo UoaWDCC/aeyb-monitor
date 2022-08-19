@@ -28,8 +28,13 @@ export default function UpcomingMeeting(prop: { title: string; startTime: Date; 
 
     const meeting = new UpcomingMeeting(prop.title, prop.startTime)
 
+    const openMeetingPage = () => {
+        console.log(`opening the "${meeting.title}" page`)
+    }
+
+
     return (
-        <div className='upcomingMeeting'>
+        <div className='upcomingMeeting' onClick={openMeetingPage}>
             <div className='meetingTitle'>{meeting.title}</div>
             <div className='dDay'>Opens in {meeting.timeTillBeginning}</div>
         </div>
