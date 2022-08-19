@@ -14,8 +14,12 @@ export default function ProfilePage() {
         <>
             <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={2} />
 
-            {/* There would be components present for profile page */}
-            <p className='placeholder2'>This is the Profile page</p>
+            <div className='pageComponent'>
+                {/* There would be components present for profile page */}
+                <p>This is the Profile page</p>
+            </div>
+
+
         </ >
     )
 }

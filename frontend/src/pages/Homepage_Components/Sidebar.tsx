@@ -10,9 +10,9 @@ export default function Sidebar(prop: { isMenuOpen: boolean; toggleMenu: React.M
             <div className='logoBox' onClick={prop.toggleMenu}>
                 <Mainlogo />
             </div>
-            <Menuitem iconIndex={0} isClicked={prop.isMenuOpen} currentPage={prop.currentPage} />
-            <Menuitem iconIndex={1} isClicked={prop.isMenuOpen} currentPage={prop.currentPage} />
-            <Menuitem iconIndex={2} isClicked={prop.isMenuOpen} currentPage={prop.currentPage} />
+            <Menuitem iconIndex={0} isMenuOpen={prop.isMenuOpen} currentPage={prop.currentPage} />
+            <Menuitem iconIndex={1} isMenuOpen={prop.isMenuOpen} currentPage={prop.currentPage} />
+            <Menuitem iconIndex={2} isMenuOpen={prop.isMenuOpen} currentPage={prop.currentPage} />
         </div>
     )
 }

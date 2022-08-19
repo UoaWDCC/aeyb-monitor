@@ -15,8 +15,11 @@ export default function CalendarPage() {
     <>
       <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={1} />
 
-      {/* There would be components present for homepage */}
-      <p className='placeholder3'>This is the Calendar Page</p>
+      <div className='pageComponent'>
+        {/* There would be components present for homepage */}
+        <p>This is the Calendar Page</p>
+      </div>
+
     </ >
   )
 }

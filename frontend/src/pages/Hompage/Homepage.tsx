@@ -15,8 +15,11 @@ export default function Homepage() {
     <>
       <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={0} />
 
-      {/* There would be components present for homepage */}
-      <p className='placeholder'>This is the homepage</p>
+      <div className='pageComponent'>
+        {/* There would be components present for homepage */}
+        <p>This is the Home Page</p>
+      </div>
+
     </ >
   )
 }

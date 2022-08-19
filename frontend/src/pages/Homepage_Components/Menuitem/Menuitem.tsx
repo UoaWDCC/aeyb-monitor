@@ -6,7 +6,7 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
 
-export default function Menuitem(prop: { iconIndex: number; isClicked: boolean; currentPage: number }) {
+export default function Menuitem(prop: { iconIndex: number; isMenuOpen: boolean; currentPage: number }) {
 
     const icons = [faHouse, faCalendar, faUser]
     const names = ['HOME', 'CALENDAR', 'PROFILE']
@@ -27,7 +27,7 @@ export default function Menuitem(prop: { iconIndex: number; isClicked: boolean; 
             <div className='iconBox'>
                 <FontAwesomeIcon icon={icons[prop.iconIndex]} size="2x" className={prop.currentPage === prop.iconIndex ? 'icon selectedItem' : 'icon'} />
             </div >
-            <p className={prop.isClicked ? 'iconTitle' : 'iconTitle invisibleText'} > {names[prop.iconIndex]}</p>
+            <p className={prop.isMenuOpen ? 'iconTitle' : 'iconTitle invisibleText'} > {names[prop.iconIndex]}</p>
         </div >
 
     )
