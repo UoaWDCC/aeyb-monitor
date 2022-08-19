@@ -3,6 +3,8 @@ import React from 'react';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Homepage from './pages/Hompage/Homepage';
+import ProfilePage from './pages/Profile_Page/ProfilePage';
+import CalendarPage from './pages/Calendar_Page/CalendarPage';
 
 function App() {
     return (
@@ -12,8 +14,8 @@ function App() {
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="homepage" element={<Homepage />} />
-                    {/* <Route path="calendar" element={<calendar />} />
-                    <Route path="profile" element={<profile />} /> */}
+                    <Route path="calendarpage" element={<CalendarPage />} />
+                    <Route path="profilepage" element={<ProfilePage />} />
                 </Routes>
             </Router>
         </div>

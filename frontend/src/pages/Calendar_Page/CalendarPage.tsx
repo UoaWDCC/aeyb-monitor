@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Sidebar from '../Homepage_Components/Sidebar'
-import './homepage.css'
+import './calendarpage.css'
 
-export default function Homepage() {
+export default function CalendarPage() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -13,10 +13,10 @@ export default function Homepage() {
 
   return (
     <>
-      <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={0} />
+      <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={1} />
 
       {/* There would be components present for homepage */}
-      <p className='placeholder'>This is the homepage</p>
+      <p className='placeholder3'>This is the Calendar Page</p>
     </ >
   )
 }
