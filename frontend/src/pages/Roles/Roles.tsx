@@ -12,7 +12,7 @@ function Roles() {
 
     return (
         <div className="w-full bg-[#262b6c] bg-white h-screen pt-3 ">
-            <div className="bg-[#bdc3e3] w-full lg:w-[80%] ml-auto p-4 h-[90%] rounded-md grid grid-cols-3 gap-12 overflow-hidden">
+            <div className="bg-[#bdc3e3] w-full lg:w-[80%] ml-auto p-4 h-[90%] rounded-md grid grid-cols-1 md:grid-cols-3 gap-12 overflow-hidden">
                 <div className="flex flex-col">
                     <div className="h-[300px]">
                         <RoleList allRoles={allRoles} />
@@ -23,7 +23,7 @@ function Roles() {
                     </div>
                 </div>
 
-                <div className="bg-[#262b6c] col-span-2 p-2 rounded-md">
+                <div className="bg-[#262b6c] col-span-2 p-2 rounded-md ">
                     <PermissionList />
                 </div>
             </div>

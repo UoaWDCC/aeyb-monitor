@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from '@mui/material/Switch';
 
 enum Permissions {
@@ -59,23 +59,28 @@ export default function PermissionList() {
     }
     return (
         <>
-            <h1 className="text-3xl text-white">Permissions</h1>
-            <div className="flex justify-end">
-                <h2 className="text-2xl text-white">Select all</h2>
-                <Switch
-                    onChange={() => {
-                        setChecked(checked.map((item) => !allChecked));
+            <div className="flex justify-between">
+                <h1 className="text-4xl text-white">Permissions</h1>
+                <div className="flex justify-end pt-2">
+                    <h2 className="text-2xl text-white">Select all</h2>
+                    <Switch
+                        onChange={() => {
+                            setChecked(checked.map((item) => !allChecked));
+                            setAllRolesChecked(!allChecked);
+                            setAllUsersChecked(!allChecked);
+                            setAllEventsChecked(!allChecked);
 
-                        setAllChecked(!allChecked);
-                    }}
-                />
+                            setAllChecked(!allChecked);
+                        }}
+                    />
+                </div>
             </div>
 
-            <div className="flex flex-col overflow-scroll">
+            <div className="flex flex-col overflow-scroll mt-2">
                 {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
                     ([key, value]) => {
                         return (
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-2 mb-3">
                                 <div className="col-span-2 flex">
                                     <h1 className="text-3xl text-white ">
                                         {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
@@ -84,6 +89,11 @@ export default function PermissionList() {
                                         onChange={() => {
                                             toggleSection(key, value);
                                         }}
+                                        checked={
+                                            sectionStates[
+                                                `all${key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}Checked`
+                                            ]
+                                        }
                                     />
                                 </div>
                                 {value.map((index) => {
@@ -109,35 +119,10 @@ export default function PermissionList() {
                                         </div>
                                     );
                                 })}
-                                ;
                             </div>
                         );
                     },
                 )}
-
-                {/* {(Object.keys(Permissions) as Array<keyof typeof Permissions>).map((permission, key) => {
-                    return (
-                        <div className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom">
-                            <p>
-                                {(permission.charAt(0).toUpperCase() + permission.slice(1).toLowerCase()).replace(
-                                    '_',
-                                    ' ',
-                                )}
-                            </p>
-                            <Switch
-                                color="secondary"
-                                checked={checked[key]}
-                                onClick={() =>
-                                    setChecked((oldArray) => {
-                                        const newArray = [...oldArray];
-                                        newArray[key] = !newArray[key];
-                                        return newArray;
-                                    })
-                                }
-                            />
-                        </div>
-                    );
-                })} */}
             </div>
         </>
     );
