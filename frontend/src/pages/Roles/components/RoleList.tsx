@@ -49,7 +49,7 @@ export default function RoleList(props) {
             <div className="overflow-scroll h-5/6">
                 {roles.map((role) => {
                     return (
-                        <div className="p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]">
+                        <div className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]">
                             <p>{role}</p>
                         </div>
                     );

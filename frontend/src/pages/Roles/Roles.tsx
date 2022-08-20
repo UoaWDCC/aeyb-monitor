@@ -11,21 +11,19 @@ function Roles() {
     const allRoles = ['Admin', 'User', 'Guest', 'TestRole1', 'TestRole2'];
 
     return (
-        <div className="w-full bg-[#262b6c] bg-white h-screen pt-3 ">
-            <div className="bg-[#bdc3e3] w-full lg:w-[80%] ml-auto p-4 h-[90%] rounded-md grid grid-cols-1 md:grid-cols-3 gap-12 overflow-hidden">
-                <div className="flex flex-col">
-                    <div className="h-[300px]">
-                        <RoleList allRoles={allRoles} />
-                    </div>
-
-                    <div className="h-[300px]">
-                        <UserList allUsers={allUsers} />
-                    </div>
+        <div className="bg-[#bdc3e3] w-full md:pl-[90px] p-4 h-screen rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
+            <div className="flex flex-col">
+                <div className="h-[300px]">
+                    <RoleList allRoles={allRoles} />
                 </div>
 
-                <div className="bg-[#262b6c] col-span-2 p-2 rounded-md ">
-                    <PermissionList />
+                <div className="h-[300px]">
+                    <UserList allUsers={allUsers} />
                 </div>
+            </div>
+
+            <div className="bg-[#262b6c] col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
+                <PermissionList />
             </div>
         </div>
     );

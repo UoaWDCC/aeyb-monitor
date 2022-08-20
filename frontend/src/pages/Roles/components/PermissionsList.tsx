@@ -80,7 +80,7 @@ export default function PermissionList() {
                 {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
                     ([key, value]) => {
                         return (
-                            <div className="grid grid-cols-2 gap-2 mb-3">
+                            <div className="md:grid grid-cols-2 gap-2 mb-3">
                                 <div className="col-span-2 flex">
                                     <h1 className="text-3xl text-white ">
                                         {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
