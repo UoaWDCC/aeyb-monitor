@@ -27,7 +27,10 @@ export default function UserList(props) {
             <div className="overflow-scroll h-3/4">
                 {users.map((user) => {
                     return (
-                        <div className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]">
+                        <div
+                            className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
+                            key={user}
+                        >
                             <p>{user}</p>
                         </div>
                     );

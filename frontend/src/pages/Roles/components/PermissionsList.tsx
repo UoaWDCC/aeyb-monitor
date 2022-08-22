@@ -42,7 +42,6 @@ export default function PermissionList() {
     };
 
     const [checked, setChecked] = useState(new Array(Object.keys(Permissions).length).fill(false));
-    console.log(checked);
 
     function toggleSection(key, value) {
         let keyName = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
@@ -59,9 +58,9 @@ export default function PermissionList() {
     }
     return (
         <>
-            <div className="flex justify-between">
-                <h1 className="text-4xl text-white">Permissions</h1>
-                <div className="flex justify-end pt-2">
+            <div className="flex items-center flex-col ">
+                <h1 className="text-4xl text-white ">Admin</h1>
+                <div className="flex sm:justify-end pt-2">
                     <h2 className="text-2xl text-white">Select all</h2>
                     <Switch
                         onChange={() => {
@@ -80,7 +79,7 @@ export default function PermissionList() {
                 {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
                     ([key, value]) => {
                         return (
-                            <div className="md:grid grid-cols-2 gap-2 mb-3">
+                            <div className="md:grid grid-cols-2 gap-2 mb-3" key={key}>
                                 <div className="col-span-2 flex">
                                     <h1 className="text-3xl text-white ">
                                         {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
@@ -98,7 +97,10 @@ export default function PermissionList() {
                                 </div>
                                 {value.map((index) => {
                                     return (
-                                        <div className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom">
+                                        <div
+                                            className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom"
+                                            key={index}
+                                        >
                                             <p>
                                                 {(
                                                     PermissionsArray[index].charAt(0).toUpperCase() +
