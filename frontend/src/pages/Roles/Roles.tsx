@@ -11,11 +11,16 @@ function Roles() {
     const allRoles = ['Admin', 'User', 'Guest', 'TestRole1', 'TestRole2'];
 
     return (
+        //TODO add navbar component
+
+        // Page container
         <div className=" md:pl-[90px] bg-[#bdc3e3] overflow-scroll h-screen">
+            {/* Page heading */}
             <div className="px-4 pt-2">
                 <h1 className="text-5xl text-[#262b6c]">Permissions</h1>
             </div>
             <div className=" w-full p-4  rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
+                {/* Left column of roles and users */}
                 <div className="flex flex-col">
                     <div className="h-[300px]">
                         <RoleList allRoles={allRoles} />
@@ -25,7 +30,7 @@ function Roles() {
                         <UserList allUsers={allUsers} />
                     </div>
                 </div>
-
+                {/* Right column of permissions */}
                 <div className="bg-[#262b6c] col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     <PermissionList />
                 </div>
