@@ -20,7 +20,7 @@ function Login() {
                 console.log(response.data);
             });
 
-        navigate('placeholder', { replace: true });
+        navigate('homepage', { replace: true });
     };
 
     return (

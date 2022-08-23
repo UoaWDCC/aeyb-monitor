@@ -1,0 +1,69 @@
+.pageComponent {
+    position: relative;
+    left: 100px;
+    width: -webkit-calc(100% - 100px);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerAll {
+    width: 85%;
+    height: 85%;
+    margin: auto;
+}
+
+#liveContainer {
+    width: 100%;
+    background-color: aliceblue;
+}
+
+#meetingContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#upcomingContainer {
+    margin-right: 5%;
+}
+
+#postmeetingContainer {
+    margin-left: 5%;
+}
+
+.mContainer {
+    width: 100%;
+}
+
+.containerTtl {
+    margin: 12px;
+    margin-left: 20px;
+    font-size: 24px;
+}
+
+@media (max-width: 500px) {
+    .pageComponent {
+        left: 0px;
+        width: 100%;
+    }
+    #meetingContainer {
+        flex-direction: column;
+    }
+    .meetingTitle {
+        font-size: 16px;
+    }
+    .containerTtl {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+    #upcomingContainer {
+        margin-right: 0%;
+    }
+    #postmeetingContainer {
+        margin-left: 0%;
+    }
+}

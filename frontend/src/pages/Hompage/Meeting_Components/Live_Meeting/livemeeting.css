@@ -1,0 +1,41 @@
+.liveMeeting {
+    border: 3px solid #FF0201;
+    background-color: white;
+    transition: all 0.2s;
+    border-radius: 10px;
+}
+
+.liveMeeting:hover {
+    background-color: rgb(251, 248, 248);
+}
+
+.liveMeeting:active {
+    background-color: rgb(254, 247, 247);
+}
+
+.liveMeeting>div {
+    margin: 1.5%;
+    margin-left: 2.5%;
+}
+
+.liveStatus {
+    color: #FF0201;
+}
+
+.liveBall {
+    animation: liveBlink 1s infinite alternate;
+}
+
+@keyframes liveBlink {
+    from {
+        color: red
+    }
+    to {
+        color: white
+    }
+}
+
+.meetingTitle {
+    font-size: 24px;
+    font-weight: bold;
+}
