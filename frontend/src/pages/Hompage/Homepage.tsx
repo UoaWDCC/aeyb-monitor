@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Sidebar from '../Sidebar_Components/Sidebar'
 import LiveMeeting from './Meeting_Components/Live_Meeting/LiveMeeting';
 import UpcomingMeeting from './Meeting_Components/Upcoming_Meeting/UpcomingMeeting';
+import PostMeeting from './Meeting_Components/Post_Meeting/PostMeeting';
 import './homepage.css'
 
 export default function Homepage() {
@@ -31,9 +32,9 @@ export default function Homepage() {
             </div>
             <div id="postmeetingContainer" className='mContainer'>
               <p className='containerTtl'>Post-meetings stats:</p>
-              <div className="postMeeting">POSTMEETINGPLACEHOLDER</div>
-              <div className="postMeeting">POSTMEETINGPLACEHOLDER</div>
-              <div className="postMeeting">POSTMEETINGPLACEHOLDER</div>
+              <PostMeeting />
+              <PostMeeting />
+              <PostMeeting />
             </div>
           </div>
         </div>

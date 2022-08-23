@@ -1,5 +1,5 @@
 import React from 'react'
-import './upcomingmeeting.css'
+import '../meeting.css'
 
 export default function UpcomingMeeting(prop: { title: string; startTime: Date; }) {
 
