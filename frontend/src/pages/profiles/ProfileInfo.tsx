@@ -2,7 +2,6 @@ import IonIcon from '@reacticons/ionicons';
 
 import { ReactElement } from 'react';
 import { Profile, UserStatus, Roles } from './Interface';
-import NavBar from '../components/navigation_bar.js';
 import Sidebar from '../Sidebar_Components/Sidebar'
 import NotifBar from '../components/notification_bar.js';
 import React, { useState } from 'react';
