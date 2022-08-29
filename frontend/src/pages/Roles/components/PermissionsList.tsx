@@ -29,7 +29,8 @@ const PermissionsLists = {
     events: [8, 9, 10, 11],
 };
 
-export default function PermissionList() {
+export default function PermissionList(props) {
+    const { activeRole } = props;
     //toggle all / section states
     const [allChecked, setAllChecked] = useState(false);
     const [allRolesChecked, setAllRolesChecked] = useState(false);
@@ -65,7 +66,7 @@ export default function PermissionList() {
     return (
         <>
             <div className="flex items-center flex-col ">
-                <h1 className="text-4xl text-white ">Admin</h1>
+                <h1 className="text-4xl text-white ">{activeRole}</h1>
 
                 {/* Select all */}
                 <div className="flex sm:justify-end pt-2">

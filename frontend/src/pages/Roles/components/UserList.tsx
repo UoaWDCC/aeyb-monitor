@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function UserList(props) {
-    const { allUsers } = props;
+    const { allUsers, setActiveRole } = props;
 
     function handleUserSearch(search) {
         if (search === '') {
@@ -35,6 +35,9 @@ export default function UserList(props) {
                         <div
                             className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
                             key={user}
+                            onClick={() => {
+                                setActiveRole(user);
+                            }}
                         >
                             <p>{user}</p>
                         </div>

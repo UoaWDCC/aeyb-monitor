@@ -9,6 +9,7 @@ function Roles() {
     //Dummy test users
     const allUsers = ['Hillary', 'Grant', 'Violet', 'Lauren', 'Luke', 'Sarah', 'Helen', 'Josh', 'Tyler'];
     const allRoles = ['Admin', 'User', 'Guest', 'TestRole1', 'TestRole2'];
+    const [activeRole, setActiveRole] = React.useState('');
 
     return (
         //TODO add navbar component
@@ -23,16 +24,17 @@ function Roles() {
                 {/* Left column of roles and users */}
                 <div className="flex flex-col">
                     <div className="h-[300px]">
-                        <RoleList allRoles={allRoles} />
+                        <RoleList allRoles={allRoles} setActiveRole={setActiveRole} />
                     </div>
 
                     <div className="h-[300px]">
-                        <UserList allUsers={allUsers} />
+                        <UserList allUsers={allUsers} setActiveRole={setActiveRole} />
                     </div>
                 </div>
+
                 {/* Right column of permissions */}
                 <div className="bg-[#262b6c] col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
-                    <PermissionList />
+                    <PermissionList activeRole={activeRole} />
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 export default function RoleList(props) {
-    const { allRoles } = props;
+    const { allRoles, setActiveRole } = props;
 
     const [roles, setRoles] = React.useState(allRoles);
 
@@ -59,6 +59,9 @@ export default function RoleList(props) {
                         <div
                             className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
                             key={role}
+                            onClick={() => {
+                                setActiveRole(role);
+                            }}
                         >
                             <p>{role}</p>
                         </div>
