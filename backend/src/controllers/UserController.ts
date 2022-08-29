@@ -1,15 +1,16 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import { AuthenticatedRequest, DevLoginRequest, LoginRequest } from '../types/RequestTypes';
+import { DevLoginRequest, LoginRequest } from '../types/RequestTypes';
 import User, { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
-import { Doc, TypedRequestBody } from '../types/UtilTypes';
+import { AuthenticatedRequest, Doc, TypedRequestBody } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleModel } from '../models/RoleModel';
+import GooglePayload from '../types/GooglePayload';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -25,8 +26,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
         user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
     }
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         token: generateJWT(user.id),
         data: {
             user,
@@ -43,29 +43,34 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
     const credential = req.body.credential;
 
     if (typeof credential !== 'string') {
-        res.status(400).json({
-            status: 'error',
-            message: `The credential must be a string (got ${typeof credential})`,
-        });
-        return;
+        return res.invalid(`The credential must be a string (got ${typeof credential})`);
     }
 
     try {
-        const userId = await validateIdToken(credential, res);
-        if (!userId) return;
+        const payload = await validateIdToken(credential, res);
+        if (!payload) return; // The error json will already have been set in validateIdToken
 
-        let user = await User.findById(userId);
-        // TODO: Determine if name can be extracted from id token
-        // TODO: Profile picture
+        let user = await User.findById(payload.userId);
         if (!user) {
-            user = await User.create({ _id: userId, name: 'TODO' });
-        } else {
-            // TODO: Check that the profile picture and name haven't been changed
+            user = await User.create({ _id: payload.profileUrl, name: payload.name, profileUrl: payload.profileUrl });
+        } else if (user.name !== payload.name || user.profileUrl !== payload.profileUrl) {
+            // If the profile picture or name doesn't match, it must have been updated so we need to update our internal record
+            const tempUser = await User.findByIdAndUpdate(
+                payload.userId,
+                { name: payload.name, profileUrl: payload.profileUrl },
+                {
+                    new: true,
+                    runValidators: true,
+                },
+            );
+            if (!tempUser) {
+                return res.invalid('There was an issue trying to update your user name and profile internally');
+            }
+            user = tempUser;
         }
 
         // The returned token can then be used to authenticate additional requests
-        res.status(200).json({
-            status: 'success',
+        res.ok({
             token: generateJWT(user.id),
             data: {
                 user,
@@ -73,16 +78,13 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
             },
         });
     } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            message: 'Something went wrong while validating id token',
-        });
+        return res.invalid('Something went wrong while validating id token');
     }
 });
 
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
 
-async function validateIdToken(credential: string, res: Response): Promise<string | undefined> {
+async function validateIdToken(credential: string, res: Response): Promise<GooglePayload | void> {
     const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: config.clientID,
@@ -90,23 +92,20 @@ async function validateIdToken(credential: string, res: Response): Promise<strin
 
     const payload = ticket.getPayload();
     const userId = payload?.sub;
-    if (!userId) {
-        res.status(400).json({
-            status: 'error',
-            message: 'The id token provided was malformed',
-        });
-        return;
+    const name = payload?.name;
+    const profileUrl = payload?.picture;
+
+    if (!(userId && name && profileUrl)) {
+        return res.invalid('The id token provided was malformed');
     }
 
     const domain = payload.hd;
-    // When not in development, make sure users logging in have the correct email domain
-    if (config.nodeEnv !== 'development' && domain !== config.googleDomain) {
-        res.status(404).json({
-            status: 'error',
-            message: 'Invalid google domain',
-        });
+    // Make sure users logging in have the correct email domain
+    if (domain !== config.googleDomain) {
+        return res.unauthorized('Invalid google domain');
     }
-    return userId;
+
+    return { userId, name, profileUrl };
 }
 
 function generateJWT(userId: string): string {
@@ -119,11 +118,10 @@ function generateJWT(userId: string): string {
  * @desc 	Get all the users
  * @route 	GET /api/users/
  */
-const getAllUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response) => {
+const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     const users = await User.find();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         results: users.length,
         data: {
             users,
@@ -135,16 +133,10 @@ const getAllUsers = asyncHandler(async (req: Request<AuthenticatedRequest>, res:
  * @desc    Get information about the currently logged in user
  * @route   GET /api/users/@me
  */
-const getSelf = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Response) => {
-    const self = req.params.user;
+const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+    const self = req.body.requester;
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            self,
-            permissions: [...(await getPermissions(self))],
-        },
-    });
+    res.ok({ self, permissions: [...(await getPermissions(self))] });
 });
 
 /**
@@ -153,13 +145,11 @@ const getSelf = asyncHandler(async (req: Request<AuthenticatedRequest>, res: Res
  */
 const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) => {
     const user = await User.findById(req.params.userId);
+    if (!user) {
+        return res.notFound(`There is no user with the id ${req.params.userId}`);
+    }
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user,
-        },
-    });
+    res.ok({ user, permissions: [...(await getPermissions(user))] });
 });
 
 /**
@@ -172,12 +162,7 @@ const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>
         runValidators: true,
     });
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user,
-        },
-    });
+    res.ok({ user });
 });
 
 async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
@@ -198,30 +183,18 @@ async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
 const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
     //Check roles is provided as an array
     if (!Array.isArray(req.body.roles)) {
-        res.status(400).json({
-            status: 'error',
-            message: 'Roles must be an array',
-        });
-        return;
+        return res.invalid('The roles must be an array');
     }
 
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
-        res.status(400).json({
-            status: 'error',
-            message: 'You must specify atleast one role',
-        });
-        return;
+        return res.invalid('You must specify atleast one role');
     }
 
     // Get the user
     const user = await User.findById(req.params.userId);
     if (!user) {
-        res.status(400).json({
-            status: 'error',
-            message: 'User not found',
-        });
-        return;
+        return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
     const addedRoles: RoleModel[] = [];
@@ -230,29 +203,17 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
         // Check if role exists
         const role = await Role.findById(roleId);
         if (!role) {
-            res.status(400).json({
-                status: 'error',
-                message: 'Role not found',
-            });
-            return;
+            return res.notFound(`There is no role with the id ${roleId}`);
         }
 
         // Check if the user already has the role
         if (user.roles.includes(role.id)) {
-            res.status(400).json({
-                status: 'error',
-                message: 'User already has that role',
-            });
-            return;
+            return res.invalid(`The user already has the role ${role.id}`);
         }
 
         // Check if trying to add the same role twice
         if (addedRoles.includes(role.id)) {
-            res.status(400).json({
-                status: 'error',
-                message: 'You cannot add the same role twice',
-            });
-            return;
+            return res.invalid(`You cannot add the same role twice. ${role.id} has already been added`);
         }
 
         addedRoles.push(role);
@@ -263,8 +224,7 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
 
     await user.save();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         rolesAdded: addedRoles.length,
         data: {
             user,
@@ -280,30 +240,18 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
 const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
     //Check roles is provided as an array
     if (!Array.isArray(req.body.roles)) {
-        res.status(400).json({
-            status: 'error',
-            message: 'Roles must be an array',
-        });
-        return;
+        return res.invalid('The roles must be an array');
     }
 
     // Check atleast one role specified
     if (req.body.roles.length == 0) {
-        res.status(400).json({
-            status: 'error',
-            message: 'You must specify atleast one role',
-        });
-        return;
+        return res.invalid('You must specify atleast one role');
     }
 
     // Get the user
     const user = await User.findById(req.params.userId).populate('roles');
     if (!user) {
-        res.status(400).json({
-            status: 'error',
-            message: 'User not found',
-        });
-        return;
+        return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
     const removedRoles: RoleModel[] = [];
@@ -312,11 +260,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
         // Check if role exists
         const role = await Role.findById(roleId);
         if (!role) {
-            res.status(400).json({
-                status: 'error',
-                message: 'Role not found',
-            });
-            return;
+            return res.notFound(`There is no role with the id ${roleId}`);
         }
 
         removedRoles.push(role);
@@ -334,8 +278,7 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
 
     await user.save();
 
-    res.status(200).json({
-        status: 'success',
+    res.ok({
         rolesRemoved: removedRoles.length,
         data: {
             user,

@@ -1,5 +1,4 @@
-import { UserModel } from '../models/UserModel';
-import { Doc } from './UtilTypes';
+import { MeetingModel } from '../models/MeetingModel';
 
 export interface LoginRequest {
     credential: string;
@@ -11,6 +10,6 @@ export interface DevLoginRequest {
     profileUrl?: string;
 }
 
-export interface AuthenticatedRequest {
-    user: Doc<UserModel>;
+export interface MeetingRequest extends Omit<MeetingModel, 'time' | '_id' | 'attendance'> {
+    time: string;
 }
