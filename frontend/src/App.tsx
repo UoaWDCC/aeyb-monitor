@@ -2,11 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React from 'react';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
-
 import Roles from './pages/Roles/Roles';
-
-import './App.css';
-
 import Homepage from './pages/Hompage/Homepage';
 import ProfilePage from './pages/Profile_Page/ProfilePage';
 import CalendarPage from './pages/Calendar_Page/CalendarPage';
