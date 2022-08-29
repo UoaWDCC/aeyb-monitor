@@ -1,0 +1,13 @@
+.logo {
+    position: relative;
+    aspect-ratio: 1/1;
+    height: 60px;
+    object-fit: cover;
+    margin: 15px;
+    transition: 0.2s all;
+}
+
+.logo:active {
+    left: 0.5px;
+    top: 0.5px;
+}

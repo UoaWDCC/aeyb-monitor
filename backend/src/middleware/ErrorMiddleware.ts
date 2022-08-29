@@ -17,18 +17,11 @@ function ErrorHandler(err: Error | MongooseError, req: Request, res: Response, n
         return;
     }
     if (err instanceof mongoose.Error.CastError) {
-        res.status(400).json({
-            status: 'error',
-            message: getCastErrorMessage(err),
-        });
-        return;
+        return res.invalid(getCastErrorMessage(err));
     }
 
     const status = res.statusCode ?? 501;
-    res.status(status).json({
-        status: 'error',
-        message: err.message,
-    });
+    res.error(status, err.message);
 }
 
 function getValidationErrors(error: mongoose.Error.ValidationError): ValidationError[] {
