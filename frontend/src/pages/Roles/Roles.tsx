@@ -34,7 +34,11 @@ function Roles() {
 
                 {/* Right column of permissions */}
                 <div className="bg-[#262b6c] col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
-                    <PermissionList activeRole={activeRole} />
+                    {activeRole != '' ? (
+                        <PermissionList activeRole={activeRole} />
+                    ) : (
+                        <div className="text-center text-white text-3xl">Select a role to view permissions</div>
+                    )}
                 </div>
             </div>
         </div>
