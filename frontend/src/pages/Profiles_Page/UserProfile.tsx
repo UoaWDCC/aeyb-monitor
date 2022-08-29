@@ -1,3 +1,4 @@
+import React from 'react';
 import './UserProfile.css';
 import ProfileInfo from './ProfileInfo';
 import { UserStatus, Roles } from './Interface';

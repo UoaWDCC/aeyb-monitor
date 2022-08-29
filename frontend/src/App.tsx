@@ -3,7 +3,7 @@ import React from 'react';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Homepage from './pages/Hompage/Homepage';
-import UserProfile from './pages/profiles/UserProfile';
+import UserProfile from './pages/Profiles_Page/UserProfile';
 import CalendarPage from './pages/Calendar_Page/CalendarPage';
 
 
