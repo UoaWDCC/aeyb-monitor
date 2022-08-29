@@ -1,20 +1,20 @@
 import express, { Express } from 'express';
 import UserRouter from '../routes/UserRoutes';
-import Config from '../types/Config';
-import mongoose, { ConnectOptions } from 'mongoose';
+import RoleRouter from '../routes/RoleRoutes';
+import PermissionRouter from '../routes/PermissionRoutes';
+import { Config } from '../types/Config';
+import mongoose from 'mongoose';
+import ErrorHandler from '../middleware/ErrorMiddleware';
 
 export default class Server {
     private _app: Express;
     private config: Config;
 
     constructor(config: Config) {
-        config.port = config.port ?? 5000; // Default to port 5000 if not specified
         this.config = config;
         this._app = express();
 
-        this._app.listen(this.config.port, () =>
-            console.log(`Server started on port ${this.config.port}`),
-        );
+        this._app.listen(this.config.port, () => console.log(`Server started on port ${this.config.port}`));
 
         this.init();
     }
@@ -26,15 +26,10 @@ export default class Server {
     }
 
     private async connectDB() {
-        // Connect to MonboDB database
-        mongoose
-            .connect(this.config.mongoURI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            } as ConnectOptions)
-            .then(() => {
-                console.log('Connected to the Mongodb database.');
-            });
+        // Connect to MongoDB database
+        mongoose.connect(this.config.mongoURI).then(() => {
+            console.log('Connected to the Mongodb database.');
+        });
     }
 
     private configureApp() {
@@ -43,7 +38,11 @@ export default class Server {
         this._app.use(express.urlencoded({ extended: false }));
 
         this._app.use('/api/users', UserRouter);
+        this._app.use('/api/roles', RoleRouter);
+        this._app.use('/api/permissions', PermissionRouter);
         console.log('Routers registered');
+
+        this._app.use(ErrorHandler); // Use error handler to catch any errors in routes
     }
 
     public get app(): Express {
