@@ -1,13 +1,12 @@
 {
-    "compilerOptions": {
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "alwaysStrict": true,
-        "skipLibCheck": true,
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "noFallthroughCasesInSwitch": true
-    },
-    "exclude": ["node_modules"]
+    "extends": "./tsconfig.base.json",
+    "references": [
+        {
+            "path": "./backend"
+        },
+        {
+            "path": "./shared"
+        }
+    ],
+    "files": []
 }
