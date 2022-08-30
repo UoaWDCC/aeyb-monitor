@@ -2,6 +2,6 @@
 // other mono-repos
 export * from './models/Test';
 
-export default function hello() {
+export function hello() {
     return 'Hello world!';
 }

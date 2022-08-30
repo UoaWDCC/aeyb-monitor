@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "aeyb shared types",
     "main": "dist/index.js",
+    "type": "module",
     "scripts": {
         "build": "npx tsc"
     }

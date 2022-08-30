@@ -2,7 +2,7 @@
     "extends": "../tsconfig.base.json",
 
     "compilerOptions": {
-        "target": "ES2016",
+        "target": "ESNext",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
         "module": "esnext",
@@ -11,6 +11,6 @@
         "isolatedModules": true,
         "jsx": "react-jsx"
     },
-    "include": ["src"],
+    "include": ["src", "vite.config.ts"],
     "references": [{ "path": "../shared" }]
 }

@@ -7,6 +7,10 @@ import Homepage from './pages/Hompage/Homepage';
 import ProfilePage from './pages/Profile_Page/ProfilePage';
 import CalendarPage from './pages/Calendar_Page/CalendarPage';
 
+import { hello } from '../../shared';
+
+console.log(hello());
+
 function App() {
     return (
         <div className="App">
