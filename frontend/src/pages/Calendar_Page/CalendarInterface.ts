@@ -14,4 +14,10 @@ type Events = {
     description: string
     time: string
     attendance: null //array of profiles once merged with profile page
+    status: EventStatus // user specific input
+}
+
+export enum EventStatus{
+    PENDING = "#F4CCCC",
+    RESPONDED = "#D9D2E9"
 }
