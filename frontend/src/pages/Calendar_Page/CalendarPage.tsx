@@ -1,8 +1,28 @@
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Sidebar from '../Sidebar_Components/Sidebar'
-import './calendarpage.css'
+import WeeklyInstance from './components/WeeklyInstance'
 
-export default function CalendarPage() {
+let eventList = {
+  listOfEvents: [
+
+    {
+      title: "Test1",
+      description: "blah",
+      time: "blah",
+      attendance: null
+    },
+
+    {
+      title: "Test2",
+      description: "blah",
+      time: "blah",
+      attendance: null
+    }
+  ]
+}
+
+
+const CalendarPage = (): ReactElement => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -16,10 +36,15 @@ export default function CalendarPage() {
       <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={1} />
 
       <div className='pageComponent'>
-        {/* There would be components present for homepage */}
-        <p>This is the Calendar Page</p>
+        {/* CALENDAR/EVENT COLLECTION DIV */}
+        <div className='h-full w-1/2 bg-green-50'>
+          <WeeklyInstance weekly={eventList} />
+        </div>
       </div>
 
     </ >
   )
 }
+
+export default CalendarPage;
+
