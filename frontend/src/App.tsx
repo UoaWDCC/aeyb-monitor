@@ -15,7 +15,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
-                    <Route path="roles" element={<Roles />} />
+                    <Route path="profilepage/roles" element={<Roles />} />
                     <Route path="homepage" element={<Homepage />} />
                     <Route path="calendarpage" element={<CalendarPage />} />
                     <Route path="profilepage" element={<UserProfile />} />

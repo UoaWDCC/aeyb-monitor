@@ -7,7 +7,7 @@ import Roles from '../../Roles/Roles';
 const SettingsBar = () => {
     const navigate = useNavigate();
     const navToRoles = () => {
-        navigate("/roles");
+        navigate("/profilepage/roles");
     };
 
     return (
