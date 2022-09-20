@@ -34,6 +34,16 @@ const CalendarPage = (): ReactElement => {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  // get the current date and the date in one week 
+  const [weeks, setWeekCount] = useState(0); // counts which week the user has naviigated to 
+  const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUNE", "JULY", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+  const week = new Date();
+  week.setDate(week.getDate() + weeks * 7);
+  const firstWeekDay = week.getDate();
+  const previousMonth = months[week.getMonth()];
+  week.setDate(week.getDate() + 7); // set the date to the date next week
+
   return (
     <>
       <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={1} />
@@ -42,9 +52,9 @@ const CalendarPage = (): ReactElement => {
         {/* CALENDAR/EVENT COLLECTION DIV */}
         <div className='flex flex-col h-full w-2/5'>
           <div className='flex-row text-center mt-8 mb-8'>
-            <button className=' bg-gray-200 px-4 py-4 rounded-sm w-1/8'> prev </button>
-            <p className='inline-block w-1/2 text-2xl font-bold text-[#5563AE]'>SEP 5 - SEP 11</p>
-            <button className='bg-gray-200 px-4 py-4 rounded-sm w-1/8'>next </button>
+            <button className=' bg-gray-200 px-4 py-4 rounded-sm w-1/8' onClick={() => { setWeekCount(weeks - 1) }}> prev </button>
+            <p className='inline-block w-1/2 text-2xl font-bold text-[#5563AE]'>{previousMonth} {firstWeekDay} - {months[week.getMonth()]} {week.getDate()}</p>
+            <button className='bg-gray-200 px-4 py-4 rounded-sm w-1/8' onClick={() => setWeekCount(weeks + 1)}>next </button>
           </div>
 
           <WeeklyInstance weekly={eventList} />
