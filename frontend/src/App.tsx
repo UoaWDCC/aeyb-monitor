@@ -20,7 +20,7 @@ function App() {
     return (
         <div className="App">
             <Router>
-                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={0} />
+                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />

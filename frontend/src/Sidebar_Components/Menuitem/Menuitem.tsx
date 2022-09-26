@@ -6,7 +6,7 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
 
-export default function Menuitem(prop: { iconIndex: number; isMenuOpen: boolean; currentPage: number }) {
+export default function Menuitem(prop: { iconIndex: number; isMenuOpen: boolean; currentPage: number; setCurrentPage: Function }) {
 
     const icons = [faHouse, faCalendar, faUser]
     const names = ['HOME', 'CALENDAR', 'PROFILE']
@@ -17,6 +17,7 @@ export default function Menuitem(prop: { iconIndex: number; isMenuOpen: boolean;
         if (prop.iconIndex !== prop.currentPage) {
             console.log(`switching to ${names[prop.iconIndex].toLowerCase()}`)
             navigate(`../${names[prop.iconIndex].toLowerCase()}page`, { replace: true });
+            prop.setCurrentPage(prop.iconIndex)
         } else {
             console.log('staying on the page')
         }
