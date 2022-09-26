@@ -6,6 +6,7 @@ import Roles from './pages/Roles/Roles';
 import Homepage from './pages/Hompage/Homepage';
 import UserProfile from './pages/Profiles_Page/UserProfile';
 import CalendarPage from './pages/Calendar_Page/CalendarPage';
+import ActiveMeeting from './pages/Active_Meeting/ActiveMeeting';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                     <Route path="homepage" element={<Homepage />} />
                     <Route path="calendarpage" element={<CalendarPage />} />
                     <Route path="profilepage" element={<UserProfile />} />
+                    <Route path="activemeetingpage" element={<ActiveMeeting />} />
                 </Routes>
             </Router>
         </div>
