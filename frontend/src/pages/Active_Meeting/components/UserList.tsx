@@ -29,7 +29,8 @@ export default function UserList(props) {
             {/* Search box */}
             <input
 
-                className="text bg-gray-200 w-full rounded-sm border-none outline-0 p-1 m-0 mt-2"
+                className="text bg-gray-200 w-full rounded-md border-none outline-0 p-2 m-0 mt-2"
+                id="user-search"
                 type="text"
                 placeholder="Search for a User"
                 onChange={(prop: any) => {
@@ -47,6 +48,7 @@ export default function UserList(props) {
                             onClick={() => {
                                 setActiveUser(user);
                                 setShowUsers(false);
+                                (document.getElementById("user-search") as HTMLInputElement).value = "";
                             }}
                         >
                             <p>{user}</p>
