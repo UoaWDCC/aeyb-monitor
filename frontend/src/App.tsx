@@ -6,12 +6,17 @@ import Roles from './pages/Roles/Roles';
 import Homepage from './pages/Hompage/Homepage';
 import ProfilePage from './pages/Profile_Page/ProfilePage';
 import CalendarPage from './pages/Calendar_Page/CalendarPage';
-
-import { hello } from '../../shared';
-
-console.log(hello());
+import { Test } from './shared/Types/Test';
 
 function App() {
+
+    const t: Test = {
+        name: 'Hi',
+        age: 20,
+    }
+
+    console.log(t);
+
     return (
         <div className="App">
             <Router>
