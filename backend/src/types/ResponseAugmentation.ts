@@ -1,4 +1,5 @@
 import { response } from 'express';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 type DataType = Record<string, unknown> & { data?: Record<string, unknown> };
 
@@ -11,6 +12,7 @@ declare module 'express-serve-static-core' {
         error(status: number, message: string): void;
         invalid(message: string): void;
         unauthorized(message: string): void;
+        tokenExpired(error: TokenExpiredError): void;
         notFound(message: string): void;
         success(status: number, data: DataType): void;
         ok(data: DataType): void;
@@ -34,6 +36,14 @@ response.unauthorized = function (message) {
     this.status(401).json({
         status: 'unauthorized',
         message,
+    });
+};
+
+response.tokenExpired = function (error) {
+    this.status(401).json({
+        status: 'tokenExpired',
+        messsage: error.message,
+        expiredAt: error.expiredAt,
     });
 };
 
