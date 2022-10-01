@@ -22,7 +22,7 @@ export default function UserList(props) {
 
 
     return (
-        <div className="p-2 rounded-md h-full mt-4 relative">
+        <div className="p-2 rounded-md h-full relative">
             <h1 className="text-3xl text-white">Users</h1>
 
 
@@ -43,7 +43,7 @@ export default function UserList(props) {
                 {users.map((user) => {
                     return (
                         <div
-                            className="text-lg p-2 w-full m-0 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
+                            className="text-lg p-2 w-full m-0 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c] z-50"
                             key={user}
                             onClick={() => {
                                 setActiveUser(user);

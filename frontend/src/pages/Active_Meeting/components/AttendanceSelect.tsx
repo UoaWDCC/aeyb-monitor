@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
-import Box from '@mui/material/Box';
+import React from 'react'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-export default function AttendanceSelect() {
+
+export default function AttendanceSelect(props) {
+
+    const { setAttendance } = props;
+
+    function handleChange(event: SelectChangeEvent) {
+        setAttendance(event.target.value);
+    }
 
     return (
         <FormControl fullWidth>
@@ -14,7 +20,7 @@ export default function AttendanceSelect() {
                 labelId="attendance-select-label"
                 id="attendance-select"
                 label="Attendance"
-            // onChange={handleChange}
+                onChange={handleChange}
             >
                 <MenuItem value={1}>Attended</MenuItem>
                 <MenuItem value={0}>Not Attended</MenuItem>
