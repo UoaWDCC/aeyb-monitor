@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Roles from './pages/Roles/Roles';
@@ -17,10 +17,17 @@ function App() {
         setIsMenuOpen(!isMenuOpen)
     }
 
+
+    const [isLoginPage, setIsLoginPage] = useState<boolean>(false)
+
+    useEffect(() => {
+        setIsLoginPage('/' === window.location.pathname)
+    }, [])
+
     return (
         <div className="App">
             <Router>
-                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} isLoginPage={isLoginPage} />
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
