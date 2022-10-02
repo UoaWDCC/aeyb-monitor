@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import { DevLoginRequest } from '../types/RequestTypes';
 import User from '../models/UserSchema';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
@@ -10,6 +9,7 @@ import { TypedRequest } from '../types/UtilTypes';
 import Role from '../models/RoleSchema';
 import GooglePayload from '../types/GooglePayload';
 import {
+    DevLoginRequest,
     GiveRolesRequest,
     LoginRequest,
     RemoveRolesRequest,

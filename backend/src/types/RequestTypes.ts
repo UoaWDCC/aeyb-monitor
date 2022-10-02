@@ -1,10 +1,4 @@
-import { MeetingModel } from '../models/MeetingSchema';
-
-export interface DevLoginRequest {
-    id: string;
-    name?: string;
-    profileUrl?: string;
-}
+import MeetingModel from '../shared/Types/models/MeetingModel';
 
 export interface MeetingRequest extends Omit<MeetingModel, 'time' | '_id' | 'attendance'> {
     time: string;

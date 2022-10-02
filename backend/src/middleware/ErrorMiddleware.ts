@@ -6,32 +6,26 @@ type CastErrorValueType = mongoose.Error.CastError & { valueType?: string };
 type MongooseError = mongoose.Error.ValidationError | mongoose.Error.CastError;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ErrorHandler(err: Error | MongooseError, req: Request, res: Response, next: NextFunction) {
+function ErrorHandler(error: Error | MongooseError, req: Request, res: Response, next: NextFunction) {
     // Check if the error was thrown due to invalid inputs for a model
-    if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).json({
-            status: 'errors',
-            message: 'There was something wrong with your request',
-            errors: getValidationErrors(err),
-        });
-        return;
+    if (error instanceof mongoose.Error.ValidationError) {
+        return res.invalid(getValidationErrorMessage(error));
     }
-    if (err instanceof mongoose.Error.CastError) {
-        return res.invalid(getCastErrorMessage(err));
+    if (error instanceof mongoose.Error.CastError) {
+        return res.invalid(getCastErrorMessage(error));
     }
 
     const status = res.statusCode ?? 501;
-    res.error(status, err.message);
+    res.error(status, error.message);
 }
 
-function getValidationErrors(error: mongoose.Error.ValidationError): ValidationError[] {
-    return Object.values(error.errors).map((err) => {
-        const message = err instanceof mongoose.Error.CastError ? getCastErrorMessage(err) : err.message;
-        return {
-            field: err.path,
-            message: message,
-        };
-    });
+function getValidationErrorMessage(error: mongoose.Error.ValidationError): string {
+    const errors = Object.values(error.errors);
+    if (errors.length !== 0) {
+        const error = errors[0];
+        return error instanceof mongoose.Error.CastError ? getCastErrorMessage(error) : error.message;
+    }
+    return "Something wen't wrong with your request";
 }
 
 function getCastErrorMessage(error: mongoose.Error.CastError): string {
