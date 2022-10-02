@@ -8,9 +8,13 @@ export default function Sidebar(prop: { isMenuOpen: boolean; toggleMenu: React.M
     const [currentPage, setCurrentPage] = useState<number>(0)
 
     return (
-        <div className={prop.isMenuOpen ? "sidebar menuOpen" : "sidebar"}>
-            <div className='logoBox' onClick={prop.toggleMenu}>
-                <img className='relative aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]' src={logo} alt="AEYB logo" />
+        <div className={'sidebar ' + (prop.isMenuOpen ? 'w-[250px]' : 'w-[90px]')}>
+            <div className='mb-[7vh]' onClick={prop.toggleMenu}>
+                <img
+                    className='relative aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]'
+                    src={logo}
+                    alt="AEYB logo"
+                />
             </div>
             <Menuitem iconIndex={0} isMenuOpen={prop.isMenuOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             <Menuitem iconIndex={1} isMenuOpen={prop.isMenuOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} />
