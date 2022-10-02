@@ -1,17 +1,7 @@
 import mongoose from 'mongoose';
-import AttendanceModel from '../shared/Types/models/AttendanceModel';
-import UserModel from '../shared/Types/models/UserModel';
+import MeetingModel from '../shared/Types/models/MeetingModel';
 import { AttendanceSchema } from './AttendanceSchema';
-
-export interface MeetingModel {
-    _id: mongoose.Types.ObjectId;
-    name: string;
-    creator: UserModel;
-    time: Date;
-    where: string;
-    attendance: AttendanceModel;
-    description: string;
-}
+import { applyToJsonOptions } from './Utils';
 
 const meetingSchema = new mongoose.Schema<MeetingModel>({
     name: {
@@ -28,19 +18,20 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
         type: Date,
         required: [true, 'You must specify when the event starts'],
     },
-    where: {
+    location: {
         type: String,
         required: [true, 'You must specify the where the meeting was held'],
     },
     attendance: {
         type: AttendanceSchema,
-        ref: 'Attendance',
         required: [true, 'You must specify the attendance'],
     },
     description: {
         type: String,
     },
 });
+
+applyToJsonOptions(meetingSchema);
 
 const Meeting = mongoose.model('Meeting', meetingSchema);
 
