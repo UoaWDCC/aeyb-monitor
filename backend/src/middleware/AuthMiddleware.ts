@@ -35,13 +35,13 @@ export default function protect(permission?: Permission): AuthenticationFunction
                 }
             }
 
-            // Make the user accessible in the body of the request.
+            // Make sure that the users roles have actually been populated
             if (!isPopulatedUser(user)) {
                 await user.populate('roles');
             }
 
             // We know that we've populated the user, so it's safe to cast.
-            (req as TypedRequest<unknown, unknown>).body.requester = user as unknown as Doc<PopulatedUser, string>;
+            (req as TypedRequest).body.requester = user as unknown as Doc<PopulatedUser, string>;
 
             next();
         } catch (error) {

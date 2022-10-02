@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import User from '../models/UserSchema';
+import User, { UserDBModel } from '../models/UserSchema';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
@@ -145,7 +145,7 @@ const getAllUsers = asyncHandler(async (req: TypedRequest, res: TypedResponse<Ge
 
     res.ok({
         results: users.length,
-        users,
+        users: users.map((user) => user.toJSON()),
     });
 });
 
@@ -173,24 +173,24 @@ const updateUser = asyncHandler(
             runValidators: true,
         });
 
-        res.ok({ user });
+        res.ok({ user: user.toJSON() });
     },
 );
 
 function isPopulatedUser(
-    user: Doc<UserModel, string> | Doc<PopulatedUser, string>,
+    user: Doc<UserDBModel, string> | Doc<PopulatedUser, string>,
 ): user is Doc<PopulatedUser, string> {
-    return !user.populated('roles');
+    return user.populated('roles');
 }
 
-async function getPermissions(user: Doc<UserModel, string> | Doc<PopulatedUser, string>): Promise<Set<Permission>> {
+async function getPermissions(user: Doc<UserDBModel, string> | Doc<PopulatedUser, string>): Promise<Set<Permission>> {
     if (!isPopulatedUser(user)) {
         await user.populate('roles');
     }
 
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
     return new Set(
-        user.roles
+        (user as PopulatedUser).roles
             .flatMap((role) => role.permissions)
             .map((permission) => Permission[permission as keyof typeof Permission]),
     );
@@ -218,7 +218,7 @@ const giveRoles = asyncHandler(
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const addedRoles: RoleModel[] = [];
+        const addedRoles: Doc<RoleModel>[] = [];
 
         for (const roleId of req.body.roleIds) {
             // Check if role exists
@@ -234,12 +234,12 @@ const giveRoles = asyncHandler(
         }
 
         // Give the roles to the user
-        user.roles = user.roles.concat(addedRoles.map((role) => role.id));
+        user.roles = user.roles.concat(addedRoles.map((role) => role._id));
 
         await user.save();
 
         res.ok({
-            user,
+            user: user.toJSON(),
             addedRoles,
         });
     },
@@ -262,7 +262,7 @@ const removeRoles = asyncHandler(
         }
 
         // Get the user
-        const user = await User.findById(req.params.userId).populate('roles');
+        const user = await User.findById(req.params.userId);
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
@@ -283,8 +283,7 @@ const removeRoles = asyncHandler(
 
         // Remove the roles from the user or the removed list if the user doesn't have the role
         for (const role of removedRoles) {
-            // TODO: Check that this equality works -> r._id is technically an ObjectId
-            const index = user.roles.findIndex((r) => r === role.id);
+            const index = user.roles.findIndex((r) => r.equals(role._id));
             if (index >= 0) {
                 user.roles.splice(index, 1);
             } else {
@@ -295,7 +294,7 @@ const removeRoles = asyncHandler(
         await user.save();
 
         res.ok({
-            user,
+            user: user.toJSON(),
             removedRoles,
         });
     },
