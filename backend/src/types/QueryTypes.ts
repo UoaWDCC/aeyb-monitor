@@ -2,8 +2,7 @@ export interface PaginationQuery {
     limit?: string;
     page?: string;
 }
-
-export interface EventFilterQuery extends PaginationQuery {
+export interface MeetingFilterQuery extends PaginationQuery {
     before?: string;
     after?: string;
     passed?: string;
@@ -11,6 +10,5 @@ export interface EventFilterQuery extends PaginationQuery {
     creator?: string;
     location?: string;
     name?: string;
-    roles?: string;
     type?: string;
 }
