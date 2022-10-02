@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { UserModel } from './UserModel';
 import { AttendanceSchema, Attendance } from './AttendanceModel';
 
-enum EventType {
+enum MeetingType {
     Meeting = 'meeting',
     Event = 'event',
 }
@@ -15,7 +15,7 @@ export interface MeetingModel {
     location: string;
     attendance: Attendance;
     description?: string;
-    type: EventType;
+    type: MeetingType;
 }
 
 const meetingSchema = new mongoose.Schema<MeetingModel>({
@@ -47,7 +47,7 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     },
     type: {
         type: String,
-        enum: EventType,
+        enum: MeetingType,
         required: [true, 'You must specify the type of event'],
     },
 });
