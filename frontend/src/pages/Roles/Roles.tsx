@@ -39,7 +39,7 @@ function Roles() {
                     </div>
                     {/* Return button */}
                     <div className="mt-10">
-                        <button className="text-3xl text-[#ffffff] bg-[#262b6c] p-4 border-4" onClick={returntoProfile} >Return to Profile</button>
+                        <button className="text-3xl text-[#ffffff] bg-[#262b6c] p-4 border-2 rounded-md" onClick={returntoProfile} >Return to Profile</button>
                     </div>
                 </div>
 
