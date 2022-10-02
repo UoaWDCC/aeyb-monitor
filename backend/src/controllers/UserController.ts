@@ -28,10 +28,8 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
 
     res.ok({
         token: generateJWT(user.id),
-        data: {
-            user,
-            permissions: [...(await getPermissions(user))], // Apparently it doesn't like sets
-        },
+        user,
+        permissions: [...(await getPermissions(user))], // Apparently it doesn't like sets
     });
 });
 
@@ -72,10 +70,8 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
         // The returned token can then be used to authenticate additional requests
         res.ok({
             token: generateJWT(user.id),
-            data: {
-                user,
-                permissions: await getPermissions(user),
-            },
+            user,
+            permissions: [...(await getPermissions(user))],
         });
     } catch (error) {
         return res.invalid('Something went wrong while validating id token');
@@ -115,6 +111,16 @@ function generateJWT(userId: string): string {
 }
 
 /**
+ * @desc    Get information about the currently logged in user
+ * @route   GET /api/users/@me
+ */
+const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+    const self = req.body.requester;
+
+    res.ok({ self, permissions: [...(await getPermissions(self))] });
+});
+
+/**
  * @desc 	Get all the users
  * @route 	GET /api/users/
  */
@@ -123,20 +129,8 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
 
     res.ok({
         results: users.length,
-        data: {
-            users,
-        },
+        users,
     });
-});
-
-/**
- * @desc    Get information about the currently logged in user
- * @route   GET /api/users/@me
- */
-const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const self = req.body.requester;
-
-    res.ok({ self, permissions: [...(await getPermissions(self))] });
 });
 
 /**
@@ -206,17 +200,10 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
             return res.notFound(`There is no role with the id ${roleId}`);
         }
 
-        // Check if the user already has the role
-        if (user.roles.includes(role.id)) {
-            return res.invalid(`The user already has the role ${role.id}`);
+        // Ignore duplicates and roles the user already has
+        if (!(user.roles.includes(role) || addedRoles.includes(role))) {
+            addedRoles.push(role);
         }
-
-        // Check if trying to add the same role twice
-        if (addedRoles.includes(role.id)) {
-            return res.invalid(`You cannot add the same role twice. ${role.id} has already been added`);
-        }
-
-        addedRoles.push(role);
     }
 
     // Give the roles to the user
@@ -225,11 +212,8 @@ const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, Use
     await user.save();
 
     res.ok({
-        rolesAdded: addedRoles.length,
-        data: {
-            user,
-            addedRoles,
-        },
+        user,
+        addedRoles,
     });
 });
 
@@ -262,8 +246,10 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
         if (!role) {
             return res.notFound(`There is no role with the id ${roleId}`);
         }
-
-        removedRoles.push(role);
+        // Don't include duplicates
+        if (!removedRoles.includes(role)) {
+            removedRoles.push(role);
+        }
     }
 
     // Remove the roles from the user or the removed list if the user doesn't have the role
@@ -279,11 +265,8 @@ const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, U
     await user.save();
 
     res.ok({
-        rolesRemoved: removedRoles.length,
-        data: {
-            user,
-            removedRoles,
-        },
+        user,
+        removedRoles,
     });
 });
 
