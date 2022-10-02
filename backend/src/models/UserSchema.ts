@@ -12,7 +12,7 @@ const userSchema = new Schema<UserModel & { _id: string }>({
     },
     profileUrl: String,
     roles: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'Role' }],
+        type: [{ type: String, ref: 'Role' }],
         default: [],
     },
 });

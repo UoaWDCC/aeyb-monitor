@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import ValidationError from '../types/ValidationError';
 
 type CastErrorValueType = mongoose.Error.CastError & { valueType?: string };
 type MongooseError = mongoose.Error.ValidationError | mongoose.Error.CastError;

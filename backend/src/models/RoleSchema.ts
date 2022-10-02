@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import RoleModel from '../shared/Types/models/RoleModel';
+import Permission from '../shared/Types/utils/Permission';
 import { applyToJsonOptions } from './Utils';
 
 const roleSchema = new mongoose.Schema<RoleModel>({
@@ -19,7 +20,12 @@ const roleSchema = new mongoose.Schema<RoleModel>({
         },
         default: '#ffffff',
     },
-    permissions: [String],
+    permissions: [
+        {
+            type: String,
+            enum: Permission,
+        },
+    ],
 });
 
 applyToJsonOptions(roleSchema);

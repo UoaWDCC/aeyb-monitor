@@ -25,7 +25,7 @@ import {
     UpdateUserData,
 } from '../shared/Types/responses/UserResponsesData';
 import RoleModel from '../shared/Types/models/RoleModel';
-import UserModel from '../shared/Types/models/UserModel';
+import UserModel, { PopulatedUser } from '../shared/Types/models/UserModel';
 import Permission from '../shared/Types/utils/Permission';
 
 const client = new OAuth2Client(config.clientID);
@@ -44,7 +44,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
 
     res.ok({
         token: generateJWT(user.id),
-        user,
+        user: user.toJSON(),
         permissions: [...(await getPermissions(user))], // Apparently it doesn't like sets
     });
 });
@@ -86,7 +86,7 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
         // The returned token can then be used to authenticate additional requests
         res.ok({
             token: generateJWT(user.id),
-            user,
+            user: user.toJSON(),
             permissions: [...(await getPermissions(user))],
         });
     } catch (error) {
@@ -158,7 +158,7 @@ const getUser = asyncHandler(async (req: TypedRequestParams<UserIdParam>, res: T
         return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
-    res.ok({ user, permissions: [...(await getPermissions(user))] });
+    res.ok({ user: user.toJSON(), permissions: [...(await getPermissions(user))] });
 });
 
 /**
@@ -176,8 +176,16 @@ const updateUser = asyncHandler(
     },
 );
 
-async function getPermissions(user: Doc<UserModel, string>): Promise<Set<Permission>> {
-    if (!user.populated('roles')) await user.populate('roles');
+function isPopulatedUser(
+    user: Doc<UserModel, string> | Doc<PopulatedUser, string>,
+): user is Doc<PopulatedUser, string> {
+    return !user.populated('roles');
+}
+
+async function getPermissions(user: Doc<UserModel, string> | Doc<PopulatedUser, string>): Promise<Set<Permission>> {
+    if (!isPopulatedUser(user)) {
+        await user.populate('roles');
+    }
 
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
     return new Set(
@@ -219,13 +227,13 @@ const giveRoles = asyncHandler(
             }
 
             // Ignore duplicates and roles the user already has
-            if (!(user.roles.includes(role) || addedRoles.includes(role))) {
+            if (!(user.roles.includes(role.id) || addedRoles.includes(role))) {
                 addedRoles.push(role);
             }
         }
 
         // Give the roles to the user
-        user.roles = user.roles.concat(addedRoles);
+        user.roles = user.roles.concat(addedRoles.map((role) => role.id));
 
         await user.save();
 
@@ -274,10 +282,8 @@ const removeRoles = asyncHandler(
 
         // Remove the roles from the user or the removed list if the user doesn't have the role
         for (const role of removedRoles) {
-            console.log(role.id);
-            console.log(typeof role.id);
             // TODO: Check that this equality works -> r._id is technically an ObjectId
-            const index = user.roles.findIndex((r) => r.id === role.id);
+            const index = user.roles.findIndex((r) => r === role.id);
             if (index >= 0) {
                 user.roles.splice(index, 1);
             } else {
@@ -294,4 +300,15 @@ const removeRoles = asyncHandler(
     },
 );
 
-export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, getSelf, giveRoles, removeRoles };
+export {
+    devLoginUser,
+    loginUser,
+    getAllUsers,
+    updateUser,
+    getPermissions,
+    isPopulatedUser,
+    getUser,
+    getSelf,
+    giveRoles,
+    removeRoles,
+};

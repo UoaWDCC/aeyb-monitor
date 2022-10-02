@@ -3,9 +3,10 @@ import asyncHandler from 'express-async-handler';
 import config from '../types/Config';
 import jwt from 'jsonwebtoken';
 import User from '../models/UserSchema';
-import { getPermissions } from '../controllers/UserController';
-import { TypedRequest } from '../types/UtilTypes';
+import { getPermissions, isPopulatedUser } from '../controllers/UserController';
+import { Doc, TypedRequest } from '../types/UtilTypes';
 import Permission from '../shared/Types/utils/Permission';
+import { PopulatedUser } from '../shared/Types/models/UserModel';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 
@@ -35,7 +36,12 @@ export default function protect(permission?: Permission): AuthenticationFunction
             }
 
             // Make the user accessible in the body of the request.
-            (req as TypedRequest<unknown, unknown>).body.requester = user;
+            if (!isPopulatedUser(user)) {
+                await user.populate('roles');
+            }
+
+            // We know that we've populated the user, so it's safe to cast.
+            (req as TypedRequest<unknown, unknown>).body.requester = user as unknown as Doc<PopulatedUser, string>;
 
             next();
         } catch (error) {
