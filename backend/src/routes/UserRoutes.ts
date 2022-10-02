@@ -22,10 +22,14 @@ if (config.nodeEnv === 'development') {
 
 UserRouter.post('/login', loginUser);
 
-UserRouter.route('/').get(protect(), getAllUsers);
+UserRouter.route('/').get(protect(Permission.VIEW_USERS), getAllUsers);
 UserRouter.route('/@me').get(protect(), getSelf);
-UserRouter.route('/:userId').get(protect(), getUser).patch(protect(), updateUser);
+UserRouter.route('/:userId')
+    .get(protect(Permission.VIEW_USERS), getUser)
+    .patch(protect(Permission.UPDATE_USERS), updateUser);
 
-UserRouter.route('/:userId/roles/').post(protect(), giveRoles).delete(protect(), removeRoles);
+UserRouter.route('/:userId/roles/')
+    .post(protect(Permission.GIVE_ROLE), giveRoles)
+    .delete(protect(Permission.REMOVE_ROLE), removeRoles);
 
 export default UserRouter;
