@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import Event, { EventModel } from '../models/EventModel';
+import Event, { EventModel } from '../models/EventSchema';
 import { EventIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';

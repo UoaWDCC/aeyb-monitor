@@ -1,5 +1,5 @@
 import mongoose, { model, Schema } from 'mongoose';
-import { UserModel } from './UserModel';
+import UserModel from '../shared/Types/models/UserModel';
 
 export interface EventModel {
     _id: mongoose.Types.ObjectId;

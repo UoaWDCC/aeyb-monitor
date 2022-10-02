@@ -1,5 +1,7 @@
+import { Response } from 'express';
 import mongoose, { Query } from 'mongoose';
-import { UserModel } from '../models/UserModel';
+import UserModel from '../shared/Types/models/UserModel';
+import AEYBResponse from '../shared/Types/responses/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Doc<T> = mongoose.Document<unknown, any, T> &
@@ -22,3 +24,5 @@ export interface TypedRequestParams<Type> extends TypedRequest<unknown, Type> {}
 export interface TypedRequestQuery<Type> extends TypedRequest<unknown, unknown, Type> {}
 
 export interface AuthenticatedRequest extends TypedRequest<unknown, unknown> {}
+
+export type TypedResponse<T> = Response<AEYBResponse<T>>;

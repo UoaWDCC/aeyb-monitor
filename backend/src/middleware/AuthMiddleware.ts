@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import config from '../types/Config';
 import jwt from 'jsonwebtoken';
-import User from '../models/UserModel';
+import User from '../models/UserSchema';
 import Permission from '../types/Perm';
 import { getPermissions } from '../controllers/UserController';
 import { TypedRequest } from '../types/UtilTypes';

@@ -1,12 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { RoleModel } from './RoleModel';
-
-export interface UserModel {
-    _id: string;
-    name: string;
-    profileUrl?: string;
-    roles: RoleModel[];
-}
+import UserModel from '../shared/Types/models/UserModel';
 
 // The user id will be their google id, rather than a generated ObjectId
 const userSchema = new Schema<UserModel>({

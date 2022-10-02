@@ -1,16 +1,33 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import { DevLoginRequest, LoginRequest } from '../types/RequestTypes';
-import User, { UserModel } from '../models/UserModel';
+import { DevLoginRequest } from '../types/RequestTypes';
+import User from '../models/UserSchema';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import Permission from '../types/Perm';
-import { AuthenticatedRequest, Doc, TypedRequestBody } from '../types/UtilTypes';
+import { AuthenticatedRequest, Doc, TypedRequestBody, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
-import Role, { RoleModel } from '../models/RoleModel';
+import Role from '../models/RoleSchema';
 import GooglePayload from '../types/GooglePayload';
+import {
+    GiveRolesRequest,
+    LoginRequest,
+    RemoveRolesRequest,
+    UpdateUserRequest,
+} from '../shared/Types/requests/UserRequests';
+import {
+    GetAllUsersData,
+    GetSelfData,
+    GetUserData,
+    GiveRolesData,
+    LoginData,
+    RemoveRolesData,
+    UpdateUserData,
+} from '../shared/Types/responses/UserResponsesData';
+import RoleModel from '../shared/Types/models/RoleModel';
+import UserModel from '../shared/Types/models/UserModel';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -37,7 +54,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
  * @desc    Login and gain an access token
  * @route   POST api/users/login
  */
-const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: Response) => {
+const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: TypedResponse<LoginData>) => {
     const credential = req.body.credential;
 
     if (typeof credential !== 'string') {
@@ -79,7 +96,6 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
 });
 
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
-
 async function validateIdToken(credential: string, res: Response): Promise<GooglePayload | void> {
     const ticket = await client.verifyIdToken({
         idToken: credential,
@@ -114,7 +130,7 @@ function generateJWT(userId: string): string {
  * @desc    Get information about the currently logged in user
  * @route   GET /api/users/@me
  */
-const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: TypedResponse<GetSelfData>) => {
     const self = req.body.requester;
 
     res.ok({ self, permissions: [...(await getPermissions(self))] });
@@ -124,7 +140,7 @@ const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: Response) =>
  * @desc 	Get all the users
  * @route 	GET /api/users/
  */
-const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
+const getAllUsers = asyncHandler(async (req: AuthenticatedRequest, res: TypedResponse<GetAllUsersData>) => {
     const users = await User.find();
 
     res.ok({
@@ -137,7 +153,7 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
  * @desc 	Get a specific user
  * @route 	GET /api/users/:userId
  */
-const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) => {
+const getUser = asyncHandler(async (req: TypedRequestParams<UserIdParam>, res: TypedResponse<GetUserData>) => {
     const user = await User.findById(req.params.userId);
     if (!user) {
         return res.notFound(`There is no user with the id ${req.params.userId}`);
@@ -150,14 +166,16 @@ const getUser = asyncHandler(async (req: Request<UserIdParam>, res: Response) =>
  * @desc    Edit a specific User
  * @route   PATCH /api/users/:userId
  */
-const updateUser = asyncHandler(async (req: TypedRequest<UserModel, UserIdParam>, res: Response) => {
-    const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
-        new: true,
-        runValidators: true,
-    });
+const updateUser = asyncHandler(
+    async (req: TypedRequest<UpdateUserRequest, UserIdParam>, res: TypedResponse<UpdateUserData>) => {
+        const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
+            new: true,
+            runValidators: true,
+        });
 
-    res.ok({ user });
-});
+        res.ok({ user });
+    },
+);
 
 async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
     if (!user.populated('roles')) await user.populate('roles');
@@ -174,100 +192,105 @@ async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
  * @desc 	Gives user roles specified in request body
  * @route 	POST /api/users/:userId/roles/
  */
-const giveRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
-    //Check roles is provided as an array
-    if (!Array.isArray(req.body.roles)) {
-        return res.invalid('The roles must be an array');
-    }
-
-    // Check atleast one role specified
-    if (req.body.roles.length == 0) {
-        return res.invalid('You must specify atleast one role');
-    }
-
-    // Get the user
-    const user = await User.findById(req.params.userId);
-    if (!user) {
-        return res.notFound(`There is no user with the id ${req.params.userId}`);
-    }
-
-    const addedRoles: RoleModel[] = [];
-
-    for (const roleId of req.body.roles) {
-        // Check if role exists
-        const role = await Role.findById(roleId);
-        if (!role) {
-            return res.notFound(`There is no role with the id ${roleId}`);
+const giveRoles = asyncHandler(
+    async (req: TypedRequest<GiveRolesRequest, UserIdParam>, res: TypedResponse<GiveRolesData>) => {
+        //Check roles is provided as an array
+        if (!Array.isArray(req.body.roleIds)) {
+            return res.invalid('The roles must be an array');
         }
 
-        // Ignore duplicates and roles the user already has
-        if (!(user.roles.includes(role) || addedRoles.includes(role))) {
-            addedRoles.push(role);
+        // Check atleast one role specified
+        if (req.body.roleIds.length == 0) {
+            return res.invalid('You must specify atleast one role');
         }
-    }
 
-    // Give the roles to the user
-    user.roles = user.roles.concat(addedRoles);
+        // Get the user
+        const user = await User.findById(req.params.userId);
+        if (!user) {
+            return res.notFound(`There is no user with the id ${req.params.userId}`);
+        }
 
-    await user.save();
+        const addedRoles: RoleModel[] = [];
 
-    res.ok({
-        user,
-        addedRoles,
-    });
-});
+        for (const roleId of req.body.roleIds) {
+            // Check if role exists
+            const role = await Role.findById(roleId);
+            if (!role) {
+                return res.notFound(`There is no role with the id ${roleId}`);
+            }
+
+            // Ignore duplicates and roles the user already has
+            if (!(user.roles.includes(role) || addedRoles.includes(role))) {
+                addedRoles.push(role);
+            }
+        }
+
+        // Give the roles to the user
+        user.roles = user.roles.concat(addedRoles);
+
+        await user.save();
+
+        res.ok({
+            user,
+            addedRoles,
+        });
+    },
+);
 
 /**
  * @desc 	Removes roles specified in request body from a user
  * @route 	DELETE /api/users/:userId/roles/
  */
-const removeRoles = asyncHandler(async (req: TypedRequest<{ roles: string[] }, UserIdParam>, res: Response) => {
-    //Check roles is provided as an array
-    if (!Array.isArray(req.body.roles)) {
-        return res.invalid('The roles must be an array');
-    }
-
-    // Check atleast one role specified
-    if (req.body.roles.length == 0) {
-        return res.invalid('You must specify atleast one role');
-    }
-
-    // Get the user
-    const user = await User.findById(req.params.userId).populate('roles');
-    if (!user) {
-        return res.notFound(`There is no user with the id ${req.params.userId}`);
-    }
-
-    const removedRoles: RoleModel[] = [];
-
-    for (const roleId of req.body.roles) {
-        // Check if role exists
-        const role = await Role.findById(roleId);
-        if (!role) {
-            return res.notFound(`There is no role with the id ${roleId}`);
+const removeRoles = asyncHandler(
+    async (req: TypedRequest<RemoveRolesRequest, UserIdParam>, res: TypedResponse<RemoveRolesData>) => {
+        //Check roles is provided as an array
+        if (!Array.isArray(req.body.roleIds)) {
+            return res.invalid('The roles must be an array');
         }
-        // Don't include duplicates
-        if (!removedRoles.includes(role)) {
-            removedRoles.push(role);
+
+        // Check atleast one role specified
+        if (req.body.roleIds.length == 0) {
+            return res.invalid('You must specify atleast one role');
         }
-    }
 
-    // Remove the roles from the user or the removed list if the user doesn't have the role
-    for (const role of removedRoles) {
-        const index = user.roles.findIndex((r) => r._id.equals(role._id));
-        if (index >= 0) {
-            user.roles.splice(index, 1);
-        } else {
-            removedRoles.splice(removedRoles.indexOf(role), 1);
+        // Get the user
+        const user = await User.findById(req.params.userId).populate('roles');
+        if (!user) {
+            return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
-    }
 
-    await user.save();
+        const removedRoles: RoleModel[] = [];
 
-    res.ok({
-        user,
-        removedRoles,
-    });
-});
+        for (const roleId of req.body.roleIds) {
+            // Check if role exists
+            const role = await Role.findById(roleId);
+            if (!role) {
+                return res.notFound(`There is no role with the id ${roleId}`);
+            }
+            // Don't include duplicates
+            if (!removedRoles.includes(role)) {
+                removedRoles.push(role);
+            }
+        }
+
+        // Remove the roles from the user or the removed list if the user doesn't have the role
+        for (const role of removedRoles) {
+            // TODO: Check that this equality works -> r._id is technically an ObjectId
+            const index = user.roles.findIndex((r) => r._id === role._id);
+            if (index >= 0) {
+                user.roles.splice(index, 1);
+            } else {
+                removedRoles.splice(removedRoles.indexOf(role), 1);
+            }
+        }
+
+        await user.save();
+
+        res.ok({
+            user,
+            removedRoles,
+        });
+    },
+);
 
 export { devLoginUser, loginUser, getAllUsers, updateUser, getPermissions, getUser, getSelf, giveRoles, removeRoles };

@@ -1,8 +1,4 @@
-import { MeetingModel } from '../models/MeetingModel';
-
-export interface LoginRequest {
-    credential: string;
-}
+import { MeetingModel } from '../models/MeetingSchema';
 
 export interface DevLoginRequest {
     id: string;

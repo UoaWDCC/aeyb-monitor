@@ -1,11 +1,5 @@
 import mongoose from 'mongoose';
-
-export interface RoleModel {
-    _id: mongoose.Types.ObjectId;
-    name: string;
-    color: string;
-    permissions: string[];
-}
+import RoleModel from '../shared/Types/models/RoleModel';
 
 const roleSchema = new mongoose.Schema<RoleModel>({
     name: {

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { UserModel } from './UserModel';
-import { AttendanceSchema, Attendance } from './AttendanceModel';
+import AttendanceModel from '../shared/Types/models/AttendanceModel';
+import UserModel from '../shared/Types/models/UserModel';
+import { AttendanceSchema } from './AttendanceSchema';
 
 export interface MeetingModel {
     _id: mongoose.Types.ObjectId;
@@ -8,7 +9,7 @@ export interface MeetingModel {
     creator: UserModel;
     time: Date;
     where: string;
-    attendance: Attendance;
+    attendance: AttendanceModel;
     description: string;
 }
 

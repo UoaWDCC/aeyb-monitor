@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import Meeting, { MeetingModel } from '../models/MeetingModel';
+import Meeting, { MeetingModel } from '../models/MeetingSchema';
 import { MeetingRequest } from '../types/RequestTypes';
 import { TypedRequestBody, TypedRequest } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
