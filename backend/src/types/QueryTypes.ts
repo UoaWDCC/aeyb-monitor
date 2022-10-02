@@ -11,6 +11,8 @@ export interface EventFilterQuery extends PaginationQuery {
     creator?: string;
     location?: string;
     name?: string;
+    roles?: string;
+    type?: string;
 }
 
 export interface MeetingFilterQuery extends PaginationQuery {
