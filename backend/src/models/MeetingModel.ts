@@ -2,14 +2,20 @@ import mongoose from 'mongoose';
 import { UserModel } from './UserModel';
 import { AttendanceSchema, Attendance } from './AttendanceModel';
 
+enum MeetingType {
+    Meeting = 'meeting',
+    Event = 'event',
+}
+
 export interface MeetingModel {
     _id: mongoose.Types.ObjectId;
     name: string;
     creator: UserModel;
     time: Date;
-    where: string;
+    location: string;
     attendance: Attendance;
-    description: string;
+    description?: string;
+    type: MeetingType;
 }
 
 const meetingSchema = new mongoose.Schema<MeetingModel>({
@@ -27,7 +33,7 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
         type: Date,
         required: [true, 'You must specify when the event starts'],
     },
-    where: {
+    location: {
         type: String,
         required: [true, 'You must specify the where the meeting was held'],
     },
@@ -38,6 +44,11 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     },
     description: {
         type: String,
+    },
+    type: {
+        type: String,
+        enum: MeetingType,
+        required: [true, 'You must specify the type of event'],
     },
 });
 
