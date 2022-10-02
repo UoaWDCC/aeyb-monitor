@@ -4,15 +4,15 @@ import UserModel from '../shared/Types/models/UserModel';
 import AEYBResponse from '../shared/Types/responses/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Doc<T> = mongoose.Document<unknown, any, T> &
-    T & {
-        _id: string;
+export type Doc<ModelType, IdType = mongoose.Types.ObjectId> = mongoose.Document<IdType, any, ModelType> &
+    ModelType & {
+        _id: IdType;
     };
 
 export type TypedQuery<T> = Query<Doc<T>[], Doc<T>>;
 
 export interface TypedRequest<BodyType, ParamsType, QueryType = unknown> extends Express.Request {
-    body: BodyType & { requester: Doc<UserModel> };
+    body: BodyType & { requester: Doc<UserModel, string> };
     params: ParamsType;
     query: QueryType;
 }

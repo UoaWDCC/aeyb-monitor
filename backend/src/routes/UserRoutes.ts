@@ -10,8 +10,8 @@ import {
     getSelf,
 } from '../controllers/UserController';
 import protect from '../middleware/AuthMiddleware';
+import Permission from '../shared/Types/utils/Permission';
 import config from '../types/Config';
-import Permission from '../types/Perm';
 
 const UserRouter = Router();
 

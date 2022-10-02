@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import Permission from '../types/Perm';
+import Permission from '../shared/Types/utils/Permission';
 
 /**
  * @desc 	Get all the roles

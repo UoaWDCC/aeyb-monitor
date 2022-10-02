@@ -1,11 +1,9 @@
 import asyncHandler from 'express-async-handler';
-import { Request, Response } from 'express';
 import { DevLoginRequest } from '../types/RequestTypes';
 import User from '../models/UserSchema';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import Permission from '../types/Perm';
 import { AuthenticatedRequest, Doc, TypedRequestBody, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
@@ -28,6 +26,7 @@ import {
 } from '../shared/Types/responses/UserResponsesData';
 import RoleModel from '../shared/Types/models/RoleModel';
 import UserModel from '../shared/Types/models/UserModel';
+import Permission from '../shared/Types/utils/Permission';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -35,7 +34,7 @@ const client = new OAuth2Client(config.clientID);
  * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
  * @route   POST api/users/devlogin
  */
-const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>, res: Response) => {
+const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>, res: TypedResponse<LoginData>) => {
     const userId = req.body.id;
 
     let user = await User.findById(userId);
@@ -96,7 +95,7 @@ const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: 
 });
 
 // Reference: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
-async function validateIdToken(credential: string, res: Response): Promise<GooglePayload | void> {
+async function validateIdToken(credential: string, res: TypedResponse<LoginData>): Promise<GooglePayload | void> {
     const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: config.clientID,
@@ -177,7 +176,7 @@ const updateUser = asyncHandler(
     },
 );
 
-async function getPermissions(user: Doc<UserModel>): Promise<Set<Permission>> {
+async function getPermissions(user: Doc<UserModel, string>): Promise<Set<Permission>> {
     if (!user.populated('roles')) await user.populate('roles');
 
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
@@ -259,7 +258,7 @@ const removeRoles = asyncHandler(
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const removedRoles: RoleModel[] = [];
+        const removedRoles: Doc<RoleModel>[] = [];
 
         for (const roleId of req.body.roleIds) {
             // Check if role exists
@@ -275,8 +274,10 @@ const removeRoles = asyncHandler(
 
         // Remove the roles from the user or the removed list if the user doesn't have the role
         for (const role of removedRoles) {
+            console.log(role.id);
+            console.log(typeof role.id);
             // TODO: Check that this equality works -> r._id is technically an ObjectId
-            const index = user.roles.findIndex((r) => r._id === role._id);
+            const index = user.roles.findIndex((r) => r.id === role.id);
             if (index >= 0) {
                 user.roles.splice(index, 1);
             } else {

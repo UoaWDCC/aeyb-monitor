@@ -3,9 +3,9 @@ import asyncHandler from 'express-async-handler';
 import config from '../types/Config';
 import jwt from 'jsonwebtoken';
 import User from '../models/UserSchema';
-import Permission from '../types/Perm';
 import { getPermissions } from '../controllers/UserController';
 import { TypedRequest } from '../types/UtilTypes';
+import Permission from '../shared/Types/utils/Permission';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import RoleModel from '../shared/Types/models/RoleModel';
+import { applyToJsonOptions } from './Utils';
 
 const roleSchema = new mongoose.Schema<RoleModel>({
     name: {
@@ -20,6 +21,8 @@ const roleSchema = new mongoose.Schema<RoleModel>({
     },
     permissions: [String],
 });
+
+applyToJsonOptions(roleSchema);
 
 const Role = mongoose.model('Role', roleSchema);
 
