@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import User, { UserDBModel } from '../models/UserSchema';
+import User, { UserDocument, UserPopulatedDocument } from '../models/UserSchema';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
@@ -25,7 +25,7 @@ import {
     UpdateUserData,
 } from '../shared/Types/responses/UserResponsesData';
 import RoleModel from '../shared/Types/models/RoleModel';
-import UserModel, { PopulatedUser } from '../shared/Types/models/UserModel';
+import { PopulatedUser } from '../shared/Types/models/UserModel';
 import Permission from '../shared/Types/utils/Permission';
 import { Request } from 'express';
 
@@ -38,9 +38,11 @@ const client = new OAuth2Client(config.clientID);
 const devLoginUser = asyncHandler(async (req: Request<DevLoginRequest>, res: TypedResponse<LoginData>) => {
     const userId = req.body.id;
 
-    let user = await User.findById(userId);
+    let user = await User.findByIdWithRoles(userId);
     if (!user) {
-        user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
+        user = await (
+            await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl })
+        ).asPopulated();
     }
 
     res.ok({
@@ -65,9 +67,15 @@ const loginUser = asyncHandler(async (req: TypedRequest<LoginRequest>, res: Type
         const payload = await validateIdToken(credential, res);
         if (!payload) return; // The error json will already have been set in validateIdToken
 
-        let user = await User.findById(payload.userId);
+        let user = await User.findByIdWithRoles(payload.userId);
         if (!user) {
-            user = await User.create({ _id: payload.profileUrl, name: payload.name, profileUrl: payload.profileUrl });
+            user = await (
+                await User.create({
+                    _id: payload.profileUrl,
+                    name: payload.name,
+                    profileUrl: payload.profileUrl,
+                })
+            ).asPopulated();
         } else if (user.name !== payload.name || user.profileUrl !== payload.profileUrl) {
             // If the profile picture or name doesn't match, it must have been updated so we need to update our internal record
             const tempUser = await User.findByIdAndUpdate(
@@ -81,13 +89,13 @@ const loginUser = asyncHandler(async (req: TypedRequest<LoginRequest>, res: Type
             if (!tempUser) {
                 return res.invalid('There was an issue trying to update your user name and profile internally');
             }
-            user = tempUser;
+            user = await tempUser.asPopulated();
         }
 
         // The returned token can then be used to authenticate additional requests
         res.ok({
             token: generateJWT(user.id),
-            user: user.toJSON(),
+            user,
             permissions: [...(await getPermissions(user))],
         });
     } catch (error) {
@@ -154,12 +162,12 @@ const getAllUsers = asyncHandler(async (req: TypedRequest, res: TypedResponse<Ge
  * @route 	GET /api/users/:userId
  */
 const getUser = asyncHandler(async (req: TypedRequestParams<UserIdParam>, res: TypedResponse<GetUserData>) => {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findByIdWithRoles(req.params.userId);
     if (!user) {
         return res.notFound(`There is no user with the id ${req.params.userId}`);
     }
 
-    res.ok({ user: user.toJSON(), permissions: [...(await getPermissions(user))] });
+    res.ok({ user, permissions: [...(await getPermissions(user))] });
 });
 
 /**
@@ -177,20 +185,14 @@ const updateUser = asyncHandler(
     },
 );
 
-function isPopulatedUser(
-    user: Doc<UserDBModel, string> | Doc<PopulatedUser, string>,
-): user is Doc<PopulatedUser, string> {
+function isPopulatedUser(user: UserDocument | UserPopulatedDocument): user is UserPopulatedDocument {
     return user.populated('roles');
 }
 
-async function getPermissions(user: Doc<UserDBModel, string> | Doc<PopulatedUser, string>): Promise<Set<Permission>> {
-    if (!isPopulatedUser(user)) {
-        await user.populate('roles');
-    }
-
+async function getPermissions(user: UserPopulatedDocument): Promise<Set<Permission>> {
     // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
     return new Set(
-        (user as PopulatedUser).roles
+        user.roles
             .flatMap((role) => role.permissions)
             .map((permission) => Permission[permission as keyof typeof Permission]),
     );

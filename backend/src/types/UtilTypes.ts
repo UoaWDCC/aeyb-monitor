@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import mongoose, { Query } from 'mongoose';
-import { PopulatedUser } from '../shared/Types/models/UserModel';
+import { UserPopulatedDocument } from '../models/UserSchema';
 import AEYBResponse from '../shared/Types/responses/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,7 +14,7 @@ export type DBModel<T, IdType = mongoose.Types.ObjectId> = T & { _id: IdType };
 export type TypedQuery<T> = Query<Doc<T>[], Doc<T>>;
 
 export interface TypedRequest<BodyType = unknown, ParamsType = unknown, QueryType = unknown> extends Express.Request {
-    body: BodyType & { requester: Doc<PopulatedUser, string> };
+    body: BodyType & { requester: UserPopulatedDocument };
     params: ParamsType;
     query: QueryType;
 }
