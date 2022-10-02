@@ -3,7 +3,7 @@ import User from '../models/UserSchema';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import { AuthenticatedRequest, Doc, TypedRequestBody, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
+import { Doc, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
 import Role from '../models/RoleSchema';
@@ -27,6 +27,7 @@ import {
 import RoleModel from '../shared/Types/models/RoleModel';
 import UserModel, { PopulatedUser } from '../shared/Types/models/UserModel';
 import Permission from '../shared/Types/utils/Permission';
+import { Request } from 'express';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -34,7 +35,7 @@ const client = new OAuth2Client(config.clientID);
  * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
  * @route   POST api/users/devlogin
  */
-const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>, res: TypedResponse<LoginData>) => {
+const devLoginUser = asyncHandler(async (req: Request<DevLoginRequest>, res: TypedResponse<LoginData>) => {
     const userId = req.body.id;
 
     let user = await User.findById(userId);
@@ -53,7 +54,7 @@ const devLoginUser = asyncHandler(async (req: TypedRequestBody<DevLoginRequest>,
  * @desc    Login and gain an access token
  * @route   POST api/users/login
  */
-const loginUser = asyncHandler(async (req: TypedRequestBody<LoginRequest>, res: TypedResponse<LoginData>) => {
+const loginUser = asyncHandler(async (req: TypedRequest<LoginRequest>, res: TypedResponse<LoginData>) => {
     const credential = req.body.credential;
 
     if (typeof credential !== 'string') {
@@ -129,7 +130,7 @@ function generateJWT(userId: string): string {
  * @desc    Get information about the currently logged in user
  * @route   GET /api/users/@me
  */
-const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: TypedResponse<GetSelfData>) => {
+const getSelf = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetSelfData>) => {
     const self = req.body.requester;
 
     res.ok({ self, permissions: [...(await getPermissions(self))] });
@@ -139,7 +140,7 @@ const getSelf = asyncHandler(async (req: AuthenticatedRequest, res: TypedRespons
  * @desc 	Get all the users
  * @route 	GET /api/users/
  */
-const getAllUsers = asyncHandler(async (req: AuthenticatedRequest, res: TypedResponse<GetAllUsersData>) => {
+const getAllUsers = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetAllUsersData>) => {
     const users = await User.find();
 
     res.ok({

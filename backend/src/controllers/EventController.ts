@@ -1,8 +1,8 @@
 import asyncHandler from 'express-async-handler';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import Event, { EventModel } from '../models/EventSchema';
 import { EventIdParam } from '../types/RequestParams';
-import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
 import { EventFilterQuery } from '../types/QueryTypes';
 
@@ -40,7 +40,7 @@ const getAllEvents = asyncHandler(
  * @desc    Get a specific event
  * @route   GET /api/events/:eventId
  */
-const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) => {
+const getEvent = asyncHandler(async (req: TypedRequestParams<EventIdParam>, res: Response) => {
     const event = await Event.findById(req.params.eventId);
     if (!event) {
         return res.notFound(`There is no event with the id ${req.params.eventId}`);
@@ -54,7 +54,7 @@ const getEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) 
  * @desc    Add a new event
  * @route   POST /api/events/
  */
-const addEvent = asyncHandler(async (req: TypedRequestBody<EventModel>, res: Response) => {
+const addEvent = asyncHandler(async (req: TypedRequest<EventModel>, res: Response) => {
     const newEvent = await Event.create({ ...req.body, creator: req.body.requester });
 
     res.created({ event: newEvent });
@@ -64,7 +64,7 @@ const addEvent = asyncHandler(async (req: TypedRequestBody<EventModel>, res: Res
  * @desc    Delete a specific event
  * @route   DELETE /api/events/:eventId
  */
-const deleteEvent = asyncHandler(async (req: Request<EventIdParam>, res: Response) => {
+const deleteEvent = asyncHandler(async (req: TypedRequestParams<EventIdParam>, res: Response) => {
     const response = await Event.findByIdAndDelete(req.params.eventId);
     if (!response) {
         return res.notFound(`There is no event with the id ${req.params.eventId}`);

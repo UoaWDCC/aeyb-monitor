@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingSchema';
 import { MeetingRequest } from '../types/RequestTypes';
-import { TypedRequestBody, TypedRequest } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
@@ -42,7 +42,7 @@ const getAllMeetings = asyncHandler(
  * @desc    Get a specific meeting
  * @route   GET /api/meetings/:meetingId
  */
-const getMeeting = asyncHandler(async (req: Request<MeetingIdParam>, res: Response) => {
+const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
     const meeting = await Meeting.findById(req.params.meetingId);
     if (!meeting) {
         return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
@@ -56,7 +56,7 @@ const getMeeting = asyncHandler(async (req: Request<MeetingIdParam>, res: Respon
  * @desc 	Add a new meetings
  * @route 	POST /api/meetings/
  */
-const addMeeting = asyncHandler(async (req: TypedRequestBody<MeetingModel>, res: Response) => {
+const addMeeting = asyncHandler(async (req: TypedRequest<MeetingModel>, res: Response) => {
     const newMeeting = await Meeting.create({
         ...req.body,
         creator: req.body.requester,
@@ -69,7 +69,7 @@ const addMeeting = asyncHandler(async (req: TypedRequestBody<MeetingModel>, res:
  * @desc 	Delete a specific meeting
  * @route 	DELETE /api/meetings/:meetingId
  */
-const deleteMeeting = asyncHandler(async (req: Request<MeetingIdParam>, res: Response) => {
+const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
     const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
     if (!meeting) {
         return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);

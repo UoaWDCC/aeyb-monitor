@@ -11,18 +11,14 @@ export type Doc<ModelType, IdType = mongoose.Types.ObjectId> = mongoose.Document
 
 export type TypedQuery<T> = Query<Doc<T>[], Doc<T>>;
 
-export interface TypedRequest<BodyType, ParamsType = unknown, QueryType = unknown> extends Express.Request {
+export interface TypedRequest<BodyType = unknown, ParamsType = unknown, QueryType = unknown> extends Express.Request {
     body: BodyType & { requester: Doc<PopulatedUser, string> };
     params: ParamsType;
     query: QueryType;
 }
 
-export interface TypedRequestBody<Type> extends TypedRequest<Type, unknown> {}
-
 export interface TypedRequestParams<Type> extends TypedRequest<unknown, Type> {}
 
 export interface TypedRequestQuery<Type> extends TypedRequest<unknown, unknown, Type> {}
-
-export interface AuthenticatedRequest extends TypedRequest<unknown, unknown> {}
 
 export type TypedResponse<T> = Response<AEYBResponse<T>>;

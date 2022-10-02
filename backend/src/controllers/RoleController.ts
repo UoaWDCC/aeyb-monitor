@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import Role from '../models/RoleSchema';
 import User from '../models/UserSchema';
 import { RoleIdParam } from '../types/RequestParams';
-import { TypedRequest, TypedRequestBody } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
 import RoleModel from '../shared/Types/models/RoleModel';
 
 /**
@@ -25,7 +25,7 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
  * @desc 	Get a specific role
  * @route 	GET /api/roles/:roleId
  */
-const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) => {
+const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: Response) => {
     const role = await Role.findById(req.params.roleId);
     if (!role) {
         return res.notFound(`There is no role with the id ${req.params.roleId}`);
@@ -45,7 +45,7 @@ const getRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) =>
  * @desc 	Add a new role
  * @route 	POST /api/roles/
  */
-const addRole = asyncHandler(async (req: TypedRequestBody<RoleModel>, res: Response) => {
+const addRole = asyncHandler(async (req: TypedRequest<RoleModel>, res: Response) => {
     const newRole = await Role.create(req.body);
 
     res.created({ role: newRole });
