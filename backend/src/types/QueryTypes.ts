@@ -14,14 +14,3 @@ export interface EventFilterQuery extends PaginationQuery {
     roles?: string;
     type?: string;
 }
-
-export interface MeetingFilterQuery extends PaginationQuery {
-    before?: string;
-    after?: string;
-    passed?: string;
-    time?: string;
-    creator?: string;
-    location?: string;
-    name?: string;
-    roles?: string;
-}
