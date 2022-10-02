@@ -1,13 +1,13 @@
-import mongoose, { model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import { UserModel } from './UserModel';
-import { Attendance, AttendanceSchema } from './AttendanceModel';
+import { AttendanceSchema, Attendance } from './AttendanceModel';
 
 enum EventType {
     Meeting = 'meeting',
     Event = 'event',
 }
 
-export interface EventModel {
+export interface MeetingModel {
     _id: mongoose.Types.ObjectId;
     name: string;
     creator: UserModel;
@@ -18,16 +18,16 @@ export interface EventModel {
     type: EventType;
 }
 
-const eventSchema = new Schema<EventModel>({
+const meetingSchema = new mongoose.Schema<MeetingModel>({
     name: {
         type: String,
-        required: [true, 'You must specify the name of the event'],
+        required: [true, "You must specify the meeting's name"],
         trim: true,
     },
     creator: {
         type: String,
         ref: 'User',
-        required: [true, 'You must specify the user who created the event'],
+        required: [true, "You must specify the creator's id"],
     },
     time: {
         type: Date,
@@ -35,15 +35,16 @@ const eventSchema = new Schema<EventModel>({
     },
     location: {
         type: String,
-        required: [true, 'You must specify where the event takes place'],
-        trim: true,
+        required: [true, 'You must specify the where the meeting was held'],
     },
     attendance: {
         type: AttendanceSchema,
         ref: 'Attendance',
         required: [true, 'You must specify the attendance'],
     },
-    description: String,
+    description: {
+        type: String,
+    },
     type: {
         type: String,
         enum: EventType,
@@ -51,6 +52,6 @@ const eventSchema = new Schema<EventModel>({
     },
 });
 
-const Event = model('Event', eventSchema);
+const Meeting = mongoose.model('Meeting', meetingSchema);
 
-export default Event;
+export default Meeting;

@@ -1,4 +1,4 @@
-import { EventModel } from '../models/EventModel';
+import { MeetingModel } from '../models/MeetingModel';
 
 export interface LoginRequest {
     credential: string;
@@ -10,6 +10,6 @@ export interface DevLoginRequest {
     profileUrl?: string;
 }
 
-export interface MeetingRequest extends Omit<EventModel, 'time' | '_id' | 'attendance'> {
+export interface MeetingRequest extends Omit<MeetingModel, 'time' | '_id' | 'attendance'> {
     time: string;
 }
