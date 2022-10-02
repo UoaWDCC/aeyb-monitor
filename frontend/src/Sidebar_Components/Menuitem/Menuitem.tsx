@@ -1,34 +1,35 @@
 import React from 'react'
 import './menuitem.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { faHouse } from '@fortawesome/free-solid-svg-icons'
-import { faCalendar } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faHouse, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
 
 export default function Menuitem(prop: { iconIndex: number; isMenuOpen: boolean; currentPage: number; setCurrentPage: Function }) {
 
+    enum Page {
+        HOME,
+        CALENGDAR,
+        PROFILE
+    }
+
     const icons = [faHouse, faCalendar, faUser]
-    const names = ['HOME', 'CALENDAR', 'PROFILE']
 
     const navigate = useNavigate();
-
     const loadAPage = () => {
         if (prop.iconIndex !== prop.currentPage) {
-            console.log(`switching to ${names[prop.iconIndex].toLowerCase()}`)
-            navigate(`../${names[prop.iconIndex].toLowerCase()}page`, { replace: true });
+            navigate(`../${Page[prop.iconIndex].toLowerCase()}page`, { replace: true })
             prop.setCurrentPage(prop.iconIndex)
-        } else {
-            console.log('staying on the page')
         }
     }
 
     return (
         <div className='menuItem' onClick={loadAPage}>
             <div className='iconBox'>
-                <FontAwesomeIcon icon={icons[prop.iconIndex]} size="2x" className={prop.currentPage === prop.iconIndex ? 'icon selectedItem' : 'icon'} />
+                <FontAwesomeIcon icon={icons[prop.iconIndex]} size="2x" className={'relative active:opacity-95 ' + (prop.currentPage === prop.iconIndex ? 'opacity-[.85] hover:opacity-90' : 'opacity-70 hover:opacity-80')} />
             </div >
-            <p className={prop.isMenuOpen ? 'iconTitle' : 'iconTitle invisibleText'} > {names[prop.iconIndex]}</p>
+            <p className={'iconTitle ' + (prop.isMenuOpen ? 'ml-[20px]' : 'ml-[-300px]')}>
+                {Page[prop.iconIndex]}
+            </p>
         </div >
 
     )
