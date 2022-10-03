@@ -25,7 +25,7 @@ import {
     UpdateUserData,
 } from '../shared/Types/responses/UserResponsesData';
 import RoleModel from '../shared/Types/models/RoleModel';
-import { PopulatedUser } from '../shared/Types/models/UserModel';
+import { UnpopulatedUser } from '../shared/Types/models/UserModel';
 import Permission from '../shared/Types/utils/Permission';
 import { Request } from 'express';
 
@@ -149,11 +149,12 @@ const getSelf = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetSel
  * @route 	GET /api/users/
  */
 const getAllUsers = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetAllUsersData>) => {
-    const users = await User.find();
+    const promises = (await User.find()).map((user) => user.asPopulated());
+    const users = await Promise.all(promises);
 
     res.ok({
         results: users.length,
-        users: users.map((user) => user.toJSON()),
+        users,
     });
 });
 
@@ -181,7 +182,7 @@ const updateUser = asyncHandler(
             runValidators: true,
         });
 
-        res.ok({ user: user.toJSON() });
+        res.ok({ user: await user.asPopulated() });
     },
 );
 
@@ -215,7 +216,7 @@ const giveRoles = asyncHandler(
         }
 
         // Get the user
-        const user = await User.findById(req.params.userId);
+        const user = await User.findByIdWithRoles(req.params.userId);
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
@@ -236,12 +237,12 @@ const giveRoles = asyncHandler(
         }
 
         // Give the roles to the user
-        user.roles = user.roles.concat(addedRoles.map((role) => role._id));
+        user.roles = user.roles.concat(addedRoles);
 
         await user.save();
 
         res.ok({
-            user: user.toJSON(),
+            user,
             addedRoles,
         });
     },
@@ -264,7 +265,7 @@ const removeRoles = asyncHandler(
         }
 
         // Get the user
-        const user = await User.findById(req.params.userId);
+        const user = await User.findByIdWithRoles(req.params.userId);
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
@@ -285,7 +286,7 @@ const removeRoles = asyncHandler(
 
         // Remove the roles from the user or the removed list if the user doesn't have the role
         for (const role of removedRoles) {
-            const index = user.roles.findIndex((r) => r.equals(role._id));
+            const index = user.roles.findIndex((r) => r.id === role.id);
             if (index >= 0) {
                 user.roles.splice(index, 1);
             } else {
@@ -296,7 +297,7 @@ const removeRoles = asyncHandler(
         await user.save();
 
         res.ok({
-            user: user.toJSON(),
+            user,
             removedRoles,
         });
     },
