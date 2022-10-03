@@ -38,12 +38,12 @@ export default function UserList(props) {
                 }}
             />
 
-            <div className={"absolute top-5/6 overflow-scroll w-full " + (showUsers ? 'visible' : 'invisible')}>
+            <div className={"absolute top-5/6 overflow-scroll w-full pr-4 " + (showUsers ? 'visible' : 'invisible')}>
                 {/* Displays each user that has been searched for */}
                 {users.map((user) => {
                     return (
                         <div
-                            className="text-lg p-2 w-full m-0 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c] z-50"
+                            className="text-lg p-2 w-full rounded-md text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
                             key={user}
                             onClick={() => {
                                 setActiveUser(user);

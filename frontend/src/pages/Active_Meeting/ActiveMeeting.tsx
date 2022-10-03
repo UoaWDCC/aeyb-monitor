@@ -15,30 +15,24 @@ export default function ActiveMeeting() {
 
 
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
 
     const [attendance, setAttendance] = useState(AttendanceType.Attended);
 
     const [rating, setRating] = useState(3);
 
-
-    // toggles the sidebar being open and closed
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
     return (
         <div className='h-screen overflow-scroll'>
-            <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={0} />
-            <div className='w-5/6 sm:w-1/3 h-screen mx-auto py-2 flex items-center flex-col justify-around'>
-                <h1 className='text-5xl mt-2'>Meeting A - with Group B</h1>
+            <div className='w-5/6 lg:w-1/3 h-screen mx-auto py-2 flex items-center flex-col justify-around'>
+                <h1 className='text-4xl mt-2'>Meeting A - with Group B</h1>
 
-                <div className='w-full'>
+                <div className='w-full z-50'>
                     <UserList allUsers={allUsers} setActiveUser={setActiveUser} />
                 </div>
 
                 {
-                    activeUser === '' ? <h2 className='text-2xl '>Select a user </h2> :
+                    activeUser === '' ? <div></div> :
                         <div className='flex flex-col items-center w-full'>
                             <h2 className='text-2xl my-5'>{activeUser}'s Participation Feedback:</h2>
                             <div className='my-2 w-full'>
@@ -64,9 +58,6 @@ export default function ActiveMeeting() {
                 }
 
                 <button className='mt-20 text-red-600 font-extrabold border-2 border-red-600 p-2 rounded-md w-full'>END MEETING</button>
-
-
-
             </div>
         </div>
     )

@@ -21,6 +21,7 @@ export default function AttendanceSelect(props) {
                 id="attendance-select"
                 label="Attendance"
                 onChange={handleChange}
+                defaultValue=''
             >
                 <MenuItem value={1}>Attended</MenuItem>
                 <MenuItem value={0}>Not Attended</MenuItem>
