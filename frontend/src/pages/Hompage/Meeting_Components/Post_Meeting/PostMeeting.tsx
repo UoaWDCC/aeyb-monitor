@@ -1,10 +1,13 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import '../meeting.css'
 
 export default function PostMeeting() {
+    const navigate = useNavigate();
 
     const openMeetingPage = () => {
-        console.log(`opening the PLACEHOLDER MEETING page`)
+        console.log(`opening the PLACEHOLDER MEETING page`);
+        navigate("../aftermeetingpage");
     }
 
     return (
