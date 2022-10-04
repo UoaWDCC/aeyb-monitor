@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Sidebar from '../Sidebar_Components/Sidebar'
 import LiveMeeting from './Meeting_Components/Live_Meeting/LiveMeeting';
 import UpcomingMeeting from './Meeting_Components/Upcoming_Meeting/UpcomingMeeting';
 import PostMeeting from './Meeting_Components/Post_Meeting/PostMeeting';
@@ -7,17 +6,8 @@ import './homepage.css'
 
 export default function Homepage() {
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // toggles the sidebar being open and closed
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
-
   return (
     <>
-      <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} currentPage={0} />
-
       <div className='pageComponent'>
         <div className="containerAll">
           <div id="liveContainer">

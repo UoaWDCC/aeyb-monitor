@@ -15,7 +15,6 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 90px;
     height: 100%;
     background-color: white;
     transition: width 0.5s;
@@ -23,12 +22,4 @@ body {
 
 .sidebar>* {
     margin-bottom: 12vh;
-}
-
-.logoBox {
-    margin-bottom: 7vh;
-}
-
-.menuOpen {
-    width: 250px;
 }
