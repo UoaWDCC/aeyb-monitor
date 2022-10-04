@@ -21,6 +21,7 @@ const getAllMeetings = asyncHandler(
                 creator: (value) => (query = query.where('creator').equals(value)),
                 location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
                 name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
+                type: (value) => (query = query.where('type', new RegExp(value, 'i'))),
             };
 
             Object.entries(req.query)
