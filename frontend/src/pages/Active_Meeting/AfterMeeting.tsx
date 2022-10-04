@@ -18,7 +18,7 @@ export default function AfterMeeting() {
     }
 
     function inputRequired() {
-        if ((document.getElementById("comment") as HTMLInputElement).value.length != 0) {
+        if ((document.getElementById("comment") as HTMLInputElement).value.length !== 0) {
             setLeaveMeetingOpen(true);
         } else {
             setCommentStatus(false);
