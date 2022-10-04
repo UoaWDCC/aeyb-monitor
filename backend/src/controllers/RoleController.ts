@@ -3,21 +3,26 @@ import { Request, Response } from 'express';
 import Role from '../models/RoleModel';
 import User from '../models/UserModel';
 import { RoleIdParam } from '../types/RequestParams';
-import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import RoleDTO from '../shared/Types/dtos/RoleDTO';
+import {
+    AddRoleData,
+    DeleteRoleData,
+    GetAllRolesData,
+    GetRoleData,
+    UpdateRoleData,
+} from '../shared/Types/responses/RoleResponsesData';
 
 /**
  * @desc 	Get all the roles
  * @route 	GET /api/roles/
  */
-const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
+const getAllRoles = asyncHandler(async (req: Request, res: TypedResponse<GetAllRolesData>) => {
     const roles = await Role.find();
 
     res.ok({
         results: roles.length,
-        data: {
-            roles,
-        },
+        roles,
     });
 });
 
@@ -25,7 +30,7 @@ const getAllRoles = asyncHandler(async (req: Request, res: Response) => {
  * @desc 	Get a specific role
  * @route 	GET /api/roles/:roleId
  */
-const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: Response) => {
+const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: TypedResponse<GetRoleData>) => {
     const role = await Role.findById(req.params.roleId);
     if (!role) {
         return res.notFound(`There is no role with the id ${req.params.roleId}`);
@@ -35,9 +40,7 @@ const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: R
 
     res.ok({
         userCount,
-        data: {
-            role,
-        },
+        role,
     });
 });
 
@@ -45,7 +48,7 @@ const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: R
  * @desc 	Add a new role
  * @route 	POST /api/roles/
  */
-const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: Response) => {
+const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: TypedResponse<AddRoleData>) => {
     const newRole = await Role.create(req.body);
 
     res.created({ role: newRole });
@@ -55,7 +58,7 @@ const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: Response) =
  * @desc 	Delete a specific role
  * @route 	DELETE /api/roles/:roleId
  */
-const deleteRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response) => {
+const deleteRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: TypedResponse<DeleteRoleData>) => {
     // Remove the role from any users that had it
     let modCount = 0;
     await User.updateMany({ roles: req.params.roleId }, { $pull: { roles: req.params.roleId } }, { new: true }).then(
@@ -77,7 +80,7 @@ const deleteRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response)
  * @desc 	Edit a specific role
  * @route 	PATCH /api/roles/:roleId
  */
-const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: Response) => {
+const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: TypedResponse<UpdateRoleData>) => {
     const role = await Role.findByIdAndUpdate(req.params.roleId, req.body, {
         new: true,
         runValidators: true,
