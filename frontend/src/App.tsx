@@ -17,24 +17,17 @@ function App() {
         setIsMenuOpen(!isMenuOpen)
     }
 
-
-    const [isLoginPage, setIsLoginPage] = useState<boolean>(false)
-
-    useEffect(() => {
-        setIsLoginPage('/' === window.location.pathname)
-    }, [])
-
     return (
         <div className="App">
             <Router>
-                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} isLoginPage={isLoginPage} />
+                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="profilepage/roles" element={<Roles />} />
                     <Route path="homepage" element={<Homepage />} />
                     <Route path="calendarpage" element={<CalendarPage />} />
-                    <Route path="profilepage" element={<UserProfile />} />
+                    <Route path="profilepage/*" element={<UserProfile />} />
                 </Routes>
             </Router>
         </div>

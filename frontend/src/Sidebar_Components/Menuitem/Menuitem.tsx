@@ -12,7 +12,6 @@ export default function Menuitem(prop: { iconIndex: number; isMenuOpen: boolean;
         PROFILE
     }
 
-
     const icons = [faHouse, faCalendar, faUser]
 
     const navigate = useNavigate();
