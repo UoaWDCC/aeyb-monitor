@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Roles from './pages/Roles/Roles';
@@ -8,6 +8,7 @@ import UserProfile from './pages/Profiles_Page/UserProfile';
 import CalendarPage from './pages/Calendar_Page/CalendarPage';
 import Sidebar from './Sidebar_Components/Sidebar';
 import ActiveMeeting from './pages/Active_Meeting/ActiveMeeting';
+import AfterMeeting from './pages/Active_Meeting/AfterMeeting';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
                     <Route path="calendarpage" element={<CalendarPage />} />
                     <Route path="profilepage/*" element={<UserProfile />} />
                     <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                    <Route path="aftermeetingpage" element={<AfterMeeting />} />
                 </Routes>
             </Router>
         </div>
