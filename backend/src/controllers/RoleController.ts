@@ -1,10 +1,10 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import Role from '../models/RoleSchema';
-import User from '../models/UserSchema';
+import Role from '../models/RoleModel';
+import User from '../models/UserModel';
 import { RoleIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
-import RoleModel from '../shared/Types/models/RoleModel';
+import RoleDTO from '../shared/Types/dtos/RoleDTO';
 
 /**
  * @desc 	Get all the roles
@@ -45,7 +45,7 @@ const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: R
  * @desc 	Add a new role
  * @route 	POST /api/roles/
  */
-const addRole = asyncHandler(async (req: TypedRequest<RoleModel>, res: Response) => {
+const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: Response) => {
     const newRole = await Role.create(req.body);
 
     res.created({ role: newRole });
@@ -77,7 +77,7 @@ const deleteRole = asyncHandler(async (req: Request<RoleIdParam>, res: Response)
  * @desc 	Edit a specific role
  * @route 	PATCH /api/roles/:roleId
  */
-const updateRole = asyncHandler(async (req: TypedRequest<RoleModel, RoleIdParam>, res: Response) => {
+const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: Response) => {
     const role = await Role.findByIdAndUpdate(req.params.roleId, req.body, {
         new: true,
         runValidators: true,

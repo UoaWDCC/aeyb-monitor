@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import mongoose, { Query } from 'mongoose';
-import { UserPopulatedDocument } from '../models/UserSchema';
+import { UserPopulatedDocument } from '../models/UserModel';
 import AEYBResponse from '../shared/Types/responses/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

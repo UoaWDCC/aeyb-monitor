@@ -1,12 +1,12 @@
 import asyncHandler from 'express-async-handler';
-import User, { UserDocument, UserPopulatedDocument } from '../models/UserSchema';
+import User, { UserDocument, UserPopulatedDocument } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import { Doc, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
-import Role from '../models/RoleSchema';
+import Role from '../models/RoleModel';
 import GooglePayload from '../types/GooglePayload';
 import {
     DevLoginRequest,
@@ -24,8 +24,8 @@ import {
     RemoveRolesData,
     UpdateUserData,
 } from '../shared/Types/responses/UserResponsesData';
-import RoleModel from '../shared/Types/models/RoleModel';
-import { UnpopulatedUser } from '../shared/Types/models/UserModel';
+import RoleDTO from '../shared/Types/dtos/RoleDTO';
+import { UnpopulatedUserDTO } from '../shared/Types/dtos/UserDTO';
 import Permission from '../shared/Types/utils/Permission';
 import { Request } from 'express';
 
@@ -67,15 +67,13 @@ const loginUser = asyncHandler(async (req: TypedRequest<LoginRequest>, res: Type
         const payload = await validateIdToken(credential, res);
         if (!payload) return; // The error json will already have been set in validateIdToken
 
-        let user = await User.findByIdWithRoles(payload.userId);
+        let user = await User.findById(payload.userId);
         if (!user) {
-            user = await (
-                await User.create({
-                    _id: payload.profileUrl,
-                    name: payload.name,
-                    profileUrl: payload.profileUrl,
-                })
-            ).asPopulated();
+            user = await User.create({
+                _id: payload.profileUrl,
+                name: payload.name,
+                profileUrl: payload.profileUrl,
+            });
         } else if (user.name !== payload.name || user.profileUrl !== payload.profileUrl) {
             // If the profile picture or name doesn't match, it must have been updated so we need to update our internal record
             const tempUser = await User.findByIdAndUpdate(
@@ -89,14 +87,16 @@ const loginUser = asyncHandler(async (req: TypedRequest<LoginRequest>, res: Type
             if (!tempUser) {
                 return res.invalid('There was an issue trying to update your user name and profile internally');
             }
-            user = await tempUser.asPopulated();
+            user = tempUser;
         }
+
+        const populatedUser = await user.asPopulated();
 
         // The returned token can then be used to authenticate additional requests
         res.ok({
             token: generateJWT(user.id),
-            user,
-            permissions: [...(await getPermissions(user))],
+            user: populatedUser,
+            permissions: [...(await getPermissions(populatedUser))],
         });
     } catch (error) {
         return res.invalid('Something went wrong while validating id token');
@@ -221,7 +221,7 @@ const giveRoles = asyncHandler(
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const addedRoles: Doc<RoleModel>[] = [];
+        const addedRoles: Doc<RoleDTO>[] = [];
 
         for (const roleId of req.body.roleIds) {
             // Check if role exists
@@ -270,7 +270,7 @@ const removeRoles = asyncHandler(
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const removedRoles: Doc<RoleModel>[] = [];
+        const removedRoles: Doc<RoleDTO>[] = [];
 
         for (const roleId of req.body.roleIds) {
             // Check if role exists

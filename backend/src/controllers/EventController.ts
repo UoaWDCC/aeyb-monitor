@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Response } from 'express';
-import Event, { EventModel } from '../models/EventSchema';
+import Event, { EventDTO } from '../models/EventModel';
 import { EventIdParam } from '../types/RequestParams';
 import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
 import PaginationHandler from '../classes/PaginationHandler';
@@ -11,7 +11,7 @@ import { EventFilterQuery } from '../types/QueryTypes';
  * @route   GET /api/events
  */
 const getAllEvents = asyncHandler(
-    new PaginationHandler<EventModel, EventFilterQuery>(Event)
+    new PaginationHandler<EventDTO, EventFilterQuery>(Event)
         .pre((query, req) => {
             const filterHandlers: Record<string, (value: string) => void> = {
                 before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
@@ -54,7 +54,7 @@ const getEvent = asyncHandler(async (req: TypedRequestParams<EventIdParam>, res:
  * @desc    Add a new event
  * @route   POST /api/events/
  */
-const addEvent = asyncHandler(async (req: TypedRequest<EventModel>, res: Response) => {
+const addEvent = asyncHandler(async (req: TypedRequest<EventDTO>, res: Response) => {
     const newEvent = await Event.create({ ...req.body, creator: req.body.requester });
 
     res.created({ event: newEvent });
@@ -77,7 +77,7 @@ const deleteEvent = asyncHandler(async (req: TypedRequestParams<EventIdParam>, r
  * @desc    Edit a specific event
  * @route   PATCH /api/events/:eventId
  */
-const updateEvent = asyncHandler(async (req: TypedRequest<EventModel, EventIdParam>, res: Response) => {
+const updateEvent = asyncHandler(async (req: TypedRequest<EventDTO, EventIdParam>, res: Response) => {
     const event = await Event.findByIdAndUpdate(req.params.eventId, req.body, {
         new: true,
         runValidators: true,

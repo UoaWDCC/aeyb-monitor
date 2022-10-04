@@ -1,19 +1,19 @@
 import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import Meeting from '../models/MeetingSchema';
+import Meeting from '../models/MeetingModel';
 import { MeetingRequest } from '../types/RequestTypes';
 import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
-import MeetingModel from '../shared/Types/models/MeetingModel';
+import MeetingDTO from '../shared/Types/dtos/MeetingDTO';
 
 /**
  * @desc 	Get all the meetings
  * @route 	GET /api/meetings/
  */
 const getAllMeetings = asyncHandler(
-    new PaginationHandler<MeetingModel, MeetingFilterQuery>(Meeting)
+    new PaginationHandler<MeetingDTO, MeetingFilterQuery>(Meeting)
         .pre((query, req) => {
             const filterHandlers: Record<string, (value: string) => void> = {
                 before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
@@ -56,7 +56,7 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
  * @desc 	Add a new meetings
  * @route 	POST /api/meetings/
  */
-const addMeeting = asyncHandler(async (req: TypedRequest<MeetingModel>, res: Response) => {
+const addMeeting = asyncHandler(async (req: TypedRequest<MeetingDTO>, res: Response) => {
     const newMeeting = await Meeting.create({
         ...req.body,
         creator: req.body.requester,

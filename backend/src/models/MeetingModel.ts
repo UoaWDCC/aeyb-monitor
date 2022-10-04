@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import MeetingModel from '../shared/Types/models/MeetingModel';
-import { AttendanceSchema } from './AttendanceSchema';
+import MeetingDTO from '../shared/Types/dtos/MeetingDTO';
+import { AttendanceSchema } from './AttendanceModel';
 import { applyToJsonOptions } from './Utils';
 
-const meetingSchema = new mongoose.Schema<MeetingModel>({
+const meetingSchema = new mongoose.Schema<MeetingDTO>({
     name: {
         type: String,
         required: [true, "You must specify the meeting's name"],

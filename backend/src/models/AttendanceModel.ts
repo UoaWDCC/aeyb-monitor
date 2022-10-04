@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
-import AttendanceModel from '../shared/Types/models/AttendanceModel';
+import AttendanceDTO from '../shared/Types/dtos/AttendanceDTO';
 
-export const AttendanceSchema = new Schema<AttendanceModel>(
+export const AttendanceSchema = new Schema<AttendanceDTO>(
     {
         attendedUsers: {
             type: [{ type: String, ref: 'User' }],
