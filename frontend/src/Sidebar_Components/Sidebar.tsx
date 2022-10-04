@@ -13,12 +13,12 @@ export default function Sidebar(prop: { isMenuOpen: boolean; toggleMenu: React.M
     }, 100)
 
     const useReactPath = () => {
-        const [path, setPath] = React.useState(window.location.pathname);
+        const [path, setPath] = useState(window.location.pathname);
         const listenToPopstate = () => {
             const winPath = window.location.pathname;
             setPath(winPath);
         };
-        React.useEffect(() => {
+        useEffect(() => {
             window.addEventListener("popstate", listenToPopstate);
             return () => {
                 window.removeEventListener("popstate", listenToPopstate);
