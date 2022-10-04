@@ -8,11 +8,21 @@ export default function AfterMeeting() {
     const navToHomePage = () => {
         navigate("../homepage");
     };
+    const [hasComment, setCommentStatus] = useState(true);
 
     function handleSubmit() {
         console.log(`
         Rating: ${rating},
         Comments: ${(document.getElementById("comment") as HTMLInputElement).value}`)
+    }
+
+    function inputRequired() {
+        if ((document.getElementById("comment") as HTMLInputElement).value.length != 0) {
+            handleSubmit();
+            navToHomePage();
+        } else {
+            setCommentStatus(false);
+        }
     }
 
     return (
@@ -26,12 +36,12 @@ export default function AfterMeeting() {
                         <Rating setRating={setRating} />
                     </div>
                     <h2 className='text-3xl'>How did you find the meeting?</h2>
-                    <textarea id="comment" className=' mt-4 mb-10 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
+                    <textarea id="comment" className=' mt-4 mb-2 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
+                    <p className={`text-red-600 mb-10 w-full text-left ${hasComment ? "invisible" : "visible"}`}>*required: please leave a comment</p>
 
-                    <button className='text-red-600 border-red-600 border-2 p-1 rounded-md w-1/3 text-2xl' onClick={() => { handleSubmit(); navToHomePage(); }}>Submit</button>
+                    <button className='text-red-600 border-red-600 border-2 p-1 rounded-md w-1/3 text-2xl' onClick={inputRequired}>Submit</button>
                 </div>
             </div>
-
         </div >
     )
 }
