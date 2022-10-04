@@ -49,6 +49,8 @@ export default function UserList(props) {
                                 setActiveUser(user);
                                 setShowUsers(false);
                                 (document.getElementById("user-search") as HTMLInputElement).value = "";
+                                if ((document.getElementById("comment") as HTMLInputElement))
+                                    (document.getElementById("comment") as HTMLInputElement).value = "";
                             }}
                         >
                             <p>{user}</p>
