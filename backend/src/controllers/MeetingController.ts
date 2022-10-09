@@ -35,7 +35,7 @@ const getAllMeetings = asyncHandler(
             return query;
         })
         .pre((query) => query.sort({ time: 'ascending' }))
-        .post(async (events) => await Promise.all(events.map((event) => event.populate('creator')))).handler,
+        .post(async (meetings) => await Promise.all(meetings.map((meeting) => meeting.populate('creator')))).handler,
 );
 
 /**
