@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import mongoose, { Query } from 'mongoose';
+import mongoose, { Document, Query } from 'mongoose';
 import { UserPopulatedDocument } from '../models/UserModel';
 import AEYBResponse from '../shared/Types/responses/utils';
 
@@ -9,7 +9,7 @@ export type Doc<ModelType, IdType = mongoose.Types.ObjectId> = mongoose.Document
         _id: IdType;
     };
 
-export type DBModel<T, IdType = mongoose.Types.ObjectId> = T & { _id: IdType };
+export type DocumentModel<T, IdType = mongoose.Types.ObjectId> = T & Omit<Document<IdType>, 'id'>;
 
 export type TypedQuery<T> = Query<Doc<T>[], Doc<T>>;
 

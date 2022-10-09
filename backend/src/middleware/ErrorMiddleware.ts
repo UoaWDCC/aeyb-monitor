@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import InvalidError from '../errors/InvalidError';
 
 type CastErrorValueType = mongoose.Error.CastError & { valueType?: string };
 type MongooseError = mongoose.Error.ValidationError | mongoose.Error.CastError;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function ErrorHandler(error: Error | MongooseError, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof InvalidError) {
+        return res.invalid(error.message);
+    }
     // Check if the error was thrown due to invalid inputs for a model
     if (error instanceof mongoose.Error.ValidationError) {
         return res.invalid(getValidationErrorMessage(error));

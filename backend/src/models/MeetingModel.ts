@@ -1,9 +1,18 @@
-import mongoose from 'mongoose';
+import { model, Schema } from 'mongoose';
 import MeetingDTO, { MeetingType } from '../shared/Types/dtos/MeetingDTO';
+import { DocumentModel } from '../types/UtilTypes';
 import { AttendanceSchema } from './AttendanceModel';
+import { UserDocument } from './UserModel';
 import { applyToJsonOptions } from './Utils';
 
-const meetingSchema = new mongoose.Schema<MeetingDTO>({
+export interface MeetingDocument extends DocumentModel<Omit<MeetingDTO, 'creator'>> {
+    creator: string;
+    asPopulated(): Promise<MeetingPopulatedDocument>;
+}
+
+export type MeetingPopulatedDocument = DocumentModel<MeetingDTO>;
+
+const meetingSchema = new Schema<MeetingDocument>({
     name: {
         type: String,
         required: [true, "You must specify the meeting's name"],
@@ -38,6 +47,13 @@ const meetingSchema = new mongoose.Schema<MeetingDTO>({
 
 applyToJsonOptions(meetingSchema);
 
-const Meeting = mongoose.model('Meeting', meetingSchema);
+meetingSchema.methods.asPopulated = async function (this: UserDocument) {
+    if (this.populated('creator')) {
+        return this;
+    }
+    return await this.populate('creator');
+};
+
+const Meeting = model('Meeting', meetingSchema);
 
 export default Meeting;

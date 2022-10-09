@@ -1,43 +1,54 @@
 import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
-import { TypedRequest, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
-import MeetingDTO from '../shared/Types/dtos/MeetingDTO';
-import { AddMeetingData, GetMeetingData, UpdateMeetingData } from '../shared/Types/responses/MeetingResponses';
+import {
+    AddMeetingData,
+    GetAllMeetingsData,
+    GetMeetingData,
+    UpdateMeetingData,
+} from '../shared/Types/responses/MeetingResponses';
 import { AddMeetingRequest, UpdateMeetingRequest } from '../shared/Types/requests/MeetingRequests';
+
+const paginationOptions = PaginationHandler.createOptions();
 
 /**
  * @desc 	Get all the meetings
  * @route 	GET /api/meetings/
  */
 const getAllMeetings = asyncHandler(
-    new PaginationHandler<MeetingDTO, MeetingFilterQuery>(Meeting)
-        .pre((query, req) => {
-            const filterHandlers: Record<string, (value: string) => void> = {
-                before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
-                after: (value) => (query = query.where({ time: { $gt: new Date(value) } })),
-                time: (value) => (query = query.where('time').equals(new Date(value))),
-                creator: (value) => (query = query.where('creator').equals(value)),
-                location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
-                name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
-                type: (value) => (query = query.where('type', new RegExp(value, 'i'))),
-            };
+    async (req: TypedRequestQuery<MeetingFilterQuery>, res: TypedResponse<GetAllMeetingsData>) => {
+        let query = Meeting.find();
 
-            Object.entries(req.query)
-                .filter(([query]) => filterHandlers[query])
-                .forEach(([query, value]: [string, string]) => filterHandlers[query](value));
+        const filterHandlers: Record<string, (value: string) => void> = {
+            before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
+            after: (value) => (query = query.where({ time: { $gt: new Date(value) } })),
+            time: (value) => (query = query.where('time').equals(new Date(value))),
+            creator: (value) => (query = query.where('creator').equals(value)),
+            location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
+            name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
+            type: (value) => (query = query.where('type', new RegExp(value, 'i'))),
+        };
 
-            if (!req.query.passed || req.query.passed !== 'true') {
-                query = query.where('time').gte(Date.now()); // Only get events that haven't passed
-            }
+        Object.entries(req.query)
+            .filter(([query]) => filterHandlers[query])
+            .forEach(([query, value]: [string, string]) => filterHandlers[query](value));
 
-            return query;
-        })
-        .pre((query) => query.sort({ time: 'ascending' }))
-        .post(async (meetings) => await Promise.all(meetings.map((meeting) => meeting.populate('creator')))).handler,
+        if (!req.query.passed || req.query.passed !== 'true') {
+            query = query.where('time').gte(Date.now()); // Only get events that haven't passed
+        }
+
+        query = query.sort({ time: 'ascending' });
+
+        const { response, data } = await PaginationHandler.paginate(query, req.query, paginationOptions);
+        res.ok({
+            ...response,
+            meetings: await Promise.all(data.map((meeting) => meeting.asPopulated())),
+        });
+    },
 );
 
 /**
@@ -50,8 +61,7 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
         return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
     }
 
-    await meeting.populate('creator');
-    res.ok({ meeting });
+    res.ok({ meeting: await meeting.asPopulated() });
 });
 
 /**
@@ -64,7 +74,7 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
         creator: req.body.requester,
     });
 
-    res.ok({ meeting: newMeeting });
+    res.ok({ meeting: await newMeeting.asPopulated() });
 });
 
 /**
@@ -93,7 +103,7 @@ const updateMeeting = asyncHandler(
         if (!meeting) {
             return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
         }
-        res.ok({ meeting });
+        res.ok({ meeting: await meeting.asPopulated() });
     },
 );
 

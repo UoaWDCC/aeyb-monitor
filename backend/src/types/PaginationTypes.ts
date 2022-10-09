@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Doc, TypedQuery, TypedRequestQuery } from './UtilTypes';
+import { TypedQuery, TypedRequestQuery } from './UtilTypes';
 
 export interface PaginationOptions {
     limit: number;
@@ -7,9 +7,32 @@ export interface PaginationOptions {
 }
 
 export interface PaginationConfig {
+    /**
+     * The maximum allowed limit for how many results to return.
+     *
+     * @default Number.MAX_SAFE_INTEGER
+     */
     maxLimit: number;
+
+    /**
+     * The default limit for how many results to return if none if specified.
+     *
+     * @default 30 - Automatically bounded by the minLimit and maxLimit
+     */
     defaultLimit: number;
+
+    /**
+     * The minimum allowed limit for how many results to return.
+     *
+     * @default 1
+     */
     minLimit: number;
+
+    /**
+     * The default page that should be used if none if specified in the query.
+     *
+     * @default 0
+     */
     defaultPage: number;
 }
 
@@ -19,4 +42,4 @@ export type PreCallback<T, TQuery> = (
     res: Response,
 ) => TypedQuery<T> | void;
 
-export type PostCallback<T> = (results: Doc<T>[], options: PaginationOptions) => Promise<Doc<T>[]> | Doc<T>[];
+export type PostCallback<T> = (results: T[], options: PaginationOptions) => Promise<T[]> | T[];

@@ -1,14 +1,14 @@
-import { Schema, model, Types, Document, Model, LeanDocument } from 'mongoose';
+import { Schema, model, Types, Model } from 'mongoose';
 import UserDTO, { UnpopulatedUserDTO } from '../shared/Types/dtos/UserDTO';
+import { DocumentModel } from '../types/UtilTypes';
 import { applyToJsonOptions } from './Utils';
 
-export interface UserDocument extends Omit<UnpopulatedUserDTO, 'roles'>, Omit<Document<string>, 'id'> {
+export interface UserDocument extends DocumentModel<Omit<UnpopulatedUserDTO, 'roles'>, string> {
     roles: Types.ObjectId[];
     asPopulated(): Promise<UserPopulatedDocument>;
-    asDTO(): UserDTO;
 }
 
-export interface UserPopulatedDocument extends UserDTO, Omit<Document<string>, 'id'> {}
+export type UserPopulatedDocument = DocumentModel<UserDTO, string>;
 
 export interface TypedUserModel extends Model<UserDocument> {
     findByIdWithRoles(id: string): Promise<UserPopulatedDocument>;
