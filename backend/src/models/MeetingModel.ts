@@ -15,8 +15,8 @@ const meetingSchema = new mongoose.Schema<MeetingDTO>({
         required: [true, "You must specify the creator's id"],
     },
     time: {
-        type: Date,
-        required: [true, 'You must specify when the event starts'],
+        type: Number,
+        required: [true, 'You must specify when the event starts in ms'],
     },
     location: {
         type: String,

@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import Role from '../models/RoleModel';
 import User from '../models/UserModel';
 import { RoleIdParam } from '../types/RequestParams';

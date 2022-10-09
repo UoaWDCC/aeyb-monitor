@@ -25,7 +25,6 @@ import {
     UpdateUserData,
 } from '../shared/Types/responses/UserResponsesData';
 import RoleDTO from '../shared/Types/dtos/RoleDTO';
-import { UnpopulatedUserDTO } from '../shared/Types/dtos/UserDTO';
 import Permission from '../shared/Types/utils/Permission';
 import { Request } from 'express';
 

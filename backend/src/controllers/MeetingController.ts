@@ -1,12 +1,13 @@
 import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
-import { MeetingRequest } from '../types/RequestTypes';
-import { TypedRequest, TypedRequestParams } from '../types/UtilTypes';
+import { TypedRequest, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import { MeetingFilterQuery } from '../types/QueryTypes';
 import MeetingDTO from '../shared/Types/dtos/MeetingDTO';
+import { AddMeetingData, GetMeetingData, UpdateMeetingData } from '../shared/Types/responses/MeetingResponses';
+import { AddMeetingRequest, UpdateMeetingRequest } from '../shared/Types/requests/MeetingRequests';
 
 /**
  * @desc 	Get all the meetings
@@ -43,7 +44,7 @@ const getAllMeetings = asyncHandler(
  * @desc    Get a specific meeting
  * @route   GET /api/meetings/:meetingId
  */
-const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
+const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetMeetingData>) => {
     const meeting = await Meeting.findById(req.params.meetingId);
     if (!meeting) {
         return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
@@ -57,7 +58,7 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
  * @desc 	Add a new meetings
  * @route 	POST /api/meetings/
  */
-const addMeeting = asyncHandler(async (req: TypedRequest<MeetingDTO>, res: Response) => {
+const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
     const newMeeting = await Meeting.create({
         ...req.body,
         creator: req.body.requester,
@@ -82,16 +83,18 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
  * @desc    Edit a specific meeting
  * @route   PATCH /api/meetings/:meetingId
  */
-const updateMeeting = asyncHandler(async (req: TypedRequest<MeetingRequest, MeetingIdParam>, res: Response) => {
-    const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
-        new: true,
-        runValidators: true,
-    });
+const updateMeeting = asyncHandler(
+    async (req: TypedRequest<UpdateMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
+            new: true,
+            runValidators: true,
+        });
 
-    if (!meeting) {
-        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
-    }
-    res.ok({ meeting });
-});
+        if (!meeting) {
+            return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+        }
+        res.ok({ meeting });
+    },
+);
 
 export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };
