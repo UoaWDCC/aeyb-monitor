@@ -1,6 +1,10 @@
 import { response } from 'express';
+<<<<<<< HEAD
 import AEYBResponse from '../shared/Types/responses/utils';
 import { SuccessfulResponse } from '../shared/Types/responses/utils/SuccessfulResponse';
+=======
+import { TokenExpiredError } from 'jsonwebtoken';
+>>>>>>> main
 
 /**
  * Response Utilities using 'Module augmentation'. The types need to match for module augmentation to work
@@ -20,6 +24,7 @@ declare module 'express-serve-static-core' {
         error(status: number, message: string): void;
         invalid(message: string): void;
         unauthorized(message: string): void;
+        tokenExpired(error: TokenExpiredError): void;
         notFound(message: string): void;
         success(status: number, data: ResBody extends SuccessfulResponse<infer T> ? T : ResBody): void;
         ok(data: ResBody extends SuccessfulResponse<infer T> ? T : ResBody): void;
@@ -41,6 +46,14 @@ response.invalid = function (message) {
 
 response.unauthorized = function (message) {
     this.error(401, message);
+};
+
+response.tokenExpired = function (error) {
+    this.status(401).json({
+        status: 'tokenExpired',
+        messsage: error.message,
+        expiredAt: error.expiredAt,
+    });
 };
 
 response.notFound = function (message) {

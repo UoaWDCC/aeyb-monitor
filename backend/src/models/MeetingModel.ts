@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import MeetingDTO from '../shared/Types/dtos/MeetingDTO';
+import MeetingDTO, { MeetingType } from '../shared/Types/dtos/MeetingDTO';
 import { AttendanceSchema } from './AttendanceModel';
 import { applyToJsonOptions } from './Utils';
 
@@ -28,6 +28,11 @@ const meetingSchema = new mongoose.Schema<MeetingDTO>({
     },
     description: {
         type: String,
+    },
+    type: {
+        type: String,
+        enum: MeetingType,
+        required: [true, 'You must specify the type of event'],
     },
 });
 

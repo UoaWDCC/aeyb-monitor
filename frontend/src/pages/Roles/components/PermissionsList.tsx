@@ -103,7 +103,7 @@ export default function PermissionList(props) {
                                         }}
                                         checked={
                                             sectionStates[
-                                                `all${key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}Checked`
+                                            `all${key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}Checked`
                                             ]
                                         }
                                     />
