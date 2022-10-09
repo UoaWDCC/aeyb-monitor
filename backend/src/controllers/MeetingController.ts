@@ -24,9 +24,9 @@ const getAllMeetings = asyncHandler(
         let query = Meeting.find();
 
         const filterHandlers: Record<string, (value: string) => void> = {
-            before: (value) => (query = query.where({ time: { $lt: new Date(value) } })),
-            after: (value) => (query = query.where({ time: { $gt: new Date(value) } })),
-            time: (value) => (query = query.where('time').equals(new Date(value))),
+            before: (value) => (query = query.where('time').lt(Number.parseInt(value))),
+            after: (value) => (query = query.where('time').gt(Number.parseInt(value))),
+            time: (value) => (query = query.where('time').equals(Number.parseInt(value))),
             creator: (value) => (query = query.where('creator').equals(value)),
             location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
             name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
@@ -86,7 +86,7 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     if (!meeting) {
         return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
     }
-    res.status(204);
+    res.sendStatus(204);
 });
 
 /**

@@ -18,8 +18,7 @@ function ErrorHandler(error: Error | MongooseError, req: Request, res: Response,
         return res.invalid(getCastErrorMessage(error));
     }
 
-    const status = res.statusCode ?? 501;
-    res.error(status, error.message);
+    res.error(501, error.message);
 }
 
 function getValidationErrorMessage(error: mongoose.Error.ValidationError): string {

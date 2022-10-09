@@ -33,7 +33,8 @@ export default class PaginationHandler {
     ): Promise<{ response: PaginatedResponse<unknown>; data: TRes[] }> {
         const options = PaginationHandler.handlePagination(queryOptions, config);
 
-        const documentCount = await query.countDocuments();
+        // You can only execute each query once so we need to make a copy of it so we can reuse it again later
+        const documentCount = await query.clone().countDocuments();
         if (documentCount === 0) {
             return { response: PaginationHandler.createResponse(false, false, 0, 0, 0, options), data: [] };
         }

@@ -1,10 +1,6 @@
 import { response } from 'express';
-<<<<<<< HEAD
-import AEYBResponse from '../shared/Types/responses/utils';
 import { SuccessfulResponse } from '../shared/Types/responses/utils/SuccessfulResponse';
-=======
 import { TokenExpiredError } from 'jsonwebtoken';
->>>>>>> main
 
 /**
  * Response Utilities using 'Module augmentation'. The types need to match for module augmentation to work
