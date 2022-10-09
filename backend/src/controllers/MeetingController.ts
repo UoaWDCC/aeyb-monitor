@@ -4,7 +4,6 @@ import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
 import { MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
-import { MeetingFilterQuery } from '../types/QueryTypes';
 import {
     AddMeetingData,
     GetAllMeetingsData,
