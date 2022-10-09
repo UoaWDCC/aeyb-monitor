@@ -10,7 +10,7 @@ export interface MeetingDocument extends DocumentModel<Omit<MeetingDTO, 'creator
     asPopulated(): Promise<MeetingPopulatedDocument>;
 }
 
-export type MeetingPopulatedDocument = DocumentModel<MeetingDTO>;
+export interface MeetingPopulatedDocument extends DocumentModel<MeetingDTO> {}
 
 const meetingSchema = new Schema<MeetingDocument>({
     name: {

@@ -3,10 +3,10 @@ import User, { UserDocument, UserPopulatedDocument } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
-import { Doc, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
+import { TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '../types/RequestParams';
 import { TypedRequest } from '../types/UtilTypes';
-import Role from '../models/RoleModel';
+import Role, { RoleDocument } from '../models/RoleModel';
 import GooglePayload from '../types/GooglePayload';
 import {
     DevLoginRequest,
@@ -24,7 +24,6 @@ import {
     RemoveRolesData,
     UpdateUserData,
 } from '../shared/Types/responses/UserResponsesData';
-import RoleDTO from '../shared/Types/dtos/RoleDTO';
 import Permission from '../shared/Types/utils/Permission';
 import { Request } from 'express';
 
@@ -220,7 +219,7 @@ const giveRoles = asyncHandler(
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const addedRoles: Doc<RoleDTO>[] = [];
+        const addedRoles: RoleDocument[] = [];
 
         for (const roleId of req.body.roleIds) {
             // Check if role exists
@@ -230,7 +229,7 @@ const giveRoles = asyncHandler(
             }
 
             // Ignore duplicates and roles the user already has
-            if (!(user.roles.includes(role.id) || addedRoles.includes(role))) {
+            if (!(user.roles.includes(role) || addedRoles.includes(role))) {
                 addedRoles.push(role);
             }
         }
@@ -269,7 +268,7 @@ const removeRoles = asyncHandler(
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const removedRoles: Doc<RoleDTO>[] = [];
+        const removedRoles: RoleDocument[] = [];
 
         for (const roleId of req.body.roleIds) {
             // Check if role exists

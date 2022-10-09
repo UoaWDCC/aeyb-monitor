@@ -1,9 +1,12 @@
 import mongoose from 'mongoose';
 import RoleDTO from '../shared/Types/dtos/RoleDTO';
 import Permission from '../shared/Types/utils/Permission';
+import { DocumentModel } from '../types/UtilTypes';
 import { applyToJsonOptions } from './Utils';
 
-const roleSchema = new mongoose.Schema<RoleDTO>({
+export interface RoleDocument extends DocumentModel<RoleDTO> {}
+
+const roleSchema = new mongoose.Schema<RoleDocument>({
     name: {
         type: String,
         required: [true, 'You must specify the role name'],

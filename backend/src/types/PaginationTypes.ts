@@ -1,6 +1,3 @@
-import { Response } from 'express';
-import { TypedQuery, TypedRequestQuery } from './UtilTypes';
-
 export interface PaginationOptions {
     limit: number;
     page: number;
@@ -35,11 +32,3 @@ export interface PaginationConfig {
      */
     defaultPage: number;
 }
-
-export type PreCallback<T, TQuery> = (
-    query: TypedQuery<T>,
-    req: TypedRequestQuery<TQuery>,
-    res: Response,
-) => TypedQuery<T> | void;
-
-export type PostCallback<T> = (results: T[], options: PaginationOptions) => Promise<T[]> | T[];
