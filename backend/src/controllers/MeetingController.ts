@@ -12,6 +12,7 @@ import {
     UpdateMeetingData,
 } from '../shared/Types/responses/MeetingResponses';
 import { AddMeetingRequest, UpdateMeetingRequest } from '../shared/Types/requests/MeetingRequests';
+import { GetAllMeetingsQuery } from '../shared/Types/queries/MeetingQueries';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -20,15 +21,13 @@ const paginationOptions = PaginationHandler.createOptions();
  * @route 	GET /api/meetings/
  */
 const getAllMeetings = asyncHandler(
-    async (req: TypedRequestQuery<MeetingFilterQuery>, res: TypedResponse<GetAllMeetingsData>) => {
+    async (req: TypedRequestQuery<GetAllMeetingsQuery>, res: TypedResponse<GetAllMeetingsData>) => {
         let query = Meeting.find();
 
         const filterHandlers: Record<string, (value: string) => void> = {
             before: (value) => (query = query.where('time').lt(Number.parseInt(value))),
             after: (value) => (query = query.where('time').gt(Number.parseInt(value))),
-            time: (value) => (query = query.where('time').equals(Number.parseInt(value))),
             creator: (value) => (query = query.where('creator').equals(value)),
-            location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
             name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
             type: (value) => (query = query.where('type', new RegExp(value, 'i'))),
         };

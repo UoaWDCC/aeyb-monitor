@@ -1,8 +1,3 @@
-export interface PaginationOptions {
-    limit: number;
-    page: number;
-}
-
 export interface PaginationConfig {
     /**
      * The maximum allowed limit for how many results to return.

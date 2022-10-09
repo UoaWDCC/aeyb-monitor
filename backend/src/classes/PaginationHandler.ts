@@ -1,8 +1,9 @@
 import { Query } from 'mongoose';
 import InvalidError from '../errors/InvalidError';
+import { PaginationQuery } from '../shared/Types/queries/utils';
 import { PaginatedResponse } from '../shared/Types/responses/utils';
-import { PaginationOptions, PaginationConfig } from '../types/PaginationTypes';
-import { PaginationQuery } from '../types/QueryTypes';
+import { PaginationOptions } from '../shared/Types/utils/Pagination';
+import { PaginationConfig } from '../types/PaginationTypes';
 
 export default class PaginationHandler {
     public static createOptions(config?: Partial<PaginationConfig>): PaginationConfig {
@@ -86,7 +87,7 @@ export default class PaginationHandler {
         }
 
         if (queryOptions.page) {
-            const parsedPage = parseInt(queryOptions.page);
+            const parsedPage = Number.parseInt(queryOptions.page);
             if (isNaN(parsedPage)) {
                 throw new InvalidError(`Expected the page parameter to be an integer (Got ${queryOptions.page})`);
             }
