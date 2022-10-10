@@ -36,17 +36,17 @@ const client = new OAuth2Client(config.clientID);
 const devLoginUser = asyncHandler(async (req: Request<DevLoginRequest>, res: TypedResponse<LoginData>) => {
     const userId = req.body.id;
 
-    let user = await User.findByIdWithRoles(userId);
+    let user = await User.findById(userId);
     if (!user) {
-        user = await (
-            await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl })
-        ).asPopulated();
+        user = await User.create({ _id: userId, name: req.body.name, profileUrl: req.body.profileUrl });
     }
+
+    const populatedUser = await user.asPopulated();
 
     res.ok({
         token: generateJWT(user.id),
-        user: user.toJSON(),
-        permissions: [...(await getPermissions(user))], // Apparently it doesn't like sets
+        user: populatedUser,
+        permissions: [...(await getPermissions(populatedUser))], // Apparently it doesn't like sets
     });
 });
 
