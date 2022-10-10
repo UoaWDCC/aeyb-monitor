@@ -54,7 +54,7 @@ const devLoginUser = asyncHandler(async (req: Request<DevLoginRequest>, res: Typ
  * @desc    Login and gain an access token
  * @route   POST api/users/login
  */
-const loginUser = asyncHandler(async (req: TypedRequest<LoginRequest>, res: TypedResponse<LoginData>) => {
+const loginUser = asyncHandler(async (req: Request<LoginRequest>, res: TypedResponse<LoginData>) => {
     const credential = req.body.credential;
 
     if (typeof credential !== 'string') {
