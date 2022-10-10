@@ -1,7 +1,5 @@
-import IonIcon from '@reacticons/ionicons';
-
 import { ReactElement } from 'react';
-import { Profile, UserStatus, Roles } from './Interface';
+import { Profile } from './Interface';
 import NotifBar from './components/Notification_Bar';
 import SettingsBar from './components/Settings';
 import React from 'react';
@@ -29,6 +27,9 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                         <span className=' border-[#FF0201] text-[#FF0201] border-2 rounded-md px-4'>{props.profile.roles[0]}</span>
                     </div>
                 </div>
+
+                {/* Logout Button Div*/}
+                <button className="text-1.5xl text-[#ffffff] bg-[#262b6c] p-2 border-2 rounded-md ml-7" >Log Out</button>
 
                 {/*Settings Div 
                     - output will depend on main role
