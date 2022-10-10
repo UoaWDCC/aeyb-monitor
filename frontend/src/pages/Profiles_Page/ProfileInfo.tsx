@@ -3,12 +3,19 @@ import { Profile } from './Interface';
 import NotifBar from './components/Notification_Bar';
 import SettingsBar from './components/Settings';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileInformation {
     profile: Profile;
 }
 
 const ProfileInfo = (props: ProfileInformation): ReactElement => {
+
+    const navigate = useNavigate();
+    const logout = () => {
+        navigate('/')
+    }
+
 
     return (
         <div>
@@ -29,7 +36,7 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                 </div>
 
                 {/* Logout Button Div*/}
-                <button className="text-1.5xl text-[#ffffff] bg-[#262b6c] p-2 px-4 rounded-md ml-10" >Log Out</button>
+                <button className="text-1.5xl text-[#ffffff] bg-[#262b6c] p-2 px-4 rounded-md ml-10" onClick={logout} >Log Out</button>
 
                 {/*Settings Div 
                     - output will depend on main role

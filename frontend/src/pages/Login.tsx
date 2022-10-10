@@ -34,7 +34,6 @@ function Login() {
                     onSuccess={(res) => onSuccess(res as GoogleLoginResponse)}
                     onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
                 >
                     Sign in with Google
                 </GoogleLogin>
