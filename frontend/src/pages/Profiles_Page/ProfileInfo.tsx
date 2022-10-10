@@ -29,7 +29,7 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                 </div>
 
                 {/* Logout Button Div*/}
-                <button className="text-1.5xl text-[#ffffff] bg-[#262b6c] p-2 border-2 rounded-md ml-7" >Log Out</button>
+                <button className="text-1.5xl text-[#ffffff] bg-[#262b6c] p-2 px-4 rounded-md ml-10" >Log Out</button>
 
                 {/*Settings Div 
                     - output will depend on main role
