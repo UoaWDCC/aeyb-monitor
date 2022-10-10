@@ -3,9 +3,9 @@ import asyncHandler from 'express-async-handler';
 import config from '../types/Config';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import User from '../models/UserModel';
-import Permission from '../types/Perm';
 import { getPermissions } from '../controllers/UserController';
 import { TypedRequest } from '../types/UtilTypes';
+import Permission from '../shared/Types/utils/Permission';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 
@@ -20,7 +20,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
 
             // Verify token:
             const decoded = jwt.verify(token, config.jwtSecret);
-            const user = await User.findById(decoded.sub ?? '');
+            const user = await User.findByIdWithRoles((decoded.sub as string) ?? '');
             if (!user) {
                 return res.unauthorized('Invalid bearer token');
             }
@@ -34,8 +34,8 @@ export default function protect(permission?: Permission): AuthenticationFunction
                 }
             }
 
-            // Make the user accessible in the body of the request.
-            (req as TypedRequest<unknown, unknown>).body.requester = user;
+            // We know that we've populated the user, so it's safe to cast.
+            (req as TypedRequest).body.requester = user;
 
             next();
         } catch (error) {

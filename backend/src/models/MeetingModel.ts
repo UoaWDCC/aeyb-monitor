@@ -1,24 +1,18 @@
-import mongoose from 'mongoose';
-import { UserModel } from './UserModel';
-import { AttendanceSchema, Attendance } from './AttendanceModel';
+import { model, Schema } from 'mongoose';
+import MeetingDTO, { MeetingType } from '../shared/Types/dtos/MeetingDTO';
+import { DocumentModel } from '../types/UtilTypes';
+import { AttendanceSchema } from './AttendanceModel';
+import { UserDocument } from './UserModel';
+import { applyToJsonOptions } from './Utils';
 
-enum MeetingType {
-    Meeting = 'meeting',
-    Event = 'event',
+export interface MeetingDocument extends DocumentModel<Omit<MeetingDTO, 'creator'>> {
+    creator: string;
+    asPopulated(): Promise<MeetingPopulatedDocument>;
 }
 
-export interface MeetingModel {
-    _id: mongoose.Types.ObjectId;
-    name: string;
-    creator: UserModel;
-    time: Date;
-    location: string;
-    attendance: Attendance;
-    description?: string;
-    type: MeetingType;
-}
+export interface MeetingPopulatedDocument extends DocumentModel<MeetingDTO> {}
 
-const meetingSchema = new mongoose.Schema<MeetingModel>({
+const meetingSchema = new Schema<MeetingDocument>({
     name: {
         type: String,
         required: [true, "You must specify the meeting's name"],
@@ -30,8 +24,8 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
         required: [true, "You must specify the creator's id"],
     },
     time: {
-        type: Date,
-        required: [true, 'You must specify when the event starts'],
+        type: Number,
+        required: [true, 'You must specify when the event starts in ms'],
     },
     location: {
         type: String,
@@ -39,7 +33,6 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     },
     attendance: {
         type: AttendanceSchema,
-        ref: 'Attendance',
         required: [true, 'You must specify the attendance'],
     },
     description: {
@@ -52,6 +45,15 @@ const meetingSchema = new mongoose.Schema<MeetingModel>({
     },
 });
 
-const Meeting = mongoose.model('Meeting', meetingSchema);
+applyToJsonOptions(meetingSchema);
+
+meetingSchema.methods.asPopulated = async function (this: UserDocument) {
+    if (this.populated('creator')) {
+        return this;
+    }
+    return await this.populate('creator');
+};
+
+const Meeting = model('Meeting', meetingSchema);
 
 export default Meeting;

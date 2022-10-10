@@ -1,0 +1,6 @@
+[submodule "backend/src/shared"]
+	path = backend/src/shared
+	url = https://github.com/UoaWDCC/AEYB-Shared
+[submodule "frontend/src/shared"]
+	path = frontend/src/shared
+	url = https://github.com/UoaWDCC/AEYB-Shared
