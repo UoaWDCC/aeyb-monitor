@@ -13,9 +13,7 @@ function Login() {
 
     useEffect(() => {
         if (!userContext.user && storedToken) {
-            userContext.relogin().then(() => {
-                navigate('/', { replace: true });
-            })
+            userContext.relogin()
         }
     }, [storedToken, userContext.user, userContext.relogin, userContext, navigate])
 

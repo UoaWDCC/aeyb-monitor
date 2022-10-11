@@ -5,6 +5,7 @@ import Menuitem from './menuitem/Menuitem'
 import { Outlet } from 'react-router-dom';
 import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { faCalendar, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
+import LogoutButton from '../LogoutButton';
 
 export interface MenuItemData {
     url: string;
@@ -59,6 +60,7 @@ export default function Sidebar() {
                         alt="AEYB logo"
                     />
                 </div>
+                <LogoutButton></LogoutButton>
                 {renderMenuItems()}
             </div>
             <Outlet />

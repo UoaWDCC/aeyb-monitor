@@ -50,6 +50,7 @@ export function UserContextProvider({ children }) {
             if (data) {
                 setUser(data.self);
                 setPermissions(data.permissions);
+                navigate('/')
             }
         }
     }
@@ -68,7 +69,7 @@ export function UserContextProvider({ children }) {
         setLocalStorageToken(null);
         setUser(null);
         setPermissions([]);
-        navigate('/login');
+        navigate('/login', { replace: true });
     }
 
     async function fetcher<Url extends keyof API>(
@@ -95,6 +96,7 @@ export function UserContextProvider({ children }) {
             });
 
             if (res.status === 'tokenExpired') {
+                alert('your login token is expired')
                 logout();
                 return
             } else if (res.status === 'error') {
