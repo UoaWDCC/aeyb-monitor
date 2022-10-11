@@ -16,7 +16,7 @@ function App() {
         <Router>
             <UserContextProvider>
                 <MeetingContextProvider>
-                    <Routes>
+                    <Routes >
                         <Route path="/" element={<Sidebar />}>
                             <Route path="/" element={<Homepage />} />
                             <Route path="profilepage/roles" element={<Roles />} />

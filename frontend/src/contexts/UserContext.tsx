@@ -50,7 +50,7 @@ export function UserContextProvider({ children }) {
             if (data) {
                 setUser(data.self);
                 setPermissions(data.permissions);
-                navigate('/')
+                navigate('/', { replace: true })
             }
         }
     }
