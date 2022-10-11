@@ -43,7 +43,6 @@ export function UserContextProvider({ children }) {
 
     const [user, setUser] = useState<UserDTO | null>(null);
     const [permissions, setPermissions] = useState<Permission[]>([]);
-    const [localStorageToken, setLocalStorageToken] = useLocalStorage<string>('userToken', null)
 
     async function relogin() {
         if (localStorageToken !== null) {
@@ -63,7 +62,6 @@ export function UserContextProvider({ children }) {
             axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             setUser(data.user);
             setPermissions(data.permissions);
-            setLocalStorageToken(data.token)
         }
     }
 
