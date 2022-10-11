@@ -25,7 +25,6 @@ function Login() {
 
 
     const handleLogin = (googleData: GoogleLoginResponse) => {
-        console.log(googleData);
         userContext.onLogin(googleData).then(() => {
             navigate('homepage', { replace: true });
         })
@@ -41,7 +40,6 @@ function Login() {
                     onSuccess={(res) => handleLogin(res as GoogleLoginResponse)}
                     onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
                 >
                     Sign in with Google
                 </GoogleLogin>

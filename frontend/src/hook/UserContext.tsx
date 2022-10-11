@@ -32,8 +32,7 @@ export function useUserContext() {
 const UserContext = createContext<UserContextProps>({
     user: null,
     permissions: [],
-    relogin: async () => UnimplementedFunction(),
-    logout: UnimplementedFunction,
+    logout: UnimplementedFunction, relogin: async () => UnimplementedFunction(),
     onLogin: async (_) => UnimplementedFunction(),
 })
 
@@ -43,9 +42,10 @@ export function UserContextProvider({ children }) {
 
     const [user, setUser] = useState<UserDTO | null>(null);
     const [permissions, setPermissions] = useState<Permission[]>([]);
+    const [localStorageToken, setLocalStorageToken] = useLocalStorage<string | null>('userToken', null)
 
     async function relogin() {
-        if (localStorageToken !== null) {
+        if (localStorageToken) {
             axios.defaults.headers["Authorization"] = `Bearer ${localStorageToken}`;
             const data = await fetcher('GET /api/users/@me');
             if (data) {
@@ -62,6 +62,7 @@ export function UserContextProvider({ children }) {
             axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             setUser(data.user);
             setPermissions(data.permissions);
+            setLocalStorageToken(data.token)
         }
     }
 
