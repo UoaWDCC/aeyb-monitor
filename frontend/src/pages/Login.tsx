@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../images/logos/AEYB-meetings-logo.png';
+import { useUserContext } from '../hook/UserContext';
+import useLocalStorage from '../hook/UseLocastrorage';
 
 function Login() {
-    const onFailure = () => {
-        console.log('Invalid account');
+    const userContext = useUserContext();
+    const navigate = useNavigate();
+    const [storedToken,] = useLocalStorage('userToken', null);
+
+    useEffect(() => {
+        if (!userContext.user && storedToken) {
+            userContext.relogin().then(() => {
+                navigate('homepage', { replace: true });
+            })
+        }
+    }, [storedToken, userContext.user, userContext.relogin, userContext, navigate])
+
+    const onFailure = (error: Error) => {
+        console.log(error);
     };
 
-    const navigate = useNavigate();
 
-    const onSuccess = (googleData: GoogleLoginResponse) => {
-        axios
-            .post('http://localhost:5000/api/users/login', {
-                credential: googleData.tokenId,
-            })
-            .then((response) => {
-                console.log(response.data);
-            });
-
-        navigate('homepage', { replace: true });
+    const handleLogin = (googleData: GoogleLoginResponse) => {
+        console.log(googleData);
+        userContext.onLogin(googleData).then(() => {
+            navigate('homepage', { replace: true });
+        })
     };
 
     return (
@@ -31,7 +38,7 @@ function Login() {
                 <GoogleLogin
                     className="loginBox"
                     clientId="931818604859-0jd0r03np411c0v0pp89daplg1eansep.apps.googleusercontent.com"
-                    onSuccess={(res) => onSuccess(res as GoogleLoginResponse)}
+                    onSuccess={(res) => handleLogin(res as GoogleLoginResponse)}
                     onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
                     isSignedIn={true}

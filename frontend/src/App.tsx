@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { UserContextProvider } from './hook/UserContext';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Roles from './pages/Roles/Roles';
@@ -22,17 +23,21 @@ function App() {
     return (
         <div className="App">
             <Router>
-                <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-                <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="*" element={<NotFound />} />
-                    <Route path="profilepage/roles" element={<Roles />} />
-                    <Route path="homepage" element={<Homepage />} />
-                    <Route path="calendarpage" element={<CalendarPage />} />
-                    <Route path="profilepage/*" element={<UserProfile />} />
-                    <Route path="activemeetingpage" element={<ActiveMeeting />} />
-                    <Route path="aftermeetingpage" element={<AfterMeeting />} />
-                </Routes>
+                <UserContextProvider>
+
+                    <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+                    <Routes>
+                        <Route path="/" element={<Login />} />
+                        <Route path="*" element={<NotFound />} />
+                        <Route path="profilepage/roles" element={<Roles />} />
+                        <Route path="homepage" element={<Homepage />} />
+                        <Route path="calendarpage" element={<CalendarPage />} />
+                        <Route path="profilepage/*" element={<UserProfile />} />
+                        <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                        <Route path="aftermeetingpage" element={<AfterMeeting />} />
+                    </Routes>
+                </UserContextProvider>
+
             </Router>
         </div>
     );
