@@ -23,7 +23,7 @@ function Roles() {
         //TODO add navbar component
 
         // Page container
-        <div className=" md:pl-[90px] bg-white overflow-scroll h-screen">
+        <div className=" md:pl-[90px] bg-white overflow-scroll h-screen md:ml-4">
             {/* Page heading */}
             <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
@@ -35,7 +35,7 @@ function Roles() {
                 </div>
 
             </div>
-            <div className=" w-full p-4  rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
+            <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
                 {/* Left column of roles and users */}
                 <div className="flex flex-col">
                     <div className="h-[40%]">
