@@ -2,7 +2,7 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { MeetingIdParam } from '../types/RequestParams';
+import { MeetingIdParam } from '../shared/Types/params';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,

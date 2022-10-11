@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Role from '../models/RoleModel';
 import User from '../models/UserModel';
-import { RoleIdParam } from '../types/RequestParams';
+import { RoleIdParam } from '../shared/Types/params';
 import { TypedRequest, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import RoleDTO from '../shared/Types/dtos/RoleDTO';
 import {

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import { TypedRequestParams, TypedResponse } from '../types/UtilTypes';
-import { UserIdParam } from '../types/RequestParams';
+import { UserIdParam } from '../shared/Types/params';
 import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleDocument } from '../models/RoleModel';
 import GooglePayload from '../types/GooglePayload';

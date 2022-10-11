@@ -1,4 +1,4 @@
-export interface PaginationConfig {
+export default interface PaginationConfig {
     /**
      * The maximum allowed limit for how many results to return.
      *
