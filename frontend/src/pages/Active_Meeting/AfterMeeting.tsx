@@ -29,7 +29,7 @@ export default function AfterMeeting() {
 
     return (
         <div className='h-screen overflow-scroll relative'>
-            <div className='h-screen mx-auto py-2 flex items-center flex-col text-[#262B6C]'>
+            <div className='h-screen mx-auto py-2 flex items-center flex-col text-[#262B6C] text-center'>
                 <h1 className='text-4xl mt-4 mb-10 font-bold'>Meeting A - with Group B</h1>
                 <div className='flex flex-col items-center w-5/6 lg:w-1/3 text-center'>
 
