@@ -1,6 +1,6 @@
-import MeetingDTO from '../../../../shared/Types/dtos/MeetingDTO'
-import { getRelativeTime } from '../utils'
-import '../meeting.css'
+import MeetingDTO from '../../../shared/Types/dtos/MeetingDTO'
+import { getRelativeTime } from './meetingUtils'
+import './meeting.css'
 
 export default function UpcomingMeeting(props: { meeting: MeetingDTO }) {
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { getRelativeTime } from '../utils';
+import { getRelativeTime } from '../meetingUtils';
 import MeetingDTO from '../../../../shared/Types/dtos/MeetingDTO';
 import './livemeeting.css'
 

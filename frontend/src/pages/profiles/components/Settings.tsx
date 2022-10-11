@@ -2,7 +2,7 @@ import IonIcon from '@reacticons/ionicons';
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
-import Roles from '../../Roles/Roles';
+import Roles from '../../roles/Roles';
 
 const SettingsBar = () => {
     const navigate = useNavigate();

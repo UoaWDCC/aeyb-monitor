@@ -1,10 +1,7 @@
-import IonIcon from '@reacticons/ionicons';
-
 import { ReactElement } from 'react';
-import { Profile, UserStatus, Roles } from './Interface';
-import NotifBar from './components/Notification_Bar';
+import { Profile, } from './Interface';
+import NotifBar from './components/NotificationBar';
 import SettingsBar from './components/Settings';
-import React from 'react';
 
 interface ProfileInformation {
     profile: Profile;

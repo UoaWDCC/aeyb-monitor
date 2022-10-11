@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../images/edited/AEYB_A0_CircleBlackWardline.png';
-import { useUserContext } from '../context/UserContext';
-import useLocalStorage from '../hook/UseLocastrorage';
+import Logo from '../../images/edited/AEYB_A0_CircleBlackWardline.png';
+import { useUserContext } from '../../contexts/UserContext';
+import useLocalStorage from '../../hooks/UseLocastrorage';
 
 function Login() {
     const userContext = useUserContext();

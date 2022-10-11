@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const NotifBar = () => {
     const [show, setShow] = useState(false);
-    const [notify, setNotify] = useState(true);
+    const [notify,] = useState(true);
     return (
         <div className='absolute right-4 top-4 text-right inline-flex gap-x-3'>
             <div className={`${show ? "block" : "hidden"} w-96 h-72 bg-indigo-200 shadow-lg`}></div>

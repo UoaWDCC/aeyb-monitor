@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserContextProvider } from './context/UserContext';
-import { MeetingContextProvider } from './context/MeetingContext';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
-import Roles from './pages/Roles/Roles';
-import Homepage from './pages/Hompage/Homepage';
-import UserProfile from './pages/Profiles_Page/UserProfile';
-import CalendarPage from './pages/Calendar_Page/CalendarPage';
-import Sidebar from './Sidebar_Components/Sidebar';
-import ActiveMeeting from './pages/Active_Meeting/ActiveMeeting';
-import AfterMeeting from './pages/Active_Meeting/AfterMeeting';
+import { UserContextProvider } from './contexts/UserContext';
+import { MeetingContextProvider } from './contexts/MeetingContext';
+import Login from './pages/login/Login';
+import NotFound from './pages/not_found/NotFound';
+import Roles from './pages/roles/Roles';
+import Homepage from './pages/home/Homepage';
+import UserProfile from './pages/profiles/UserProfile';
+import CalendarPage from './pages/calendar/CalendarPage';
+import Sidebar from './utility_components/sidebar/Sidebar';
+import ActiveMeeting from './pages/active_meeting/ActiveMeeting';
+import AfterMeeting from './pages/active_meeting/AfterMeeting';
 
 function App() {
     return (

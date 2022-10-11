@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './sidebar.css'
-import logo from '../images/edited/AEYB_A0_Circle_resized.png'
-import Menuitem from './Menuitem/Menuitem'
+import logo from '../../images/edited/AEYB_A0_Circle_resized.png'
+import Menuitem from './menuitem/Menuitem'
 import { Outlet } from 'react-router-dom';
 import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { faCalendar, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';

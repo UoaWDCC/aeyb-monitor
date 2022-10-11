@@ -1,8 +1,8 @@
-import LiveMeeting from './Meeting_Components/Live_Meeting/LiveMeeting';
-import UpcomingMeeting from './Meeting_Components/Upcoming_Meeting/UpcomingMeeting';
-import PostMeeting from './Meeting_Components/Post_Meeting/PostMeeting';
+import LiveMeeting from './components/live_meeting/LiveMeeting';
+import UpcomingMeeting from './components/UpcomingMeeting';
+import PostMeeting from './components/PostMeeting';
 import './homepage.css'
-import { useMeetingContext } from '../../context/MeetingContext';
+import { useMeetingContext } from '../../contexts/MeetingContext';
 
 export default function Homepage() {
 
