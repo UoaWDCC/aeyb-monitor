@@ -1,3 +1,4 @@
+import IonIcon from '@reacticons/ionicons';
 import React from 'react';
 import './Roles.css';
 
@@ -24,31 +25,34 @@ function Roles() {
         // Page container
         <div className=" md:pl-[90px] bg-white overflow-scroll h-screen">
             {/* Page heading */}
-            <div className="px-4 pt-2 flex flex-row">
+            <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
-                <div className="mt-2px">
-                    <button className="text-2xl text-[#262b6c]" onClick={returntoProfile} >Return to Profile</button>
+                <div className="">
+                    <button className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]" onClick={returntoProfile} >
+                        <IonIcon name="chevron-back-outline" />
+                        back
+                    </button>
                 </div>
-                <h1 className="text-3xl text-[#262b6c] font-bold">PERMISSIONS</h1>
+
             </div>
             <div className=" w-full p-4  rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
                 {/* Left column of roles and users */}
                 <div className="flex flex-col">
-                    <div className="h-[300px]">
+                    <div className="h-[40%]">
                         <RoleList allRoles={allRoles} setActiveRole={setActiveRole} />
                     </div>
 
-                    <div className="h-[300px]">
+                    <div className="h-[40%]">
                         <UserList allUsers={allUsers} setActiveRole={setActiveRole} />
                     </div>
                 </div>
 
                 {/* Right column of permissions */}
-                <div className="bg-[#262b6c] col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
+                <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     {activeRole !== '' ? (
                         <PermissionList activeRole={activeRole} />
                     ) : (
-                        <div className="text-center text-white text-3xl">Select a role to view permissions</div>
+                        <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
                     )}
                 </div>
             </div>

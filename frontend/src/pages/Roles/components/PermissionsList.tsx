@@ -65,12 +65,12 @@ export default function PermissionList(props) {
     }
     return (
         <>
-            <div className="flex items-center flex-col ">
-                <h1 className="text-4xl text-white ">{activeRole}</h1>
+            <div className="flex items-center flex-row justify-between text-[#262B6C]">
+                <h1 className="text-3xl font-semibold">{activeRole}</h1>
 
                 {/* Select all */}
                 <div className="flex sm:justify-end pt-2">
-                    <h2 className="text-2xl text-white">Select all</h2>
+                    <h2 className="text-2xl">Select all</h2>
                     <Switch
                         onChange={() => {
                             setChecked(checked.map((item) => !allChecked));
@@ -84,16 +84,16 @@ export default function PermissionList(props) {
                 </div>
             </div>
 
-            <div className="flex flex-col overflow-scroll mt-2">
+            <div className="flex flex-col overflow-scroll mt-2 ">
                 {/* Map through each section permission section */}
                 {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
                     ([key, value]) => {
                         return (
                             <div className="md:grid grid-cols-2 gap-2 mb-3" key={key}>
                                 {/* Section header */}
-                                <div className="col-span-2 flex">
+                                <div className="col-span-2 flex text-[#262b6c]">
                                     {/* Section nam */}
-                                    <h1 className="text-3xl text-white ">
+                                    <h1 className="text-3xl">
                                         {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
                                     </h1>
                                     {/* Toggle section switch */}

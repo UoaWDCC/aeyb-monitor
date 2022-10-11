@@ -15,8 +15,8 @@ export default function UserList(props) {
     const [users, setUsers] = React.useState(allUsers);
 
     return (
-        <div className="bg-[#5563ae] p-2 rounded-md h-full mt-4  border-2 border-[#262b6c]">
-            <h1 className="text-3xl text-white">Users</h1>
+        <div className="bg-[#D5D9ED] p-2 rounded-md h-full mt-4 space-y-1">
+            <h1 className="text-2xl text-[#262B6C] font-bold">Users</h1>
 
             {/* Search box */}
             <input
