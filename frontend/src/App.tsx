@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
 import { UserContextProvider } from './context/UserContext';
+import { MeetingContextProvider } from './context/MeetingContext';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Roles from './pages/Roles/Roles';
@@ -12,34 +12,25 @@ import ActiveMeeting from './pages/Active_Meeting/ActiveMeeting';
 import AfterMeeting from './pages/Active_Meeting/AfterMeeting';
 
 function App() {
-
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    // toggles the sidebar being open and closed
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
-
     return (
-        <div className="App">
-            <Router>
-                <UserContextProvider>
-
-                    <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        <Router>
+            <UserContextProvider>
+                <MeetingContextProvider>
                     <Routes>
-                        <Route path="/" element={<Login />} />
+                        <Route path="/" element={<Sidebar />}>
+                            <Route path="/" element={<Homepage />} />
+                            <Route path="profilepage/roles" element={<Roles />} />
+                            <Route path="calendarpage" element={<CalendarPage />} />
+                            <Route path="profilepage/*" element={<UserProfile />} />
+                            <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                            <Route path="aftermeetingpage" element={<AfterMeeting />} />
+                        </Route>
                         <Route path="*" element={<NotFound />} />
-                        <Route path="profilepage/roles" element={<Roles />} />
-                        <Route path="homepage" element={<Homepage />} />
-                        <Route path="calendarpage" element={<CalendarPage />} />
-                        <Route path="profilepage/*" element={<UserProfile />} />
-                        <Route path="activemeetingpage" element={<ActiveMeeting />} />
-                        <Route path="aftermeetingpage" element={<AfterMeeting />} />
+                        <Route path="/login" element={<Login />} />
                     </Routes>
-                </UserContextProvider>
-
-            </Router>
-        </div>
+                </MeetingContextProvider>
+            </UserContextProvider>
+        </Router>
     );
 }
 

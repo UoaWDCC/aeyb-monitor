@@ -1,32 +1,19 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { getRelativeTime } from '../utils';
+import MeetingDTO from '../../../../shared/Types/dtos/MeetingDTO';
 import './livemeeting.css'
 
-export default function LiveMeeting(prop: { title: string; startTime: Date; endTime: Date; }) {
+export default function LiveMeeting(props: { meeting: MeetingDTO }) {
 
-    class LiveMeeting {
+    const [timeLeft, setTimeLeft] = useState<string>(getRelativeTime(props.meeting.time + 3_600_000))
 
-        constructor(title: string, startTime: Date, endTime: Date) {
-            this.title = title;
-            this.startTime = startTime;
-            this.endTime = endTime;
-        };
-
-        title: string;
-        startTime: Date;
-        endTime: Date;
-        timeLeft: number
-    }
+    useEffect(() => {
+        const interval = setInterval(() => setTimeLeft(getRelativeTime(props.meeting.time + 3_600_000)), 1_000);
+        return () => clearInterval(interval);
+    }, [props.meeting.time]);
 
     const navigate = useNavigate();
-
-    const meeting = new LiveMeeting(prop.title, prop.startTime, prop.endTime)
-    const [timeLeft, setTimeLeft] = useState(Math.floor((meeting.endTime.getTime() - new Date().getTime()) / 60000))
-
-    const updateTime = () => {
-        setTimeLeft(Math.floor((meeting.endTime.getTime() - new Date().getTime()) / 60000))
-    }
-    setInterval(updateTime, 1000)
 
     const openMeetingPage = () => {
         navigate(`../activemeetingpage`, { replace: true });
@@ -35,8 +22,8 @@ export default function LiveMeeting(prop: { title: string; startTime: Date; endT
     return (
         <div className='liveMeeting' onClick={openMeetingPage}>
             <div className='liveStatus'><span className='liveBall'>&#x25cf;</span> LIVE</div>
-            <div className='meetingTitle'>{meeting.title}</div>
-            <div className='timeleft'>{timeLeft > 0 ? `${timeLeft} minutes left` : `Meeting Finished`}</div>
+            <div className='meetingTitle'>{props.meeting.name}</div>
+            <div className='timeleft'>{timeLeft} left</div>
         </div>
     )
 }

@@ -1,24 +1,26 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Rating from './components/RadioGroupRating'
 import { useNavigate } from 'react-router-dom';
 
 export default function AfterMeeting() {
     const [rating, setRating] = useState(3);
     const navigate = useNavigate();
+
     const navToHomePage = () => {
-        navigate("../homepage");
+        navigate('/', { replace: true });
     };
+
     const [hasComment, setCommentStatus] = useState(true);
     const [leaveMeetingOpen, setLeaveMeetingOpen] = useState(false);
 
     function handleSubmit() {
         console.log(`
         Rating: ${rating},
-        Comments: ${(document.getElementById("comment") as HTMLInputElement).value}`)
+        Comments: ${(document.getElementById('comment') as HTMLInputElement).value}`)
     }
 
     function inputRequired() {
-        if ((document.getElementById("comment") as HTMLInputElement).value.length !== 0) {
+        if ((document.getElementById('comment') as HTMLInputElement).value.length !== 0) {
             setLeaveMeetingOpen(true);
         } else {
             setCommentStatus(false);
@@ -36,8 +38,8 @@ export default function AfterMeeting() {
                         <Rating setRating={setRating} />
                     </div>
                     <h2 className='text-3xl'>How did you find the meeting?</h2>
-                    <textarea id="comment" className=' mt-4 mb-2 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
-                    <p className={`text-red-600 mb-10 w-full text-left ${hasComment ? "invisible" : "visible"}`}>*required: please leave a comment</p>
+                    <textarea id='comment' className=' mt-4 mb-2 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
+                    <p className={`text-red-600 mb-10 w-full text-left ${hasComment ? 'invisible' : 'visible'}`}>*required: please leave a comment</p>
 
                     <button className='text-red-600 border-red-600 border-2 p-1 rounded-md w-1/3 text-2xl' onClick={inputRequired}>Submit</button>
                 </div>
@@ -50,12 +52,18 @@ export default function AfterMeeting() {
                             Are you sure you want to submit?
                             <div className='flex justify-around p-5 mt-20'>
                                 <button className='bg-gray-400 p-2 rounded-md text-3xl  px-5' onClick={() => setLeaveMeetingOpen(false)}>Cancel</button>
-                                <button className=' bg-red-300 p-2 rounded-xl text-3xl px-5' onClick={() => { handleSubmit(); navToHomePage(); }}>Submit</button>
+                                <button
+                                    className=' bg-red-300 p-2 rounded-xl text-3xl px-5'
+                                    onClick={() => {
+                                        handleSubmit();
+                                        navToHomePage();
+                                    }}
+                                >Submit</button>
 
                             </div>
                         </div>
                     </div>
-                    : <div></div>
+                    : null
             }
         </div >
 

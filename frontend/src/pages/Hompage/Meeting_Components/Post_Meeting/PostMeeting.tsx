@@ -1,19 +1,21 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import MeetingDTO from '../../../../shared/Types/dtos/MeetingDTO';
 import '../meeting.css'
+import { getRelativeTime } from '../utils';
 
-export default function PostMeeting() {
+export default function PostMeeting(props: { meeting: MeetingDTO }) {
+
     const navigate = useNavigate();
 
     const openMeetingPage = () => {
-        console.log(`opening the PLACEHOLDER MEETING page`);
         navigate("../aftermeetingpage");
     }
 
     return (
         <div className='postMeeting' onClick={openMeetingPage}>
-            <div className='meetingTitle'>Placeholder Meeting Title</div>
-            <div className='dDay'>Opens in 3 hours</div>
+            <div className='meetingTitle'>{props.meeting.name}</div>
+            {/* Meeting time is assumed to be 1 hour long at this stage, if we were to add meeting end time, we would need to change this to props.meeting.endTime (As currently in 11th of October) */}
+            <div className='dDay'>Finished {getRelativeTime(props.meeting.time + 3_600_000)} ago</div>
         </div>
     )
 }

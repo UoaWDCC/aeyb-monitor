@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext } from 'react'
 import UserDTO from '../shared/Types/dtos/UserDTO';
 import { UnimplementedFunction } from '../utils';
 import { GoogleLoginResponse } from 'react-google-login';
@@ -12,14 +12,15 @@ import API from '../shared/Types/api';
 // Eventually move to config file
 axios.defaults.baseURL = 'http://localhost:5000';
 
-export type FetcherType = <EndpointUrl extends keyof API>(
-    url: EndpointUrl, payload: API[EndpointUrl]["req"], params: API[EndpointUrl]["params"]
-) => Promise<API[EndpointUrl]["res"] | null>
+export type FetcherType = <Url extends keyof API>(
+    url: Url, payload?: API[Url]["req"], params?: API[Url]["params"], queryParams?: API[Url]["query"]
+) => Promise<void | API[Url]["res"]>
 
 export interface UserContextProps {
     user: UserDTO | null;
-    permissions: Permission[];
-    logout(): void;
+    hasPermission: (permission: Permission | string) => boolean;
+    fetcher: FetcherType,
+    logout(): Promise<void>;
     relogin(): Promise<void>;
     onLogin(res: GoogleLoginResponse): Promise<void>;
 }
@@ -28,16 +29,18 @@ export const useUserContext = () => useContext(UserContext);
 
 const UserContext = createContext<UserContextProps>({
     user: null,
-    permissions: [],
-    logout: UnimplementedFunction, relogin: async () => UnimplementedFunction(),
+    hasPermission: () => false,
+    fetcher: async () => UnimplementedFunction(),
+    logout: async () => UnimplementedFunction(),
+    relogin: async () => UnimplementedFunction(),
     onLogin: async () => UnimplementedFunction(),
 })
 
 export function UserContextProvider({ children }) {
     const navigate = useNavigate();
 
-    const [user, setUser] = useState<UserDTO | null>(null);
-    const [permissions, setPermissions] = useState<Permission[]>([]);
+    const [user, setUser] = useLocalStorage<UserDTO | null>('user', null);
+    const [permissions, setPermissions] = useLocalStorage<Permission[]>('permissions', []);
     const [localStorageToken, setLocalStorageToken] = useLocalStorage<string | null>('userToken', null)
 
     async function relogin() {
@@ -52,7 +55,6 @@ export function UserContextProvider({ children }) {
     }
 
     async function onLogin(googleData: GoogleLoginResponse) {
-
         const data = await fetcher('POST /api/users/login', { credential: googleData.tokenId });
         if (data) {
             axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
@@ -62,9 +64,11 @@ export function UserContextProvider({ children }) {
         }
     }
 
-    function logout() {
+    async function logout() {
         setLocalStorageToken(null);
-        navigate('/');
+        setUser(null);
+        setPermissions([]);
+        navigate('/login');
     }
 
     async function fetcher<Url extends keyof API>(
@@ -85,6 +89,9 @@ export function UserContextProvider({ children }) {
                 url: endpoint,
                 data: payload,
                 params: queryParams,
+                headers: {
+                    Authorization: localStorageToken ? `Bearer ${localStorageToken}` : undefined
+                }
             });
 
             if (res.status === 'tokenExpired') {
@@ -101,9 +108,14 @@ export function UserContextProvider({ children }) {
         }
     }
 
+    function hasPermission(permission: Permission) {
+        return permissions.includes(permission);
+    }
+
     const contextValue: UserContextProps = {
         user,
-        permissions,
+        hasPermission,
+        fetcher,
         relogin,
         onLogin,
         logout,
