@@ -4,7 +4,7 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../images/logos/AEYB-meetings-logo.png';
 import { useUserContext } from '../context/UserContext';
-import useLocalStorage from '../hook/UseLocastrorage';
+import useLocalStorage from '../hook/UseLocalstrorage';
 
 function Login() {
     const userContext = useUserContext();

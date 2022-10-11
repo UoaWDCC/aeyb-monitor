@@ -6,7 +6,7 @@ import AEYBResponse from '../shared/Types/responses/utils';
 import Permission from '../shared/Types/utils/Permission';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
-import useLocalStorage from '../hook/UseLocastrorage';
+import useLocalStorage from '../hook/UseLocalstrorage';
 import API from '../shared/Types/api';
 
 // Eventually move to config file
