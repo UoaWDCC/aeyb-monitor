@@ -4,29 +4,34 @@ body {
 }
 
 .loginPageHeader {
-    background-color: #262a6c;
+    width: 100vw;
+    height: 100vh;
+    background-color: #959bc4;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10vh;
-    margin-left: 15vw;
-    margin-right: 15vw;
-    padding: 5%;
+    justify-content: center;
 }
 
 .meetingsLogo {
-    width: 40vw;
+    width: 25%;
 }
 
 .loginBox {
-    transition: all 0.2s;
     position: relative;
     justify-content: center;
     box-shadow: 0 1 10px rgba(0, 0, 0, 0.75);
-    width: 200px;
+    width: 20%;
 }
 
 .loginBox:active {
     left: 1px;
     top: 1px;
+}
+
+.loginTitle {
+    font-size: 2em;
+    padding-top: 1%;
+    padding-bottom: 2%;
+    font-weight: 100;
 }

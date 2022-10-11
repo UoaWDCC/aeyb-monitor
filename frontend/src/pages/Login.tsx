@@ -3,7 +3,7 @@ import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../images/logos/AEYB-meetings-logo.png';
+import Logo from '../images/edited/AEYB_A0_CircleBlackWardline.png';
 
 function Login() {
     const onFailure = () => {
@@ -26,8 +26,9 @@ function Login() {
 
     return (
         <div className="loginPage">
-            <header className="loginPageHeader">
+            <div className="loginPageHeader">
                 <img src={Logo} alt='AEYB meetings logo' className='meetingsLogo'></img>
+                <p className='loginTitle'>M E E T I N G S</p>
                 <GoogleLogin
                     className="loginBox"
                     clientId="931818604859-0jd0r03np411c0v0pp89daplg1eansep.apps.googleusercontent.com"
@@ -38,7 +39,7 @@ function Login() {
                 >
                     Sign in with Google
                 </GoogleLogin>
-            </header>
+            </div>
         </div>
     );
 }
