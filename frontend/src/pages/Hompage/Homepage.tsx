@@ -25,7 +25,7 @@ export default function Homepage() {
   const renderPostMeetings = () => {
     const now = Date.now();
     return Object.values(meetingContext.meetings)
-      .filter(meeting => meeting.time <= now)
+      .filter(meeting => meeting.time + 3_600_000 <= now)
       .map(meeting => <PostMeeting key={meeting.id} meeting={meeting} />)
   }
 
