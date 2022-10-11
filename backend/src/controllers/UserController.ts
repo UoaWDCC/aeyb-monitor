@@ -144,7 +144,7 @@ const getSelf = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetSel
 
 /**
  * @desc 	Get all the users
- * @route 	GET /api/users/
+ * @route 	GET /api/users
  */
 const getAllUsers = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetAllUsersData>) => {
     const promises = (await User.find()).map((user) => user.asPopulated());
@@ -199,7 +199,7 @@ async function getPermissions(user: UserPopulatedDocument): Promise<Set<Permissi
 
 /**
  * @desc 	Gives user roles specified in request body
- * @route 	POST /api/users/:userId/roles/
+ * @route 	POST /api/users/:userId/roles
  */
 const giveRoles = asyncHandler(
     async (req: TypedRequest<GiveRolesRequest, UserIdParam>, res: TypedResponse<GiveRolesData>) => {
@@ -248,7 +248,7 @@ const giveRoles = asyncHandler(
 
 /**
  * @desc 	Removes roles specified in request body from a user
- * @route 	DELETE /api/users/:userId/roles/
+ * @route 	DELETE /api/users/:userId/roles
  */
 const removeRoles = asyncHandler(
     async (req: TypedRequest<RemoveRolesRequest, UserIdParam>, res: TypedResponse<RemoveRolesData>) => {

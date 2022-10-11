@@ -6,7 +6,7 @@ import { GetAllPermissionsData } from '../shared/Types/responses/PermissionRespo
 
 /**
  * @desc 	Get all the roles
- * @route 	GET /api/permissions/
+ * @route 	GET /api/permissions
  */
 const getAllPermissions = asyncHandler(async (req: Request, res: TypedResponse<GetAllPermissionsData>) => {
     const permissions = Object.values(Permission);
