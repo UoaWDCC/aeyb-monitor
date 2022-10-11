@@ -20,7 +20,7 @@ const SettingsBar = () => {
                 <p className='py-16 w-3/4 h-full'>Meeting Stats</p>
                 <div className='py-16 w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
             </button>
-            <button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-8' onClick={navToRoles}>
+            <button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-8 hover:text-[#465188]' onClick={navToRoles}>
                 <p className='py-16 w-3/4 h-full'>Roles</p>
                 <div className='py-16 w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
             </button>
