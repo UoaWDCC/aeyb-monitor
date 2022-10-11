@@ -22,10 +22,14 @@ function Roles() {
         //TODO add navbar component
 
         // Page container
-        <div className=" md:pl-[90px] bg-[#bdc3e3] overflow-scroll h-screen">
+        <div className=" md:pl-[90px] bg-white overflow-scroll h-screen">
             {/* Page heading */}
-            <div className="px-4 pt-2">
-                <h1 className="text-5xl text-[#262b6c]">Permissions</h1>
+            <div className="px-4 pt-2 flex flex-row">
+                {/* Return button */}
+                <div className="mt-2px">
+                    <button className="text-2xl text-[#262b6c]" onClick={returntoProfile} >Return to Profile</button>
+                </div>
+                <h1 className="text-3xl text-[#262b6c] font-bold">PERMISSIONS</h1>
             </div>
             <div className=" w-full p-4  rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
                 {/* Left column of roles and users */}
@@ -36,10 +40,6 @@ function Roles() {
 
                     <div className="h-[300px]">
                         <UserList allUsers={allUsers} setActiveRole={setActiveRole} />
-                    </div>
-                    {/* Return button */}
-                    <div className="mt-10">
-                        <button className="text-3xl text-[#ffffff] bg-[#262b6c] p-4 border-2 rounded-md" onClick={returntoProfile} >Return to Profile</button>
                     </div>
                 </div>
 
