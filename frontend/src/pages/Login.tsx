@@ -3,7 +3,7 @@ import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../images/logos/AEYB-meetings-logo.png';
-import { useUserContext } from '../hook/UserContext';
+import { useUserContext } from '../context/UserContext';
 import useLocalStorage from '../hook/UseLocastrorage';
 
 function Login() {

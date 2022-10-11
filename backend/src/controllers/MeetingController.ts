@@ -51,7 +51,7 @@ const getAllMeetings = asyncHandler(
 
 /**
  * @desc    Get a specific meeting
- * @route   GET /api/meetings/:meetingId
+ * @route   GET /api/meetings/:meetingId/users/:userId
  */
 const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetMeetingData>) => {
     const meeting = await Meeting.findById(req.params.meetingId);

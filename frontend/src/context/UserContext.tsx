@@ -1,12 +1,12 @@
 import { createContext, useContext, useState } from 'react'
 import UserDTO from '../shared/Types/dtos/UserDTO';
-import { UnimplementedFunction } from './Utils';
+import { UnimplementedFunction } from '../utils';
 import { GoogleLoginResponse } from 'react-google-login';
 import AEYBResponse from '../shared/Types/responses/utils';
 import Permission from '../shared/Types/utils/Permission';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
-import useLocalStorage from './UseLocastrorage';
+import useLocalStorage from '../hook/UseLocastrorage';
 import API from '../shared/Types/api';
 
 // Eventually move to config file
@@ -24,20 +24,16 @@ export interface UserContextProps {
     onLogin(res: GoogleLoginResponse): Promise<void>;
 }
 
-export function useUserContext() {
-    return useContext(UserContext)
-
-}
+export const useUserContext = () => useContext(UserContext);
 
 const UserContext = createContext<UserContextProps>({
     user: null,
     permissions: [],
     logout: UnimplementedFunction, relogin: async () => UnimplementedFunction(),
-    onLogin: async (_) => UnimplementedFunction(),
+    onLogin: async () => UnimplementedFunction(),
 })
 
 export function UserContextProvider({ children }) {
-
     const navigate = useNavigate();
 
     const [user, setUser] = useState<UserDTO | null>(null);
@@ -72,22 +68,23 @@ export function UserContextProvider({ children }) {
     }
 
     async function fetcher<Url extends keyof API>(
-        url: Url, payload?: API[Url]["req"], params?: API[Url]["params"]
+        url: Url, payload?: API[Url]["req"], params?: API[Url]["params"], queryParams?: API[Url]["query"]
     ): Promise<void | API[Url]["res"]> {
+
+        let [method, endpoint] = url.split(" ", 2);
         if (params) {
             // Replace all the params in the url
-            Object.keys(url).forEach((key) => {
-                url.replace(`:${key}`, params[key]);
+            Object.keys(params).forEach((key) => {
+                endpoint = endpoint.replace(`:${key}`, params[key]);
             });
         }
-
-        const [method, endpoint] = url.split(" ", 2);
 
         try {
             const { data: res }: AxiosResponse<AEYBResponse<API[Url]["res"]>> = await axios({
                 method,
                 url: endpoint,
                 data: payload,
+                params: queryParams,
             });
 
             if (res.status === 'tokenExpired') {
