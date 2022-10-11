@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserContextProvider } from './context/UserContext';
+import { MeetingContextProvider } from './context/MeetingContext';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Roles from './pages/Roles/Roles';
@@ -14,18 +15,20 @@ function App() {
     return (
         <Router>
             <UserContextProvider>
-                <Routes>
-                    <Route path="/" element={<Sidebar />}>
-                        <Route path="/" element={<Homepage />} />
-                        <Route path="profilepage/roles" element={<Roles />} />
-                        <Route path="calendarpage" element={<CalendarPage />} />
-                        <Route path="profilepage/*" element={<UserProfile />} />
-                        <Route path="activemeetingpage" element={<ActiveMeeting />} />
-                        <Route path="aftermeetingpage" element={<AfterMeeting />} />
-                    </Route>
-                    <Route path="*" element={<NotFound />} />
-                    <Route path="/login" element={<Login />} />
-                </Routes>
+                <MeetingContextProvider>
+                    <Routes>
+                        <Route path="/" element={<Sidebar />}>
+                            <Route path="/" element={<Homepage />} />
+                            <Route path="profilepage/roles" element={<Roles />} />
+                            <Route path="calendarpage" element={<CalendarPage />} />
+                            <Route path="profilepage/*" element={<UserProfile />} />
+                            <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                            <Route path="aftermeetingpage" element={<AfterMeeting />} />
+                        </Route>
+                        <Route path="*" element={<NotFound />} />
+                        <Route path="/login" element={<Login />} />
+                    </Routes>
+                </MeetingContextProvider>
             </UserContextProvider>
         </Router>
     );

@@ -19,8 +19,6 @@ function Roles() {
     }
 
     return (
-        //TODO add navbar component
-
         // Page container
         <div className=" md:pl-[90px] bg-[#bdc3e3] overflow-scroll h-screen">
             {/* Page heading */}

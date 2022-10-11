@@ -8,10 +8,8 @@ export default function Menuitem(props: { data: MenuItemData; isMenuOpen: boolea
     const navigate = useNavigate();
 
     const loadAPage = () => {
-        if (!props.isCurrentPage) {
-            navigate(props.data.url, { replace: true })
-            props.setCurrentPage(props.data.title)
-        }
+        navigate(props.data.url, { replace: true })
+        props.setCurrentPage(props.data.title)
     }
 
     return (
