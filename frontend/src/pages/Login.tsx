@@ -14,7 +14,7 @@ function Login() {
     useEffect(() => {
         if (!userContext.user && storedToken) {
             userContext.relogin().then(() => {
-                navigate('homepage', { replace: true });
+                navigate('/', { replace: true });
             })
         }
     }, [storedToken, userContext.user, userContext.relogin, userContext, navigate])
@@ -26,7 +26,7 @@ function Login() {
 
     const handleLogin = (googleData: GoogleLoginResponse) => {
         userContext.onLogin(googleData).then(() => {
-            navigate('homepage', { replace: true });
+            navigate('/', { replace: true });
         })
     };
 

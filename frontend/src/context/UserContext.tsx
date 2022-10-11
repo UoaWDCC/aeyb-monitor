@@ -12,14 +12,14 @@ import API from '../shared/Types/api';
 // Eventually move to config file
 axios.defaults.baseURL = 'http://localhost:5000';
 
-export type FetcherType = <EndpointUrl extends keyof API>(
-    url: EndpointUrl, payload: API[EndpointUrl]["req"], params: API[EndpointUrl]["params"]
-) => Promise<API[EndpointUrl]["res"] | null>
+export type FetcherType = <Url extends keyof API>(
+    url: Url, payload?: API[Url]["req"], params?: API[Url]["params"], queryParams?: API[Url]["query"]
+) => Promise<void | API[Url]["res"]>
 
 export interface UserContextProps {
     user: UserDTO | null;
     permissions: Permission[];
-    logout(): void;
+    logout(): Promise<void>;
     relogin(): Promise<void>;
     onLogin(res: GoogleLoginResponse): Promise<void>;
 }
@@ -29,7 +29,8 @@ export const useUserContext = () => useContext(UserContext);
 const UserContext = createContext<UserContextProps>({
     user: null,
     permissions: [],
-    logout: UnimplementedFunction, relogin: async () => UnimplementedFunction(),
+    logout: async () => UnimplementedFunction(),
+    relogin: async () => UnimplementedFunction(),
     onLogin: async () => UnimplementedFunction(),
 })
 
@@ -58,13 +59,15 @@ export function UserContextProvider({ children }) {
             axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             setUser(data.user);
             setPermissions(data.permissions);
+            console.log(data.token);
             setLocalStorageToken(data.token)
+            console.log(data.permissions);
         }
     }
 
-    function logout() {
+    async function logout() {
         setLocalStorageToken(null);
-        navigate('/');
+        navigate('/login');
     }
 
     async function fetcher<Url extends keyof API>(

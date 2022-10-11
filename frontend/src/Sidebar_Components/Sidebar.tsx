@@ -1,51 +1,68 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './sidebar.css'
 import logo from '../images/edited/AEYB_A0_Circle_resized.png'
 import Menuitem from './Menuitem/Menuitem'
+import { Outlet } from 'react-router-dom';
+import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
+import { faCalendar, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
 
-export default function Sidebar(prop: { isMenuOpen: boolean; toggleMenu: React.MouseEventHandler<HTMLDivElement>; }) {
+export interface MenuItemData {
+    url: string;
+    icon: FontAwesomeIconProps["icon"],
+    title: string;
+}
 
-    const [currentPage, setCurrentPage] = useState<number>(0)
-    const [currentURL, setCurrentURL] = useState<String>(window.location.pathname)
+const MenuItems: MenuItemData[] = [{
+    url: '/',
+    icon: faHouse,
+    title: 'HOME',
+}, {
+    url: '/calendarpage',
+    icon: faCalendar,
+    title: 'CALENDAR',
+}, {
+    url: '/profilepage',
+    icon: faUser,
+    title: 'PROFILE'
+}];
 
-    setInterval(() => {
-        setCurrentURL(window.location.pathname)
-    }, 100)
+export default function Sidebar() {
 
-    const useReactPath = () => {
-        const [path, setPath] = useState(window.location.pathname);
-        const listenToPopstate = () => {
-            const winPath = window.location.pathname;
-            setPath(winPath);
-        };
-        useEffect(() => {
-            window.addEventListener("popstate", listenToPopstate);
-            return () => {
-                window.removeEventListener("popstate", listenToPopstate);
-            };
-        }, []);
-        return path;
-    };
+    const [currentPage, setCurrentPage] = useState('HOME')
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const path = useReactPath();
-    useEffect(() => {
-        setCurrentURL(window.location.pathname)
-    }, [path]);
+
+    // toggles the sidebar being open and closed
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen)
+    }
+
+    const renderMenuItems = () => {
+        return MenuItems.map(page => (
+            <Menuitem
+                key={page.title}
+                data={page}
+                isCurrentPage={page.title === currentPage}
+                isMenuOpen={isMenuOpen}
+                setCurrentPage={setCurrentPage}
+            />
+        ));
+    }
 
     return (
-        currentURL === '/' ? null : (
-            <div className={'sidebar ' + (prop.isMenuOpen ? 'w-[250px]' : 'w-[90px]')}>
-                <div className='mb-[7vh]' onClick={prop.toggleMenu}>
+        <>
+            <div className={'sidebar ' + (isMenuOpen ? 'w-[250px]' : 'w-[90px]')}>
+                <div className='mb-[7vh]' onClick={toggleMenu}>
                     <img
                         className='relative aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]'
                         src={logo}
                         alt="AEYB logo"
                     />
                 </div>
-                <Menuitem iconIndex={0} isMenuOpen={prop.isMenuOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-                <Menuitem iconIndex={1} isMenuOpen={prop.isMenuOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-                <Menuitem iconIndex={2} isMenuOpen={prop.isMenuOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                {renderMenuItems()}
             </div>
-        )
+            <Outlet />
+        </>
+
     )
 }

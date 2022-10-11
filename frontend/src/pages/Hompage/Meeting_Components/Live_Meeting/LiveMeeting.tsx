@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './livemeeting.css'
 
@@ -23,10 +23,11 @@ export default function LiveMeeting(prop: { title: string; startTime: Date; endT
     const meeting = new LiveMeeting(prop.title, prop.startTime, prop.endTime)
     const [timeLeft, setTimeLeft] = useState(Math.floor((meeting.endTime.getTime() - new Date().getTime()) / 60000))
 
-    const updateTime = () => {
-        setTimeLeft(Math.floor((meeting.endTime.getTime() - new Date().getTime()) / 60000))
-    }
-    setInterval(updateTime, 1000)
+    useEffect(() => {
+        const interval = setInterval(() => setTimeLeft(Math.floor((meeting.endTime.getTime() - new Date().getTime()) / 60000)), 1000);
+        return () => clearInterval(interval);
+    }, [meeting.endTime]);
+
 
     const openMeetingPage = () => {
         navigate(`../activemeetingpage`, { replace: true });

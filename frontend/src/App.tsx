@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
 import { UserContextProvider } from './context/UserContext';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
@@ -12,34 +11,23 @@ import ActiveMeeting from './pages/Active_Meeting/ActiveMeeting';
 import AfterMeeting from './pages/Active_Meeting/AfterMeeting';
 
 function App() {
-
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    // toggles the sidebar being open and closed
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
-
     return (
-        <div className="App">
-            <Router>
-                <UserContextProvider>
-
-                    <Sidebar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-                    <Routes>
-                        <Route path="/" element={<Login />} />
-                        <Route path="*" element={<NotFound />} />
+        <Router>
+            <UserContextProvider>
+                <Routes>
+                    <Route path="/" element={<Sidebar />}>
+                        <Route path="/" element={<Homepage />} />
                         <Route path="profilepage/roles" element={<Roles />} />
-                        <Route path="homepage" element={<Homepage />} />
                         <Route path="calendarpage" element={<CalendarPage />} />
                         <Route path="profilepage/*" element={<UserProfile />} />
                         <Route path="activemeetingpage" element={<ActiveMeeting />} />
                         <Route path="aftermeetingpage" element={<AfterMeeting />} />
-                    </Routes>
-                </UserContextProvider>
-
-            </Router>
-        </div>
+                    </Route>
+                    <Route path="*" element={<NotFound />} />
+                    <Route path="/login" element={<Login />} />
+                </Routes>
+            </UserContextProvider>
+        </Router>
     );
 }
 
