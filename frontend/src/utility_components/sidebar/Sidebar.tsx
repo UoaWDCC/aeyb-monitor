@@ -6,6 +6,7 @@ import { Outlet } from 'react-router-dom';
 import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { faCalendar, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
 import LogoutButton from '../LogoutButton';
+import { useUserContext } from '../../contexts/UserContext';
 
 export interface MenuItemData {
     url: string;
@@ -31,7 +32,7 @@ export default function Sidebar() {
 
     const [currentPage, setCurrentPage] = useState('HOME')
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const userContext = useUserContext()
 
     // toggles the sidebar being open and closed
     const toggleMenu = () => {
@@ -53,14 +54,19 @@ export default function Sidebar() {
     return (
         <>
             <div className={'sidebar ' + (isMenuOpen ? 'w-[250px]' : 'w-[90px]')}>
-                <div className='mb-[7vh]' onClick={toggleMenu}>
+                <div className='iconbox mb-[7vh] flex items-center'>
                     <img
+                        onClick={toggleMenu}
                         className='relative aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]'
                         src={logo}
                         alt="AEYB logo"
                     />
+                    <div className={'min-w-[120px] transition-all duration-500 ' + (isMenuOpen ? '' : 'hidden')}>
+                        <div>Welcome, </div>
+                        <div className='font-bold'>{userContext.user.name}</div>
+                        <LogoutButton></LogoutButton>
+                    </div>
                 </div>
-                <LogoutButton></LogoutButton>
                 {renderMenuItems()}
             </div>
             <Outlet />

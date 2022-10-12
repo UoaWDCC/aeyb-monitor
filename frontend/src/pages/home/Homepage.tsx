@@ -9,7 +9,6 @@ export default function Homepage() {
   const meetingContext = useMeetingContext();
   const now = Date.now();
 
-
   const renderLiveMeetings = () => {
     return Object.values(meetingContext.meetings)
       .filter(meeting => meeting.time <= now && meeting.time + 3_600_000 >= now)
