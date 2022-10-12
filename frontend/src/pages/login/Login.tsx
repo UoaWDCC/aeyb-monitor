@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';

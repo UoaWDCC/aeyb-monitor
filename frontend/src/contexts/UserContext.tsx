@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import UserDTO from '../shared/Types/dtos/UserDTO';
 import { UnimplementedFunction } from '../utils';
 import { GoogleLoginResponse } from 'react-google-login';
@@ -36,7 +36,7 @@ const UserContext = createContext<UserContextProps>({
     onLogin: async () => UnimplementedFunction(),
 })
 
-export function UserContextProvider({ children }) {
+export function UserContextProvider({ children }: { children?: ReactNode }) {
     const navigate = useNavigate();
 
     const [user, setUser] = useLocalStorage<UserDTO | null>('user', null);
@@ -58,7 +58,6 @@ export function UserContextProvider({ children }) {
     async function onLogin(googleData: GoogleLoginResponse) {
         const data = await fetcher('POST /api/users/login', { credential: googleData.tokenId });
         if (data) {
-            axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             setUser(data.user);
             setPermissions(data.permissions);
             setUserToken(data.token)

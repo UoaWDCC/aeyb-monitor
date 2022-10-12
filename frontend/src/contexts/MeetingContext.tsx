@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import MeetingDTO from "../shared/Types/dtos/MeetingDTO";
 import Permission from "../shared/Types/utils/Permission";
 import { useUserContext } from "./UserContext";
@@ -13,7 +13,7 @@ const MeetingContext = createContext<MeetingContextProps>({
     meetings: {},
 });
 
-export function MeetingContextProvider({ children }) {
+export function MeetingContextProvider({ children }: { children?: ReactNode }) {
     const userContext = useUserContext();
     const [meetings, setMeetings] = useState<Record<string, MeetingDTO>>({});
 
