@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserContextProvider } from './contexts/UserContext';
+import { UserContextProvider, useUserContext } from './contexts/UserContext';
 import { MeetingContextProvider } from './contexts/MeetingContext';
 import Login from './pages/login/Login';
 import NotFound from './pages/not_found/NotFound';
@@ -12,11 +12,14 @@ import ActiveMeeting from './pages/active_meeting/ActiveMeeting';
 import AfterMeeting from './pages/active_meeting/AfterMeeting';
 
 function App() {
-    return (
-        <Router>
-            <UserContextProvider>
-                <MeetingContextProvider>
-                    <Routes >
+
+    const AppRoutes = () => {
+        const userContext = useUserContext();
+
+        return (
+            <Routes >
+                {userContext.user ? (
+                    <>
                         <Route path="/" element={<Sidebar />}>
                             <Route path="/" element={<Homepage />} />
                             <Route path="profilepage/roles" element={<Roles />} />
@@ -27,7 +30,18 @@ function App() {
                         </Route>
                         <Route path="*" element={<NotFound />} />
                         <Route path="/login" element={<Login />} />
-                    </Routes>
+                    </>
+                ) : <Route path="*" element={<Login />} />}
+
+            </Routes>
+        );
+    }
+
+    return (
+        <Router>
+            <UserContextProvider>
+                <MeetingContextProvider>
+                    <AppRoutes />
                 </MeetingContextProvider>
             </UserContextProvider>
         </Router>
