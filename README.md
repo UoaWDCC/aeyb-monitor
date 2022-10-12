@@ -2,9 +2,17 @@
 
 ## Setup
 
-Make sure you have the all the dependencies installed by doing either `npm install` or `yarn`, first within the root directory and then in the `frontend` or `backend` directories, depending on which you're working with.
+1. To install the git submodules, run the following commands: 
+   ```sh
+    git submodule init
+    git submodule update
+    ```
+    To update the submodules if there are changes in the future, run `git submodule update --remote`
 
-> **NOTE:** You'll likely only need to install the root dependencies once.
+1. Make sure you have the all the dependencies installed by doing either `npm install` or `yarn`, first within the root directory and then in the `frontend` or `backend` directories, depending on which you're working with.
+
+    > **Note** 
+    > You'll likely only need to install the root dependencies once.
 
 ## Eslint
 

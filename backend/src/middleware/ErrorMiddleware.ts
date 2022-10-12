@@ -1,37 +1,33 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import ValidationError from '../types/ValidationError';
+import InvalidError from '../errors/InvalidError';
 
 type CastErrorValueType = mongoose.Error.CastError & { valueType?: string };
 type MongooseError = mongoose.Error.ValidationError | mongoose.Error.CastError;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ErrorHandler(err: Error | MongooseError, req: Request, res: Response, next: NextFunction) {
-    // Check if the error was thrown due to invalid inputs for a model
-    if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).json({
-            status: 'errors',
-            message: 'There was something wrong with your request',
-            errors: getValidationErrors(err),
-        });
-        return;
+function ErrorHandler(error: Error | MongooseError, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof InvalidError) {
+        return res.invalid(error.message);
     }
-    if (err instanceof mongoose.Error.CastError) {
-        return res.invalid(getCastErrorMessage(err));
+    // Check if the error was thrown due to invalid inputs for a model
+    if (error instanceof mongoose.Error.ValidationError) {
+        return res.invalid(getValidationErrorMessage(error));
+    }
+    if (error instanceof mongoose.Error.CastError) {
+        return res.invalid(getCastErrorMessage(error));
     }
 
-    const status = res.statusCode ?? 501;
-    res.error(status, err.message);
+    res.error(501, error.message);
 }
 
-function getValidationErrors(error: mongoose.Error.ValidationError): ValidationError[] {
-    return Object.values(error.errors).map((err) => {
-        const message = err instanceof mongoose.Error.CastError ? getCastErrorMessage(err) : err.message;
-        return {
-            field: err.path,
-            message: message,
-        };
-    });
+function getValidationErrorMessage(error: mongoose.Error.ValidationError): string {
+    const errors = Object.values(error.errors);
+    if (errors.length !== 0) {
+        const error = errors[0];
+        return error instanceof mongoose.Error.CastError ? getCastErrorMessage(error) : error.message;
+    }
+    return "Something wen't wrong with your request";
 }
 
 function getCastErrorMessage(error: mongoose.Error.CastError): string {

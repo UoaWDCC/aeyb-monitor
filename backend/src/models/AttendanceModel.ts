@@ -1,14 +1,7 @@
 import { Schema } from 'mongoose';
-import { UserModel } from './UserModel';
-import { RoleModel } from './RoleModel';
+import AttendanceDTO from '../shared/Types/dtos/AttendanceDTO';
 
-export interface Attendance {
-    attendedUsers: UserModel[];
-    absentUsers: Map<string, string>;
-    invited: [UserModel[], RoleModel[]];
-}
-
-export const AttendanceSchema = new Schema(
+export const AttendanceSchema = new Schema<AttendanceDTO>(
     {
         attendedUsers: {
             type: [{ type: String, ref: 'User' }],
@@ -18,13 +11,9 @@ export const AttendanceSchema = new Schema(
             of: String,
         },
         invited: {
-            _id: false,
             type: {
-                users: [{ type: String, ref: 'User' }],
-                roles: {
-                    type: [{ type: String, ref: 'Role' }],
-                    required: [true, 'You must specify the roles invited'],
-                },
+                userIds: [String],
+                roleIds: [String],
             },
             required: [true, 'You must state who is invited'],
         },

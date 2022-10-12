@@ -1,26 +1,50 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React from 'react';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
-import Roles from './pages/Roles/Roles';
-import Homepage from './pages/Hompage/Homepage';
-import ProfilePage from './pages/Profile_Page/ProfilePage';
-import CalendarPage from './pages/Calendar_Page/CalendarPage';
+import { UserContextProvider, useUserContext } from './contexts/UserContext';
+import { MeetingContextProvider } from './contexts/MeetingContext';
+import Login from './pages/login/Login';
+import NotFound from './pages/not_found/NotFound';
+import Roles from './pages/roles/Roles';
+import Homepage from './pages/home/Homepage';
+import UserProfile from './pages/profiles/UserProfile';
+import CalendarPage from './pages/calendar/CalendarPage';
+import Sidebar from './utility_components/sidebar/Sidebar';
+import ActiveMeeting from './pages/active_meeting/ActiveMeeting';
+import AfterMeeting from './pages/active_meeting/AfterMeeting';
 
 function App() {
+
+    const AppRoutes = () => {
+        const userContext = useUserContext();
+
+        return (
+            <Routes >
+                {userContext.user ? (
+                    <>
+                        <Route path="/" element={<Sidebar />}>
+                            <Route path="/" element={<Homepage />} />
+                            <Route path="profilepage/roles" element={<Roles />} />
+                            <Route path="calendarpage" element={<CalendarPage />} />
+                            <Route path="profilepage/*" element={<UserProfile />} />
+                            <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                            <Route path="aftermeetingpage" element={<AfterMeeting />} />
+                        </Route>
+                        <Route path="*" element={<NotFound />} />
+                        <Route path="/login" element={<Login />} />
+                    </>
+                ) : <Route path="*" element={<Login />} />}
+
+            </Routes>
+        );
+    }
+
     return (
-        <div className="App">
-            <Router>
-                <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="*" element={<NotFound />} />
-                    <Route path="roles" element={<Roles />} />
-                    <Route path="homepage" element={<Homepage />} />
-                    <Route path="calendarpage" element={<CalendarPage />} />
-                    <Route path="profilepage" element={<ProfilePage />} />
-                </Routes>
-            </Router>
-        </div>
+        <Router>
+            <UserContextProvider>
+                <MeetingContextProvider>
+                    <AppRoutes />
+                </MeetingContextProvider>
+            </UserContextProvider>
+        </Router>
     );
 }
 

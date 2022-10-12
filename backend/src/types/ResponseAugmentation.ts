@@ -1,20 +1,30 @@
 import { response } from 'express';
+import { SuccessfulResponse } from '../shared/Types/responses/utils/SuccessfulResponse';
+import { TokenExpiredError } from 'jsonwebtoken';
 
-type DataType = Record<string, unknown> & { data?: Record<string, unknown> };
-
-// Response Utilities using 'Module augmentation'
-// More info at: https://www.digitalocean.com/community/tutorials/typescript-module-augmentation
-// and https://joeflateau.net/posts/extending-express-request-response-objects-in-typescript
-
+/**
+ * Response Utilities using 'Module augmentation'. The types need to match for module augmentation to work
+ * which is why I've had to use `any`, along with specify the unused `Locals` and `StatusCode` types.
+ *
+ * @see https://www.digitalocean.com/community/tutorials/typescript-module-augmentation
+ * @see https://joeflateau.net/posts/extending-express-request-response-objects-in-typescript
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 declare module 'express-serve-static-core' {
-    export interface Response {
+    export interface Response<
+        ResBody = any,
+        Locals extends Record<string, any> = Record<string, any>,
+        StatusCode extends number = number,
+    > {
         error(status: number, message: string): void;
         invalid(message: string): void;
         unauthorized(message: string): void;
+        tokenExpired(error: TokenExpiredError): void;
         notFound(message: string): void;
-        success(status: number, data: DataType): void;
-        ok(data: DataType): void;
-        created(data: DataType): void;
+        success(status: number, data: ResBody extends SuccessfulResponse<infer T> ? T : ResBody): void;
+        ok(data: ResBody extends SuccessfulResponse<infer T> ? T : ResBody): void;
+        created(data: ResBody extends SuccessfulResponse<infer T> ? T : ResBody): void;
     }
 }
 
@@ -31,9 +41,14 @@ response.invalid = function (message) {
 };
 
 response.unauthorized = function (message) {
+    this.error(401, message);
+};
+
+response.tokenExpired = function (error) {
     this.status(401).json({
-        status: 'unauthorized',
-        message,
+        status: 'tokenExpired',
+        messsage: error.message,
+        expiredAt: error.expiredAt,
     });
 };
 
@@ -42,10 +57,9 @@ response.notFound = function (message) {
 };
 
 response.success = function (status, data) {
-    const responseData = data['data'] ? data : { data };
     this.status(status).json({
         status: 'success',
-        ...responseData,
+        data,
     });
 };
 
