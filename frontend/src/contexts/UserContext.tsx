@@ -41,11 +41,11 @@ export function UserContextProvider({ children }) {
 
     const [user, setUser] = useLocalStorage<UserDTO | null>('user', null);
     const [permissions, setPermissions] = useLocalStorage<Permission[]>('permissions', []);
-    const [localStorageToken, setLocalStorageToken] = useLocalStorage<string | null>('userToken', null)
+    const [userToken, setUserToken] = useLocalStorage<string | null>('userToken', null)
 
     async function relogin() {
-        if (localStorageToken) {
-            axios.defaults.headers["Authorization"] = `Bearer ${localStorageToken}`;
+        if (userToken) {
+            axios.defaults.headers["Authorization"] = `Bearer ${userToken}`;
             const data = await fetcher('GET /api/users/@me');
             if (data) {
                 setUser(data.self);
@@ -61,12 +61,12 @@ export function UserContextProvider({ children }) {
             axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             setUser(data.user);
             setPermissions(data.permissions);
-            setLocalStorageToken(data.token)
+            setUserToken(data.token)
         }
     }
 
     async function logout() {
-        setLocalStorageToken(null);
+        setUserToken(null);
         setUser(null);
         setPermissions([]);
         navigate('/login', { replace: true });
@@ -91,7 +91,7 @@ export function UserContextProvider({ children }) {
                 data: payload,
                 params: queryParams,
                 headers: {
-                    Authorization: localStorageToken ? `Bearer ${localStorageToken}` : undefined
+                    Authorization: userToken ? `Bearer ${userToken}` : undefined
                 }
             });
 

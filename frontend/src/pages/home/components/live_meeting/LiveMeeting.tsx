@@ -6,7 +6,7 @@ import './livemeeting.css'
 
 export default function LiveMeeting(props: { meeting: MeetingDTO }) {
 
-    const [timeLeft, setTimeLeft] = useState<string>(getRelativeTime(props.meeting.time + 3_600_000))
+    const [timeLeft, setTimeLeft] = useState(getRelativeTime(props.meeting.time + 3_600_000))
 
     useEffect(() => {
         const interval = setInterval(() => setTimeLeft(getRelativeTime(props.meeting.time + 3_600_000)), 1_000);

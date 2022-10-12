@@ -7,23 +7,22 @@ import { useMeetingContext } from '../../contexts/MeetingContext';
 export default function Homepage() {
 
   const meetingContext = useMeetingContext();
+  const now = Date.now();
+
 
   const renderLiveMeetings = () => {
-    const now = Date.now();
     return Object.values(meetingContext.meetings)
       .filter(meeting => meeting.time <= now && meeting.time + 3_600_000 >= now)
       .map(meeting => <LiveMeeting key={meeting.id} meeting={meeting} />)
   }
 
   const renderUpcomingMeetings = () => {
-    const now = Date.now();
     return Object.values(meetingContext.meetings)
       .filter(meeting => meeting.time >= now)
       .map(meeting => <UpcomingMeeting key={meeting.id} meeting={meeting} />)
   }
 
   const renderPostMeetings = () => {
-    const now = Date.now();
     return Object.values(meetingContext.meetings)
       .filter(meeting => meeting.time + 3_600_000 <= now)
       .map(meeting => <PostMeeting key={meeting.id} meeting={meeting} />)
