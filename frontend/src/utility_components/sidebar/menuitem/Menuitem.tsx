@@ -3,13 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom';
 import { MenuItemData } from '../Sidebar';
 
-export default function Menuitem(props: { data: MenuItemData; isMenuOpen: boolean; isCurrentPage: boolean; setCurrentPage: Function }) {
+export default function Menuitem(props: { data: MenuItemData; isMenuOpen: boolean; isCurrentPage: boolean }) {
 
     const navigate = useNavigate();
 
     const loadAPage = () => {
-        navigate(props.data.url, { replace: true })
-        props.setCurrentPage(props.data.title)
+        navigate(props.data.url, { replace: true });
     }
 
     return (

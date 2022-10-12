@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './sidebar.css'
 import logo from '../../images/edited/AEYB_A0_Circle_resized.png'
 import Menuitem from './menuitem/Menuitem'
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { faCalendar, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
 import LogoutButton from '../LogoutButton';
@@ -30,7 +30,8 @@ const MenuItems: MenuItemData[] = [{
 
 export default function Sidebar() {
 
-    const [currentPage, setCurrentPage] = useState('HOME')
+    const location = useLocation();
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const userContext = useUserContext()
 
@@ -44,9 +45,8 @@ export default function Sidebar() {
             <Menuitem
                 key={page.title}
                 data={page}
-                isCurrentPage={page.title === currentPage}
+                isCurrentPage={page.url === location.pathname}
                 isMenuOpen={isMenuOpen}
-                setCurrentPage={setCurrentPage}
             />
         ));
     }
