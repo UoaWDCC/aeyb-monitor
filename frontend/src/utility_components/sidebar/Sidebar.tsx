@@ -54,14 +54,16 @@ export default function Sidebar() {
     return (
         <>
             <div className={'sidebar ' + (isMenuOpen ? 'w-[250px]' : 'w-[90px]')}>
-                <div className='iconbox mb-[7vh] flex items-center'>
-                    <img
-                        onClick={toggleMenu}
-                        className='relative aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]'
-                        src={logo}
-                        alt="AEYB logo"
-                    />
-                    <div className={'min-w-[120px] transition-all duration-500 ' + (isMenuOpen ? '' : 'hidden')}>
+                <div className='mb-[7vh] flex items-center'>
+                    <div className='bg-white aspect-square w-[89px] z-10'>
+                        <img
+                            onClick={toggleMenu}
+                            className='aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]'
+                            src={logo}
+                            alt="AEYB logo"
+                        />
+                    </div>
+                    <div className={'relative z-0 min-w-[120px] transition-all duration-500 ' + (isMenuOpen ? 'left-[20px]' : 'left-[-300px]')}>
                         <div>Welcome, </div>
                         <div className='font-bold'>{userContext.user.name}</div>
                         <LogoutButton></LogoutButton>
