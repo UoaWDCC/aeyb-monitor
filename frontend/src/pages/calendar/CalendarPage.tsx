@@ -1,28 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import WeeklyInstance from './components/WeeklyInstance'
 import { EventStatus } from './CalendarInterface'
-
-let eventList = {
-  listOfEvents: [
-
-    {
-      title: "Activity - with Group B",
-      description: "Art exhibition at 405-721 featuring wireframes and doodles :)",
-      time: "15:00 - 14:00",
-      attendance: null,
-      status: EventStatus.PENDING
-    },
-
-    {
-      title: "Activity - with Group A",
-      description: "Bring your water bottles, we playing water balloon!! Bring your own food pls",
-      time: "12:00 - 14:00",
-      attendance: null,
-      status: EventStatus.RESPONDED
-    }
-  ]
-}
-
+import { useMeetingContext } from '../../contexts/MeetingContext'
 
 const CalendarPage = (): ReactElement => {
 
@@ -32,9 +11,17 @@ const CalendarPage = (): ReactElement => {
 
   const week = new Date();
   week.setDate(week.getDate() + weeks * 7);
+  const firstWeekTime = week.getTime();
   const firstWeekDay = week.getDate();
   const previousMonth = months[week.getMonth()];
   week.setDate(week.getDate() + 7); // set the date to the date next week
+
+  const meetingContext = useMeetingContext();
+  const renderWeeklyMeetings = () => {
+    return Object.values(meetingContext.meetings)
+      .filter(meeting => (meeting.time <= week.getTime() && meeting.time >= firstWeekTime))
+      .map(meeting => <WeeklyInstance key={meeting.id} meeting={meeting} />)
+  }
 
   return (
     <>
@@ -48,7 +35,7 @@ const CalendarPage = (): ReactElement => {
             <button className='bg-gray-200 px-4 py-4 rounded-sm w-1/8' onClick={() => setWeekCount(weeks + 1)}>next </button>
           </div>
 
-          <WeeklyInstance weekly={eventList} />
+          {renderWeeklyMeetings()}
         </div>
       </div>
 
