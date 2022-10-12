@@ -63,10 +63,12 @@ export default function Sidebar() {
                             alt="AEYB logo"
                         />
                     </div>
-                    <div className={'relative z-0 min-w-[120px] transition-all duration-500 ' + (isMenuOpen ? 'left-[20px]' : 'left-[-300px]')}>
-                        <div>Welcome, </div>
-                        <div className='font-bold'>{userContext.user.name}</div>
-                        <LogoutButton></LogoutButton>
+                    <div className={'relative z-0 min-w-[120px] transition-all duration-500 flex flex-col gap-y-2 ' + (isMenuOpen ? 'left-[20px]' : 'left-[-300px]')}>
+                        <div>
+                            <div className="text-sm">Welcome,</div>
+                            <div className='font-bold leading-4 text-lg'>{userContext.user.name}</div>
+                        </div>
+                        <LogoutButton />
                     </div>
                 </div>
                 {renderMenuItems()}
