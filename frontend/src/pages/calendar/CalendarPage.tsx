@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from 'react'
 import WeeklyInstance from './components/WeeklyInstance'
-import { EventStatus } from './CalendarInterface'
 import { useMeetingContext } from '../../contexts/MeetingContext'
 
 const CalendarPage = (): ReactElement => {
