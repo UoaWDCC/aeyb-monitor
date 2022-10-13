@@ -2,7 +2,7 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { MeetingIdParam } from '../types/RequestParams';
+import { MeetingIdParam } from '../shared/Types/params';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,
@@ -17,7 +17,7 @@ const paginationOptions = PaginationHandler.createOptions();
 
 /**
  * @desc 	Get all the meetings
- * @route 	GET /api/meetings/
+ * @route 	GET /api/meetings
  */
 const getAllMeetings = asyncHandler(
     async (req: TypedRequestQuery<GetAllMeetingsQuery>, res: TypedResponse<GetAllMeetingsData>) => {
@@ -64,7 +64,7 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
 
 /**
  * @desc 	Add a new meetings
- * @route 	POST /api/meetings/
+ * @route 	POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
     const newMeeting = await Meeting.create({
@@ -73,18 +73,6 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
     });
 
     res.ok({ meeting: await newMeeting.asPopulated() });
-});
-
-/**
- * @desc 	Delete a specific meeting
- * @route 	DELETE /api/meetings/:meetingId
- */
-const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
-    const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
-    if (!meeting) {
-        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
-    }
-    res.sendStatus(204);
 });
 
 /**
@@ -104,5 +92,17 @@ const updateMeeting = asyncHandler(
         res.ok({ meeting: await meeting.asPopulated() });
     },
 );
+
+/**
+ * @desc 	Delete a specific meeting
+ * @route 	DELETE /api/meetings/:meetingId
+ */
+const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
+    const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+    }
+    res.sendStatus(204);
+});
 
 export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };

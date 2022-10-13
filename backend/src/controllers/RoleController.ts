@@ -1,8 +1,7 @@
 import asyncHandler from 'express-async-handler';
-import { Request } from 'express';
 import Role from '../models/RoleModel';
 import User from '../models/UserModel';
-import { RoleIdParam } from '../types/RequestParams';
+import { RoleIdParam } from '../shared/Types/params';
 import { TypedRequest, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import RoleDTO from '../shared/Types/dtos/RoleDTO';
 import {
@@ -15,9 +14,9 @@ import {
 
 /**
  * @desc 	Get all the roles
- * @route 	GET /api/roles/
+ * @route 	GET /api/roles
  */
-const getAllRoles = asyncHandler(async (req: Request, res: TypedResponse<GetAllRolesData>) => {
+const getAllRoles = asyncHandler(async (req: TypedRequest, res: TypedResponse<GetAllRolesData>) => {
     const roles = await Role.find();
 
     res.ok({
@@ -46,12 +45,29 @@ const getRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res: T
 
 /**
  * @desc 	Add a new role
- * @route 	POST /api/roles/
+ * @route 	POST /api/roles
  */
 const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: TypedResponse<AddRoleData>) => {
     const newRole = await Role.create(req.body);
 
     res.created({ role: newRole });
+});
+
+/**
+ * @desc 	Edit a specific role
+ * @route 	PATCH /api/roles/:roleId
+ */
+const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: TypedResponse<UpdateRoleData>) => {
+    const role = await Role.findByIdAndUpdate(req.params.roleId, req.body, {
+        new: true,
+        runValidators: true,
+    });
+
+    if (!role) {
+        return res.notFound(`There is no role with the id ${req.params.roleId}`);
+    }
+
+    res.ok({ role });
 });
 
 /**
@@ -74,23 +90,6 @@ const deleteRole = asyncHandler(async (req: TypedRequestParams<RoleIdParam>, res
     }
 
     res.ok({ modifiedUserCount: modCount });
-});
-
-/**
- * @desc 	Edit a specific role
- * @route 	PATCH /api/roles/:roleId
- */
-const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: TypedResponse<UpdateRoleData>) => {
-    const role = await Role.findByIdAndUpdate(req.params.roleId, req.body, {
-        new: true,
-        runValidators: true,
-    });
-
-    if (!role) {
-        return res.notFound(`There is no role with the id ${req.params.roleId}`);
-    }
-
-    res.ok({ role });
 });
 
 export { getAllRoles, getRole, deleteRole, addRole, updateRole };
