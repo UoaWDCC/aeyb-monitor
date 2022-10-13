@@ -92,6 +92,18 @@ const updateMeeting = asyncHandler(
         res.ok({ meeting: await meeting.asPopulated() });
     },
 );
+
+/**
+ * @desc 	Delete a specific meeting
+ * @route 	DELETE /api/meetings/:meetingId
+ */
+ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
+    const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+    }
+    res.sendStatus(204);
+});
 /**
  * @desc 	Update the absence of a user for a meeting
  * @route 	POST /api/meetings/:meetingId/attendance/going
@@ -120,7 +132,7 @@ const updateMeeting = asyncHandler(
  * @route   PATCH /api/meetings/:meetingId/attendance/feedback
  */
 
-const addFeedback = asyncHandler(async (req: TypedRequest<AddFeedBackRequest, MeetingIdParam>, res: Response) => {
+ const addFeedback = asyncHandler(async (req: TypedRequest<AddFeedBackRequest, MeetingIdParam>, res: Response) => {
     const meeting = await Meeting.findById(req.params.meetingId);
     if (!meeting) {
         return res.notFound(`There is no meeting with id ${req.params.meetingId}`);
