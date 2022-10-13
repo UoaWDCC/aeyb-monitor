@@ -1,0 +1,29 @@
+.menuItem {
+    position: relative;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.menuItem:active {
+    left: 0.5px;
+    top: 0.5px;
+}
+
+.iconBox {
+    aspect-ratio: 1/1;
+    width: 89px;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    z-index: 1;
+}
+
+.iconTitle {
+    position: relative;
+    font-size: 20px;
+    transition: margin-left 0.5s;
+}
