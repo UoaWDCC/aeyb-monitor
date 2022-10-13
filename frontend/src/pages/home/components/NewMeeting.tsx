@@ -69,9 +69,9 @@ export default function NewMeeting(props) {
                                     onChange={handleInputChange}
                                 />
 
-                                <div className='my-2 '>
+                                <div className='my-2 w-fit px-2'>
                                     <DatePicker
-                                        className='border-[#7d6ca3] border-2 rounded-md'
+                                        className='border-[#7d6ca3] border-2 rounded-md px-5 min-w-[260px]'
                                         selected={formValues.time}
                                         showTimeSelect
                                         timeFormat="HH:mm"
