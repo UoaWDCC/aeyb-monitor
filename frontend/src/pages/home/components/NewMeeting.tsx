@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
-
+import { useMeetingContext } from '../../../contexts/MeetingContext';
+import { useUserContext } from '../../../contexts/UserContext';
+import { MeetingType } from '../../../shared/Types/dtos/MeetingDTO';
+import { AddMeetingRequest } from '../../../shared/Types/requests/MeetingRequests';
 
 const defaultValues = {
     title: '',
@@ -10,8 +13,13 @@ const defaultValues = {
     time: new Date(),
 }
 
-
 export default function NewMeeting(props) {
+
+    const userContext = useUserContext();
+    const meetingContext = useMeetingContext();
+
+
+
     const { isNewMeetingOpen, setIsNewMeetingOpen } = props
     const [formValues, setFormValues] = useState(defaultValues);
 
@@ -34,10 +42,36 @@ export default function NewMeeting(props) {
         setIsNewMeetingOpen(false)
         setFormValues(defaultValues)
     }
-    function handleSubmit() {
-        setFormValues(defaultValues)
-        setIsNewMeetingOpen(false)
-        console.log(formValues)
+
+
+
+    async function handleSubmit() {
+
+        const meetingRequest: AddMeetingRequest = {
+            time: formValues.time.getTime(),
+            location: formValues.location,
+            description: formValues.description,
+            type: MeetingType.Meeting,
+            name: formValues.title,
+            attendance: {
+                attendedUsers: [],
+                absentUsers: new Map(),
+                invited: {
+                    userIds: [],
+                    roleIds: []
+                }
+            }
+        }
+
+        console.log(formValues);
+        const data = await userContext.fetcher('POST /api/meetings', meetingRequest);
+        if (data) {
+            meetingContext.addMeeting(data.meeting);
+            setFormValues(defaultValues);
+            setIsNewMeetingOpen(false);
+        } else {
+
+        }
     }
 
     return (
