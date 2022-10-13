@@ -13,21 +13,21 @@ export default function RoleList(props) {
     const [openAddRole, setOpenAddRole] = React.useState(false);
 
     return (
-        <div className=" bg-[#5563ae] p-1 rounded-md h-full border-2 border-[#262b6c] overflow-hidden">
-            <div className="flex justify-between pr-2">
-                <h1 className="text-3xl text-white">Roles</h1>
+        <div className=" bg-[#D5D9ED] p-2 rounded-md h-full overflow-hidden space-y-1">
+            <div className="flex flex-row items-center justify-between pr-2 text-[#262B6C] font-bold">
+                <h1 className="text-2xl">Roles</h1>
 
                 {/*Icon to open/close add role box  */}
                 <FontAwesomeIcon
                     icon={openAddRole ? faXmark : faPlus}
-                    size="2x"
-                    color="white"
+                    size="lg"
+                    color="[#262B6C]"
                     onClick={() => setOpenAddRole(!openAddRole)}
                 />
             </div>
 
             {/*Add role box */}
-            <div className={' justify-between bg-white rounded-sm pr-1 ' + (openAddRole ? 'flex' : 'hidden')}>
+            <div className={' flex flex-row items-center justify-between bg-white rounded-sm pr-1 ' + (openAddRole ? 'flex' : 'hidden')}>
                 <input
                     className="text bg-white w-full rounded-sm border-none outline-0 p-1"
                     type="text"
@@ -38,7 +38,7 @@ export default function RoleList(props) {
                 {/* Confirmation icon to add roles */}
                 <FontAwesomeIcon
                     icon={faCheck}
-                    size="2x"
+                    size="lg"
                     className="text-[#262b6c]"
                     onClick={() => {
                         if ((document.getElementById('role-input') as HTMLInputElement).value !== '') {
@@ -52,7 +52,7 @@ export default function RoleList(props) {
                 />
             </div>
 
-            <div className="overflow-scroll h-5/6">
+            <div className={`overflow-y-scroll ${openAddRole ? "h-3/4" : "h-[85%]"}`}>
                 {/* Displays each role */}
                 {roles.map((role) => {
                     return (

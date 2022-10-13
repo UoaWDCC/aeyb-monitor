@@ -44,37 +44,39 @@ export default function ActiveMeeting() {
 
     return (
         <div className='h-screen overflow-scroll relative'>
-            <div className='w-5/6 lg:w-1/3 h-screen mx-auto py-2 flex items-center flex-col justify-around'>
-                <h1 className='text-4xl mt-2'>Meeting A - with Group B</h1>
+            <div className='h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center'>
+                <h1 className='text-4xl mt-2 font-bold'>Meeting A - with Group B</h1>
 
-                <div className='w-full z-10'>
-                    <UserList allUsers={allUsers} setActiveUser={setActiveUser} />
+                <div className="w-5/6 lg:w-1/3 flex flex-col items-center">
+                    <div className='w-full z-10'>
+                        <UserList allUsers={allUsers} setActiveUser={setActiveUser} />
+                    </div>
+
+                    {
+                        activeUser === '' ? <div></div> :
+                            <div className='flex flex-col items-center w-full'>
+                                <h1 className='text-4xl font-bold mt-5'>{activeUser}'s</h1>
+                                <h2 className='text-2xl mb-5'>Participation Feedback:</h2>
+                                <div className='my-2 w-full'>
+                                    <AttendanceSelect setAttendance={setAttendance} />
+                                </div>
+                                <div className='w-full my-2 flex justify-center'>
+                                    <Rating setRating={setRating} />
+                                </div>
+
+                                <textarea id="comment" className=' my-5 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
+
+                                <button className='bg-[#262b6c] text-white p-2 rounded-md' onClick={handleSubmit}>Submit for {activeUser}</button>
+
+                                <div className="w-full mt-2">
+                                    {message && <div className="rounded-md bg-green-100 text-green-900 p-2 text-center">{message}</div>}
+                                </div>
+
+                            </div>
+                    }
+
+                    <button className='mt-5 text-red-600 font-extrabold border-2 border-red-600 p-2 rounded-md w-1/3' onClick={() => setLeaveMeetingOpen(true)}>END MEETING</button>
                 </div>
-
-                {
-                    activeUser === '' ? <div></div> :
-                        <div className='flex flex-col items-center w-full'>
-                            <h1 className='text-4xl font-bold mt-5 text-[#262b6c] '>{activeUser}'s</h1>
-                            <h2 className='text-2xl mb-5'>Participation Feedback:</h2>
-                            <div className='my-2 w-full'>
-                                <AttendanceSelect setAttendance={setAttendance} />
-                            </div>
-                            <div className='w-full my-2 flex justify-center'>
-                                <Rating setRating={setRating} />
-                            </div>
-
-                            <textarea id="comment" className=' my-5 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
-
-                            <button className='bg-[#262b6c] text-white p-2 rounded-md' onClick={handleSubmit}>Submit for {activeUser}</button>
-
-                            <div className="w-full mt-2">
-                                {message && <div className="rounded-md bg-green-100 text-green-900 p-2 text-center">{message}</div>}
-                            </div>
-
-                        </div>
-                }
-
-                <button className='mt-20 text-red-600 font-extrabold border-2 border-red-600 p-2 rounded-md w-full' onClick={() => setLeaveMeetingOpen(true)}>END MEETING</button>
             </div>
             {
                 leaveMeetingOpen ?
