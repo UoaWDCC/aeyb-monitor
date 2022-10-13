@@ -13,3 +13,8 @@ export interface MeetingIdParam {
 export interface EventIdParam {
     eventId: string;
 }
+
+export interface MeetingIdAndUserIdParam {
+    meetingId: string;
+    userId: string;
+}

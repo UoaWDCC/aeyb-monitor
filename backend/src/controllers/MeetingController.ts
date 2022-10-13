@@ -2,7 +2,7 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { MeetingIdParam } from '../types/RequestParams';
+import { MeetingIdAndUserIdParam, MeetingIdParam } from '../types/RequestParams';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,
@@ -10,7 +10,7 @@ import {
     GetMeetingData,
     UpdateMeetingData,
 } from '../shared/Types/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateMeetingRequest } from '../shared/Types/requests/MeetingRequests';
+import { AddFeedBackRequest, AddMeetingRequest, UpdateAbsenceRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from '../shared/Types/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '../shared/Types/queries/MeetingQueries';
 
 const paginationOptions = PaginationHandler.createOptions();
@@ -104,5 +104,82 @@ const updateMeeting = asyncHandler(
         res.ok({ meeting: await meeting.asPopulated() });
     },
 );
+/**
+ * @desc 	Update the absence of a user for a meeting
+ * @route 	POST /api/meetings/:meetingId/attendance/going
+ */
+ const updateAbsence = asyncHandler(async (req: TypedRequest<UpdateAbsenceRequest, MeetingIdParam>, res) => {
+    const meeting = await Meeting.findById(req.params.meetingId);
+    if (!meeting) {
+        return res.notFound(`There is no meeting with id ${req.params.meetingId}`);
+    }
+    const currentAttendance = meeting.attendance.get(req.body.requester._id);
 
-export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };
+    if (currentAttendance) {
+        currentAttendance.canAttend = req.body.canAttend;
+        currentAttendance.reason = req.body.reason;
+        meeting.attendance.set(req.body.requester._id, currentAttendance);
+    }
+
+    meeting.markModified('attendance');
+    await meeting.save();
+
+    res.ok({ meeting });
+});
+
+/**
+ * @desc    Add meeting rating and feeback for user for meeting
+ * @route   PATCH /api/meetings/:meetingId/attendance/feedback
+ */
+
+const addFeedback = asyncHandler(async (req: TypedRequest<AddFeedBackRequest, MeetingIdParam>, res: Response) => {
+    const meeting = await Meeting.findById(req.params.meetingId);
+    if (!meeting) {
+        return res.notFound(`There is no meeting with id ${req.params.meetingId}`);
+    }
+
+    const currentAttendance = meeting.attendance.get(req.body.requester._id);
+
+    if (currentAttendance) {
+        currentAttendance.rating = req.body.rating;
+        currentAttendance.feedback = req.body.feedback;
+        meeting.attendance.set(req.body.requester._id, currentAttendance);
+    }
+
+    meeting.markModified('attendance');
+    await meeting.save();
+    res.ok({ meeting });
+});
+
+/**
+ * @desc   Update the attendance of a user
+ * @route  PATCH /api/meetings/:meetingId/attendance/:userId
+ */
+const updateAttendance = asyncHandler(async (req: TypedRequest<UpdateAttendanceRequest, MeetingIdAndUserIdParam>, res) => {
+    const meeting = await Meeting.findById(req.params.meetingId);
+
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+    }
+
+    const currentAttendance = meeting.attendance.get(req.params.userId);
+    if (currentAttendance) {
+        currentAttendance.didAttend = req.body.didAttend;
+        meeting.attendance.set(req.params.userId, currentAttendance);
+    }
+
+    meeting.markModified('attendance');
+    await meeting.save();
+    res.ok({ meeting });
+});
+
+export {
+    getAllMeetings,
+    getMeeting,
+    addMeeting,
+    deleteMeeting,
+    updateMeeting,
+    updateAbsence,
+    updateAttendance,
+    addFeedback,
+};
