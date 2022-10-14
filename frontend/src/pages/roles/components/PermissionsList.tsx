@@ -15,19 +15,19 @@ const AllPermissions = Object.values(Permission);
 interface Props {
     activeRole: string;
     permissions: Permission[];
+    setPermissions: (newPermissions: Permission[]) => void;
 }
 
 export default function PermissionList(props: Props) {
     //toggle all / section states
-    const [permissions, setPermissions] = useState(props.permissions);
-    const allChecked = Object.values(Permission).every(permission => permissions.includes(permission))
+    const allChecked = Object.values(Permission).every(permission => props.permissions.includes(permission))
 
     //Toggles all permissions in a section
     function toggleSection(sectionPermissions: Permission[], isChecked: boolean) {
         if (isChecked) {
-            setPermissions([...new Set([...sectionPermissions, ...permissions])]);
+            props.setPermissions([...new Set([...sectionPermissions, ...props.permissions])]);
         } else {
-            setPermissions(permissions.filter(permission => !sectionPermissions.includes(permission)));
+            props.setPermissions(props.permissions.filter(permission => !sectionPermissions.includes(permission)));
         }
     }
     return (
@@ -40,7 +40,7 @@ export default function PermissionList(props: Props) {
                     <h2 className="text-2xl">Select all</h2>
                     <Switch
                         checked={allChecked}
-                        onChange={(e) => setPermissions(e.target.checked ? AllPermissions : [])}
+                        onChange={(e) => props.setPermissions(e.target.checked ? AllPermissions : [])}
                     />
                 </div>
             </div>
@@ -60,7 +60,7 @@ export default function PermissionList(props: Props) {
                                     {/* Toggle section switch */}
                                     <Switch
                                         onChange={(e) => toggleSection(value, e.target.checked)}
-                                        checked={value.every((permission) => permissions.includes(permission))}
+                                        checked={value.every((permission) => props.permissions.includes(permission))}
                                     />
                                 </div>
                                 {/* Map through each permission in the section */}
@@ -81,11 +81,11 @@ export default function PermissionList(props: Props) {
                                             {/* Toggle individual permission switch */}
                                             <Switch
                                                 color="secondary"
-                                                checked={permissions.includes(permission)}
+                                                checked={props.permissions.includes(permission)}
                                                 onChange={(e) => {
-                                                    setPermissions(e.target.checked
-                                                        ? [...permissions, permission]
-                                                        : permissions.filter(perm => perm !== permission))
+                                                    props.setPermissions(e.target.checked
+                                                        ? [...props.permissions, permission]
+                                                        : props.permissions.filter(perm => perm !== permission))
                                                 }}
                                             />
                                         </div>

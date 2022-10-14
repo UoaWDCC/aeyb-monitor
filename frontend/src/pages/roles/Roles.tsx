@@ -10,6 +10,7 @@ import { useUserContext } from '../../contexts/UserContext';
 import RoleDTO from '../../shared/Types/dtos/RoleDTO';
 import UserDTO from '../../shared/Types/dtos/UserDTO';
 import LoadingSpinner from './components/LoadingSpinner';
+import Permission from '../../shared/Types/utils/Permission';
 
 function Roles() {
     const userContext = useUserContext();
@@ -57,6 +58,11 @@ function Roles() {
         }
     }
 
+    const handleSetPermissions = (newPermissions: Permission[]) => {
+        const updatedRole: RoleDTO = { ...roles[activeRole], permissions: newPermissions };
+        setRoles({ ...roles, [updatedRole.id]: updatedRole });
+    }
+
     return (
         // Page container
         <div className=" md:pl-[90px] bg-white overflow-scroll h-screen md:ml-4">
@@ -86,7 +92,7 @@ function Roles() {
                 {/* Right column of permissions */}
                 <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     {activeRole ? (
-                        <PermissionList activeRole={roles[activeRole].name} permissions={roles[activeRole].permissions} />
+                        <PermissionList activeRole={roles[activeRole].name} permissions={roles[activeRole].permissions} setPermissions={handleSetPermissions} />
                     ) : (
                         <div className="flex flex-col gap-4">
                             <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
