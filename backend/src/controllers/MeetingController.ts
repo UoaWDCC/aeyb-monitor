@@ -211,15 +211,10 @@ const updateAttendances = asyncHandler(
 
         for (const key of Object.keys(updatedAttendance)) {
             currentAttendance.set(key, { ...currentAttendance.get(key), didAttend: updatedAttendance[key] });
-            console.log(currentAttendance.get(key));
         }
-
-        // console.log(currentAttendance);
 
         meeting.attendance = currentAttendance;
 
-        // meeting.markModified('attendance');
-        // await meeting.save();
         res.ok({ meeting: await meeting.asPopulated() });
     },
 );
