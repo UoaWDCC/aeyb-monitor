@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import Switch from '@mui/material/Switch';
 import Permission from '../../../shared/Types/utils/Permission';
-
-//Above enum as an array
-const PermissionsArray = Object.keys(Permission) as Array<keyof typeof Permission>;
+import RoleDTO from '../../../shared/Types/dtos/RoleDTO';
 
 //groups each permission by type
 const PermissionsLists = {
@@ -12,57 +10,37 @@ const PermissionsLists = {
     meetings: [Permission.VIEW_MEETINGS, Permission.ADD_MEETINGS, Permission.DELETE_MEETINGS, Permission.UPDATE_MEETINGS],
 };
 
-export default function PermissionList(props) {
-    const { activeRole } = props;
+const AllPermissions = Object.values(Permission);
+
+interface Props {
+    activeRole: string;
+    permissions: Permission[];
+}
+
+export default function PermissionList(props: Props) {
     //toggle all / section states
-    const [allChecked, setAllChecked] = useState(false);
-    const [allRolesChecked, setAllRolesChecked] = useState(false);
-    const [allUsersChecked, setAllUsersChecked] = useState(false);
-    const [allEventsChecked, setAllEventsChecked] = useState(false);
-
-    const sectionStates = {
-        allRolesChecked,
-        setAllRolesChecked,
-        allUsersChecked,
-        setAllUsersChecked,
-        allEventsChecked,
-        setAllEventsChecked,
-    };
-
-    //Array containing states of each permission
-    const [checked, setChecked] = useState(new Array(Object.keys(Permissions).length).fill(false));
+    const [permissions, setPermissions] = useState(props.permissions);
+    const allChecked = Object.values(Permission).every(permission => permissions.includes(permission))
 
     //Toggles all permissions in a section
-    function toggleSection(key, value) {
-        let keyName = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
-
-        setChecked(
-            checked.map((item, index) => {
-                if (value.includes(index)) {
-                    return !sectionStates[`all${keyName}Checked`];
-                }
-                return item;
-            }),
-        );
-        sectionStates[`setAll${keyName}Checked`](!sectionStates[`all${keyName}Checked`]);
+    function toggleSection(sectionPermissions: Permission[], isChecked: boolean) {
+        if (isChecked) {
+            setPermissions([...new Set([...sectionPermissions, ...permissions])]);
+        } else {
+            setPermissions(permissions.filter(permission => !sectionPermissions.includes(permission)));
+        }
     }
     return (
         <>
             <div className="flex items-center flex-row justify-between text-[#262B6C]">
-                <h1 className="text-3xl font-semibold">{activeRole}</h1>
+                <h1 className="text-3xl font-semibold">{props.activeRole}</h1>
 
                 {/* Select all */}
                 <div className="flex sm:justify-end pt-2">
                     <h2 className="text-2xl">Select all</h2>
                     <Switch
-                        onChange={() => {
-                            setChecked(checked.map((item) => !allChecked));
-                            setAllRolesChecked(!allChecked);
-                            setAllUsersChecked(!allChecked);
-                            setAllEventsChecked(!allChecked);
-
-                            setAllChecked(!allChecked);
-                        }}
+                        checked={allChecked}
+                        onChange={(e) => setPermissions(e.target.checked ? AllPermissions : [])}
                     />
                 </div>
             </div>
@@ -81,42 +59,34 @@ export default function PermissionList(props) {
                                     </h1>
                                     {/* Toggle section switch */}
                                     <Switch
-                                        onChange={() => {
-                                            toggleSection(key, value);
-                                        }}
-                                        checked={
-                                            sectionStates[
-                                            `all${key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}Checked`
-                                            ]
-                                        }
+                                        onChange={(e) => toggleSection(value, e.target.checked)}
+                                        checked={value.every((permission) => permissions.includes(permission))}
                                     />
                                 </div>
                                 {/* Map through each permission in the section */}
-                                {value.map((index) => {
+                                {value.map((permission) => {
                                     return (
                                         <div
                                             className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom"
-                                            key={index}
+                                            key={permission}
                                         >
                                             {/* Permission name */}
                                             <p>
                                                 {(
-                                                    PermissionsArray[index].charAt(0).toUpperCase() +
-                                                    PermissionsArray[index].slice(1).toLowerCase()
+                                                    permission.charAt(0).toUpperCase() +
+                                                    permission.slice(1).toLowerCase()
                                                 ).replace('_', ' ')}
                                             </p>
 
                                             {/* Toggle individual permission switch */}
                                             <Switch
                                                 color="secondary"
-                                                checked={checked[index]}
-                                                onClick={() =>
-                                                    setChecked((oldArray) => {
-                                                        const newArray = [...oldArray];
-                                                        newArray[index] = !newArray[index];
-                                                        return newArray;
-                                                    })
-                                                }
+                                                checked={permissions.includes(permission)}
+                                                onChange={(e) => {
+                                                    setPermissions(e.target.checked
+                                                        ? [...permissions, permission]
+                                                        : permissions.filter(perm => perm !== permission))
+                                                }}
                                             />
                                         </div>
                                     );
