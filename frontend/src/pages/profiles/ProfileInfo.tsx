@@ -1,13 +1,16 @@
-import { ReactElement } from 'react';
-import { Profile, } from './Interface';
+import './UserProfile.css';
 import NotifBar from './components/NotificationBar';
 import SettingsBar from './components/Settings';
+import { useUserContext } from '../../contexts/UserContext';
 
-interface ProfileInformation {
-    profile: Profile;
-}
+function ProfileInfo() {
 
-const ProfileInfo = (props: ProfileInformation): ReactElement => {
+    const userContext = useUserContext();
+    const user = userContext.user;
+    const roleStyle = {
+        border: `2px solid ${user.roles[0].color}`,
+        color: `${user.roles[0].color}`
+    }
 
     return (
         <div>
@@ -17,13 +20,13 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                     - main role should always be the first role given to the user 
                       OR group the roles into categories 
                  */}
-                <div className='w-4/5 space-x-0 flex flex-row items-center justify-center mt-9'>
+                <div className='w-full space-x-7 flex flex-row items-center justify-center mt-9'>
                     <div>
-                        <img className='rounded-full w-4/5' alt='profile_picture' src={props.profile.profilePictureUrl} />
+                        <img className='rounded-full w-full' alt='profile_picture' src={user.profileUrl} />
                     </div>
-                    <div className='ml-10 text-3xl md:text-4xl'>
-                        <p className='font-bold mb-4 text-[#262B6C]'>{props.profile.name}</p>
-                        <span className=' border-[#FF0201] text-[#FF0201] border-2 rounded-md px-4'>{props.profile.roles[0]}</span>
+                    <div className='text-3xl md:text-4xl'>
+                        <p className='font-bold mb-2 text-[#262B6C]'>{user.name}</p>
+                        <span className='rounded-md px-4 text-3xl' style={roleStyle}>{user.roles[0].name}</span>
                     </div>
                 </div>
 
@@ -33,7 +36,7 @@ const ProfileInfo = (props: ProfileInformation): ReactElement => {
                 <SettingsBar />
             </div>
             <NotifBar />
-        </div>
+        </div >
     );
 };
 
