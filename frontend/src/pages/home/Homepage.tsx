@@ -3,8 +3,12 @@ import LiveMeeting from './components/live_meeting/LiveMeeting';
 import UpcomingMeeting from './components/UpcomingMeeting';
 import PostMeeting from './components/PostMeeting';
 import { useMeetingContext } from '../../contexts/MeetingContext';
+import NewMeeting from './components/NewMeeting';
+import { useState } from 'react';
 
 export default function Homepage() {
+  const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
+
 
   const meetingContext = useMeetingContext();
   const now = Date.now();
@@ -36,7 +40,10 @@ export default function Homepage() {
           </div>
           <div id='meetingContainer'>
             <div id="upcomingContainer" className='mContainer'>
-              <p className='containerTtl'>Upcoming meetings:</p>
+              <div className='flex justify-between'>
+                <p className='containerTtl'>Upcoming meetings:</p>
+                <button className='bg-[#7d6ca3] text-white m-2 px-2 rounded-md' onClick={() => setIsNewMeetingOpen(true)} >+ New Meeting</button>
+              </div>
               {renderUpcomingMeetings()}
             </div>
             <div id="postmeetingContainer" className='mContainer'>
@@ -46,6 +53,7 @@ export default function Homepage() {
           </div>
         </div>
       </div>
+      <NewMeeting isNewMeetingOpen={isNewMeetingOpen} setIsNewMeetingOpen={setIsNewMeetingOpen} />
 
     </ >
   )
