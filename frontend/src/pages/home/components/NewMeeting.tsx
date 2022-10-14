@@ -45,8 +45,8 @@ export default function NewMeeting(props) {
 
 
 
-    async function handleSubmit() {
-
+    async function handleSubmit(event) {
+        event.preventDefault();
         const meetingRequest: AddMeetingRequest = {
             time: formValues.time.getTime(),
             location: formValues.location,
@@ -78,13 +78,13 @@ export default function NewMeeting(props) {
         <>
             {
                 isNewMeetingOpen ?
-                    <div className='flex items-center justify-center absolute h-screen w-full top-0 left-0 '>
+                    <div className='flex items-center justify-center fixed h-screen w-full top-0 left-0 '>
                         <div className='opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20' ></div >
                         <div className='text-5xl bg-white p-10 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative'>
                             <button className='bg-red-400 p-2 rounded-md text-2xl text-white px-5 absolute top-0 right-0 mt-2 mr-2' onClick={handleExit}>✖</button>
                             <h1 className='my-5'>Create new meeting</h1>
 
-                            <div className='flex flex-col items-center text-lg w-3/4'>
+                            <form className='flex flex-col items-center text-lg w-3/4' onSubmit={handleSubmit}>
 
                                 <input
                                     className='border-[#7d6ca3] border-2 px-1 rounded-md w-full my-2'
@@ -93,6 +93,7 @@ export default function NewMeeting(props) {
                                     placeholder='Meeting Name'
                                     value={formValues.title}
                                     onChange={handleInputChange}
+                                    required={true}
                                 />
                                 <input
                                     className='border-[#7d6ca3] border-2 px-1 rounded-md w-full my-2'
@@ -101,6 +102,7 @@ export default function NewMeeting(props) {
                                     placeholder='Location'
                                     value={formValues.location}
                                     onChange={handleInputChange}
+                                    required={true}
                                 />
 
                                 <div className='my-2 w-fit px-2'>
@@ -125,8 +127,9 @@ export default function NewMeeting(props) {
                                     value={formValues.description}
                                     onChange={handleInputChange}
                                 />
-                            </div>
-                            <button className='bg-[#7d6ca3] text-white p-2 rounded-md text-3xl  px-5 my-2' onClick={handleSubmit}>Submit</button>
+                                <button className='bg-[#7d6ca3] text-white p-2 rounded-md text-3xl  px-5 my-2' type="submit">Submit</button>
+
+                            </form>
                         </div>
                     </div >
                     : <div></div>

@@ -44,7 +44,7 @@ export default function ActiveMeeting() {
 
     return (
         <div className='h-screen overflow-scroll relative'>
-            <div className='h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center'>
+            <div className='h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center relative z-10'>
                 <h1 className='text-4xl mt-2 font-bold'>Meeting A - with Group B</h1>
 
                 <div className="w-5/6 lg:w-1/3 flex flex-col items-center">
@@ -80,9 +80,9 @@ export default function ActiveMeeting() {
             </div>
             {
                 leaveMeetingOpen ?
-                    <div className='flex items-center justify-center fixed h-screen w-full top-0 left-0 '>
-                        <div className='opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20'></div>
-                        <div className='text-5xl bg-white p-10 opacity-100 z-30 rounded-lg'>
+                    <div className='flex items-center justify-center fixed h-screen w-full top-0 left-0 z-20'>
+                        <div className='opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-30'></div>
+                        <div className='text-5xl bg-white p-10 opacity-100 z-40 rounded-lg'>
                             Are you sure you want to end the meeting?
                             <div className='flex justify-around p-5 mt-20'>
                                 <button className='bg-gray-400 p-2 rounded-md text-3xl  px-5' onClick={() => setLeaveMeetingOpen(false)}>Cancel</button>
