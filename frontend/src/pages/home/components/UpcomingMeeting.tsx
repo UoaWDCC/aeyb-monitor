@@ -10,7 +10,7 @@ export default function UpcomingMeeting(props: { meeting: MeetingDTO }) {
 
     return (
         <div className='upcomingMeeting' onClick={openMeetingPage}>
-            <div className='meetingTitle'>{props.meeting.name}</div>
+            <div className='meetingTitle capitalize'>{props.meeting.name}</div>
             <div className='dDay'>Opens in {getRelativeTime(props.meeting.time)}</div>
         </div>
     )
