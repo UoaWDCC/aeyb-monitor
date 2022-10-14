@@ -20,7 +20,7 @@ export default function LiveMeeting(props: { meeting: MeetingDTO }) {
     }
 
     return (
-        <div className='liveMeeting' onClick={openMeetingPage}>
+        <div className='liveMeeting my-2' onClick={openMeetingPage}>
             <div className='flex flex-row justify-between'>
                 <div className='liveStatus'><span className='liveBall'>&#x25cf;</span> LIVE</div>
                 <div className='timeleft'>{timeLeft} left</div>
