@@ -1,16 +1,29 @@
-import React from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import RoleDTO from '../../../shared/Types/dtos/RoleDTO';
 
-export default function RoleList(props) {
-    const { allRoles, setActiveRole } = props;
+interface Props {
+    roles: RoleDTO[],
+    handleChangeActiveRole(roleId: string): void
+    handleAddRole(roleName: string): void;
+}
 
-    const [roles, setRoles] = React.useState(allRoles);
-
+export default function RoleList(props: Props) {
     //Open new role input box
-    const [openAddRole, setOpenAddRole] = React.useState(false);
+    const [openAddRole, setOpenAddRole] = useState(false);
+
+    const handleAddRole = async () => {
+        if ((document.getElementById('role-input') as HTMLInputElement).value !== '') {
+            props.handleAddRole((document.getElementById('role-input') as HTMLInputElement).value);
+            setOpenAddRole(false);
+            (document.getElementById('role-input') as HTMLInputElement).value = '';
+        }
+
+        setOpenAddRole(false);
+    }
 
     return (
         <div className=" bg-[#D5D9ED] p-2 rounded-md h-full overflow-hidden space-y-1">
@@ -40,30 +53,20 @@ export default function RoleList(props) {
                     icon={faCheck}
                     size="lg"
                     className="text-[#262b6c]"
-                    onClick={() => {
-                        if ((document.getElementById('role-input') as HTMLInputElement).value !== '') {
-                            setRoles([...roles, (document.getElementById('role-input') as HTMLInputElement).value]);
-                            setOpenAddRole(false);
-                            (document.getElementById('role-input') as HTMLInputElement).value = '';
-                        }
-
-                        setOpenAddRole(false);
-                    }}
+                    onClick={handleAddRole}
                 />
             </div>
 
             <div className={`overflow-y-scroll ${openAddRole ? "h-3/4" : "h-[85%]"}`}>
                 {/* Displays each role */}
-                {roles.map((role) => {
+                {props.roles.map((role) => {
                     return (
                         <div
                             className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
-                            key={role}
-                            onClick={() => {
-                                setActiveRole(role);
-                            }}
+                            key={role.id}
+                            onClick={() => props.handleChangeActiveRole(role.name)}
                         >
-                            <p>{role}</p>
+                            <p>{role.name}</p>
                         </div>
                     );
                 })}

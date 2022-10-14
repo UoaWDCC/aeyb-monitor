@@ -1,18 +1,23 @@
-import React from 'react';
+import { useState } from 'react';
+import UserDTO from '../../../shared/Types/dtos/UserDTO';
 
-export default function UserList(props) {
-    const { allUsers, setActiveRole } = props;
+interface Props {
+    users: Record<string, UserDTO>;
+}
 
-    function handleUserSearch(search) {
+export default function UserList(props: Props) {
+    const [visibileUsers, setVisibleUsers] = useState<string[]>(Object.keys(props.users));
+
+    function handleUserSearch(search: string) {
+        const loweredSearch = search.toLowerCase();
         if (search === '') {
-            setUsers(allUsers);
+            setVisibleUsers(Object.keys(props.users));
         } else {
-            setUsers(allUsers.filter((user) => user.toLowerCase().includes(search.toLowerCase())));
+            setVisibleUsers(Object.values(props.users)
+                .filter((user) => user.name.toLowerCase().includes(loweredSearch))
+                .map((user) => user.id));
         }
     }
-
-    //Users to display in the list
-    const [users, setUsers] = React.useState(allUsers);
 
     return (
         <div className="bg-[#D5D9ED] p-2 rounded-md h-full mt-4 space-y-1">
@@ -30,16 +35,17 @@ export default function UserList(props) {
 
             <div className="overflow-scroll h-3/4">
                 {/* Displays each user that has been searched for */}
-                {users.map((user) => {
+                {visibileUsers.map((userId) => {
+                    const user = props.users[userId];
                     return (
                         <div
                             className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
-                            key={user}
+                            key={userId}
                             onClick={() => {
-                                setActiveRole(user);
+                                console.log(`Clicked ${userId}`)
                             }}
                         >
-                            <p>{user}</p>
+                            <p>{user.name}</p>
                         </div>
                     );
                 })}

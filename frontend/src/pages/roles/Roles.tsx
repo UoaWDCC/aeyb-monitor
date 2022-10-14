@@ -1,22 +1,60 @@
 import IonIcon from '@reacticons/ionicons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Roles.css';
 
 import UserList from './components/UserList';
 import RoleList from './components/RoleList';
 import PermissionList from './components/PermissionsList';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../contexts/UserContext';
+import RoleDTO from '../../shared/Types/dtos/RoleDTO';
+import UserDTO from '../../shared/Types/dtos/UserDTO';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import LoadingSpinner from './components/LoadingSpinner';
 
 function Roles() {
-    //Dummy test users
-    const allUsers = ['Hillary', 'Grant', 'Violet', 'Lauren', 'Luke', 'Sarah', 'Helen', 'Josh', 'Tyler'];
-    const allRoles = ['Admin', 'User', 'Guest', 'TestRole1', 'TestRole2'];
-    const [activeRole, setActiveRole] = React.useState('');
+    const userContext = useUserContext();
+    const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [roles, setRoles] = useState<RoleDTO[]>([]);
+    const [users, setUsers] = useState<Record<string, UserDTO>>({});
+    const [activeRole, setActiveRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (isLoading) return;
+
+        const fetchRoles = async () => {
+            const data = await userContext.fetcher('GET /api/roles');
+            if (data) {
+                setRoles(data.roles);
+            }
+        }
+
+        const fetchUsers = async () => {
+            const data = await userContext.fetcher('GET /api/users');
+            if (data) {
+                const users: Record<string, UserDTO> = {};
+                data.users.forEach(user => users[user.id] = user);
+                setUsers(users);
+            }
+        }
+
+        setIsLoading(true);
+        Promise.all([fetchRoles(), fetchUsers()]).finally(() => setIsLoading(false));
+    }, []);
 
     // Navigation back to profile page
-    const navigate = useNavigate();
     const returntoProfile = () => {
         navigate("/profilepage/")
+    }
+
+    const handleAddRole = async (roleName: string) => {
+        const data = await userContext.fetcher('POST /api/roles', { name: roleName, color: '#262b6c', permissions: [] });
+        if (data) {
+            setRoles([...roles, data.role]);
+        }
     }
 
     return (
@@ -33,28 +71,36 @@ function Roles() {
                 </div>
 
             </div>
-            <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll">
+            <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
                 {/* Left column of roles and users */}
                 <div className="flex flex-col">
                     <div className="h-[40%]">
-                        <RoleList allRoles={allRoles} setActiveRole={setActiveRole} />
+                        <RoleList roles={roles} handleChangeActiveRole={setActiveRole} handleAddRole={handleAddRole} />
                     </div>
 
                     <div className="h-[40%]">
-                        <UserList allUsers={allUsers} setActiveRole={setActiveRole} />
+                        <UserList users={users} />
                     </div>
                 </div>
 
                 {/* Right column of permissions */}
                 <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
-                    {activeRole !== '' ? (
+                    {activeRole ? (
                         <PermissionList activeRole={activeRole} />
                     ) : (
-                        <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
+                        <div className="flex flex-col gap-4">
+                            <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
+                            {isLoading && (
+                                <div className="flex items-center gap-2 justify-center text-[#bdc3e3]">
+                                    <LoadingSpinner />
+                                    <p className="text-2xl font-semibold">Loading...</p>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
