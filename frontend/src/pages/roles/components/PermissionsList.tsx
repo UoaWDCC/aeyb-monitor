@@ -1,92 +1,53 @@
 import React, { useState } from 'react';
 import Switch from '@mui/material/Switch';
-
-//All permissiion copied over from backend - will need to fetch these somehow
-enum Permissions {
-    VIEW_ROLES = 'VIEW_ROLES',
-    DELETE_ROLES = 'DELETE_ROLES',
-    UPDATE_ROLES = 'UPDATE_ROLES',
-    ADD_ROLES = 'ADD_ROLES',
-    GIVE_ROLE = 'GIVE_ROLE',
-    REMOVE_ROLE = 'REMOVE_ROLE',
-
-    VIEW_USERS = 'VIEW_USERS',
-    UPDATE_USERS = 'UPDATE_USERS',
-
-    VIEW_EVENTS = 'VIEW_EVENTS',
-    UPDATE_EVENTS = 'UPDATE_EVENTS',
-    DELETE_EVENTS = 'DELETE_EVENTS',
-    ADD_EVENTS = 'ADD_EVENTS',
-}
-
-//Above enum as an array
-const PermissionsArray = Object.keys(Permissions) as Array<keyof typeof Permissions>;
+import Permission from '../../../shared/Types/utils/Permission';
+import RoleDTO from '../../../shared/Types/dtos/RoleDTO';
 
 //groups each permission by type
 const PermissionsLists = {
-    roles: [0, 1, 2, 3, 4, 5],
-    users: [6, 7],
-    events: [8, 9, 10, 11],
+    roles: [Permission.VIEW_ROLES, Permission.ADD_ROLES, Permission.DELETE_ROLES, Permission.UPDATE_ROLES],
+    users: [Permission.VIEW_USERS, Permission.UPDATE_USERS, Permission.GIVE_ROLE, Permission.REMOVE_ROLE],
+    meetings: [Permission.VIEW_MEETINGS, Permission.ADD_MEETINGS, Permission.DELETE_MEETINGS, Permission.UPDATE_MEETINGS],
 };
 
-export default function PermissionList(props) {
-    const { activeRole } = props;
+const AllPermissions = Object.values(Permission);
+
+interface Props {
+    activeRole: string;
+    permissions: Permission[];
+    setPermissions: (newPermissions: Permission[]) => void;
+}
+
+export default function PermissionList(props: Props) {
     //toggle all / section states
-    const [allChecked, setAllChecked] = useState(false);
-    const [allRolesChecked, setAllRolesChecked] = useState(false);
-    const [allUsersChecked, setAllUsersChecked] = useState(false);
-    const [allEventsChecked, setAllEventsChecked] = useState(false);
-
-    const sectionStates = {
-        allRolesChecked,
-        setAllRolesChecked,
-        allUsersChecked,
-        setAllUsersChecked,
-        allEventsChecked,
-        setAllEventsChecked,
-    };
-
-    //Array containing states of each permission
-    const [checked, setChecked] = useState(new Array(Object.keys(Permissions).length).fill(false));
+    const allChecked = Object.values(Permission).every(permission => props.permissions.includes(permission))
 
     //Toggles all permissions in a section
-    function toggleSection(key, value) {
-        let keyName = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
-
-        setChecked(
-            checked.map((item, index) => {
-                if (value.includes(index)) {
-                    return !sectionStates[`all${keyName}Checked`];
-                }
-                return item;
-            }),
-        );
-        sectionStates[`setAll${keyName}Checked`](!sectionStates[`all${keyName}Checked`]);
+    function toggleSection(sectionPermissions: Permission[], isChecked: boolean) {
+        if (isChecked) {
+            props.setPermissions([...new Set([...sectionPermissions, ...props.permissions])]);
+        } else {
+            props.setPermissions(props.permissions.filter(permission => !sectionPermissions.includes(permission)));
+        }
     }
     return (
         <>
             <div className="flex items-center flex-row justify-between text-[#262B6C]">
-                <h1 className="text-3xl font-semibold">{activeRole}</h1>
+                <h1 className="text-3xl font-semibold">{props.activeRole}</h1>
 
                 {/* Select all */}
                 <div className="flex sm:justify-end pt-2">
                     <h2 className="text-2xl">Select all</h2>
                     <Switch
-                        onChange={() => {
-                            setChecked(checked.map((item) => !allChecked));
-                            setAllRolesChecked(!allChecked);
-                            setAllUsersChecked(!allChecked);
-                            setAllEventsChecked(!allChecked);
-
-                            setAllChecked(!allChecked);
-                        }}
+                        checked={allChecked}
+                        onChange={(e) => props.setPermissions(e.target.checked ? AllPermissions : [])}
                     />
                 </div>
             </div>
 
             <div className="flex flex-col overflow-scroll mt-2 ">
                 {/* Map through each section permission section */}
-                {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
+                {Object.entries(PermissionsLists).map(
                     ([key, value]) => {
                         return (
                             <div className="md:grid grid-cols-2 gap-2 mb-3" key={key}>
@@ -98,42 +59,34 @@ export default function PermissionList(props) {
                                     </h1>
                                     {/* Toggle section switch */}
                                     <Switch
-                                        onChange={() => {
-                                            toggleSection(key, value);
-                                        }}
-                                        checked={
-                                            sectionStates[
-                                            `all${key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}Checked`
-                                            ]
-                                        }
+                                        onChange={(e) => toggleSection(value, e.target.checked)}
+                                        checked={value.every((permission) => props.permissions.includes(permission))}
                                     />
                                 </div>
                                 {/* Map through each permission in the section */}
-                                {value.map((index) => {
+                                {value.map((permission) => {
                                     return (
                                         <div
                                             className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom"
-                                            key={index}
+                                            key={permission}
                                         >
                                             {/* Permission name */}
                                             <p>
                                                 {(
-                                                    PermissionsArray[index].charAt(0).toUpperCase() +
-                                                    PermissionsArray[index].slice(1).toLowerCase()
+                                                    permission.charAt(0).toUpperCase() +
+                                                    permission.slice(1).toLowerCase()
                                                 ).replace('_', ' ')}
                                             </p>
 
                                             {/* Toggle individual permission switch */}
                                             <Switch
                                                 color="secondary"
-                                                checked={checked[index]}
-                                                onClick={() =>
-                                                    setChecked((oldArray) => {
-                                                        const newArray = [...oldArray];
-                                                        newArray[index] = !newArray[index];
-                                                        return newArray;
-                                                    })
-                                                }
+                                                checked={props.permissions.includes(permission)}
+                                                onChange={(e) => {
+                                                    props.setPermissions(e.target.checked
+                                                        ? [...props.permissions, permission]
+                                                        : props.permissions.filter(perm => perm !== permission))
+                                                }}
                                             />
                                         </div>
                                     );
