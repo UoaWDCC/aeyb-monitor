@@ -1,5 +1,5 @@
 .liveMeeting {
-    border: 3px solid #FF0201;
+    border: 3px solid #ff0201;
     background-color: white;
     transition: all 0.2s;
     border-radius: 10px;
@@ -13,13 +13,13 @@
     background-color: rgb(254, 247, 247);
 }
 
-.liveMeeting>div {
+.liveMeeting > div {
     margin: 1.5%;
     margin-left: 2.5%;
 }
 
 .liveStatus {
-    color: #FF0201;
+    color: #ff0201;
 }
 
 .liveBall {
@@ -28,10 +28,10 @@
 
 @keyframes liveBlink {
     from {
-        color: red
+        color: red;
     }
     to {
-        color: white
+        color: white;
     }
 }
 

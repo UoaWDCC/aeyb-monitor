@@ -83,7 +83,6 @@ function Roles() {
                     <div className="h-[40%]">
                         <RoleList roles={Object.values(roles)} handleChangeActiveRole={setActiveRole} handleAddRole={handleAddRole} />
                     </div>
-
                     <div className="h-[40%]">
                         <UserList users={users} />
                     </div>

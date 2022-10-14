@@ -1,4 +1,6 @@
 import MeetingDTO from '../../../shared/Types/dtos/MeetingDTO';
+import IonIcon from '@reacticons/ionicons';
+
 
 function WeeklyInstance(props: { meeting: MeetingDTO }) {
     // day and date components
@@ -16,8 +18,14 @@ function WeeklyInstance(props: { meeting: MeetingDTO }) {
                             <p>no description.</p>
                             : <p>{props.meeting.description}</p>
                     }</div>
-                    <p className='text-xl mt-4'>{days[date.getDay()]} {date.getDate()}{nth(date.getDate())} at {date.getHours() % 12}:{date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()} {date.getHours() >= 12 ? "PM" : "AM"}</p>
-                    <p className='text-xl'>{props.meeting.location}</p>
+                    <div className='flex items-center'>
+                        <IonIcon name="time-outline" className='text-2xl pr-1' />
+                        <p className='text-xl'>{days[date.getDay()]} {date.getDate()}{nth(date.getDate())} at {date.getHours() % 12}:{date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()} {date.getHours() >= 12 ? "PM" : "AM"}</p>
+                    </div>
+                    <div className='flex items-center'>
+                        <IonIcon name="location-outline" className='text-2xl pr-1' />
+                        <p className='text-xl'>{props.meeting.location}</p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -13,7 +13,7 @@ export default function PostMeeting(props: { meeting: MeetingDTO }) {
 
     return (
         <div className='postMeeting' onClick={openMeetingPage}>
-            <div className='meetingTitle'>{props.meeting.name}</div>
+            <div className='meetingTitle capitalize'>{props.meeting.name}</div>
             {/* Meeting time is assumed to be 1 hour long at this stage, if we were to add meeting end time, we would need to change this to props.meeting.endTime (As currently in 11th of October) */}
             <div className='dDay'>Finished {getRelativeTime(props.meeting.time + 3_600_000)} ago</div>
         </div>
