@@ -1,32 +1,15 @@
 import React, { useState } from 'react';
 import Switch from '@mui/material/Switch';
-
-//All permissiion copied over from backend - will need to fetch these somehow
-enum Permissions {
-    VIEW_ROLES = 'VIEW_ROLES',
-    DELETE_ROLES = 'DELETE_ROLES',
-    UPDATE_ROLES = 'UPDATE_ROLES',
-    ADD_ROLES = 'ADD_ROLES',
-    GIVE_ROLE = 'GIVE_ROLE',
-    REMOVE_ROLE = 'REMOVE_ROLE',
-
-    VIEW_USERS = 'VIEW_USERS',
-    UPDATE_USERS = 'UPDATE_USERS',
-
-    VIEW_EVENTS = 'VIEW_EVENTS',
-    UPDATE_EVENTS = 'UPDATE_EVENTS',
-    DELETE_EVENTS = 'DELETE_EVENTS',
-    ADD_EVENTS = 'ADD_EVENTS',
-}
+import Permission from '../../../shared/Types/utils/Permission';
 
 //Above enum as an array
-const PermissionsArray = Object.keys(Permissions) as Array<keyof typeof Permissions>;
+const PermissionsArray = Object.keys(Permission) as Array<keyof typeof Permission>;
 
 //groups each permission by type
 const PermissionsLists = {
-    roles: [0, 1, 2, 3, 4, 5],
-    users: [6, 7],
-    events: [8, 9, 10, 11],
+    roles: [Permission.VIEW_ROLES, Permission.ADD_ROLES, Permission.DELETE_ROLES, Permission.UPDATE_ROLES],
+    users: [Permission.VIEW_USERS, Permission.UPDATE_USERS, Permission.GIVE_ROLE, Permission.REMOVE_ROLE],
+    meetings: [Permission.VIEW_MEETINGS, Permission.ADD_MEETINGS, Permission.DELETE_MEETINGS, Permission.UPDATE_MEETINGS],
 };
 
 export default function PermissionList(props) {
@@ -86,7 +69,7 @@ export default function PermissionList(props) {
 
             <div className="flex flex-col overflow-scroll mt-2 ">
                 {/* Map through each section permission section */}
-                {(Object.entries(PermissionsLists) as [keyof typeof PermissionsLists, Array<number>][]).map(
+                {Object.entries(PermissionsLists).map(
                     ([key, value]) => {
                         return (
                             <div className="md:grid grid-cols-2 gap-2 mb-3" key={key}>
