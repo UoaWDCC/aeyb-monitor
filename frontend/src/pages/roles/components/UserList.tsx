@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserDTO from '../../../shared/Types/dtos/UserDTO';
 
 interface Props {
@@ -7,6 +7,10 @@ interface Props {
 
 export default function UserList(props: Props) {
     const [visibileUsers, setVisibleUsers] = useState<string[]>(Object.keys(props.users));
+
+    useEffect(() => {
+        setVisibleUsers(Object.keys(props.users));
+    }, [props.users]);
 
     function handleUserSearch(search: string) {
         const loweredSearch = search.toLowerCase();
