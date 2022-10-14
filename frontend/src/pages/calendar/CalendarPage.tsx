@@ -10,11 +10,11 @@ const CalendarPage = (): ReactElement => {
   const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUNE", "JULY", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
   const week = new Date();
-  week.setDate(week.getDate() + weeks * 7);
+  week.setDate(week.getDate() - week.getDay() + weeks * 7);
   const firstWeekTime = week.getTime();
   const firstWeekDay = week.getDate();
   const previousMonth = months[week.getMonth()];
-  week.setDate(week.getDate() + 7); // set the date to the date next week
+  week.setDate(week.getDate() + 6); // set the date to the date next week
 
   const meetingContext = useMeetingContext();
   const renderWeeklyMeetings = () => {
