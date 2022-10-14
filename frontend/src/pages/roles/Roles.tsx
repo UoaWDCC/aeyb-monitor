@@ -21,8 +21,8 @@ function Roles() {
 
     return (
         // Page container
-        <div className=" md:pl-[90px] bg-white overflow-scroll h-screen md:ml-4">
-            <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
+        <div className=" md:pl-[90px] bg-white overflow-scroll h-screen md:ml-4xw">
+            <div className="w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full mt-2">
                 {/* Left column of roles and users */}
                 <div className="flex flex-col h-screen">
                     <div className="h-[45%]">
