@@ -6,7 +6,7 @@
 }
 
 .liveMeeting:hover {
-    background-color: rgb(251, 248, 248);
+    @apply bg-red-100;
 }
 
 .liveMeeting:active {

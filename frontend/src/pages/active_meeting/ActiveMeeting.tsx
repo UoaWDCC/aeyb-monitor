@@ -10,7 +10,7 @@ export enum AttendanceType {
 }
 
 export default function ActiveMeeting() {
-    const allUsers = ['Joe', 'Bob', 'User 1', 'User 2', 'Mary', 'Jane', 'Susan'];
+    const allUsers = ['Joe', 'Bob', 'Raymond', 'User 2', 'Mary', 'Jane', 'Susan'];
     const [activeUser, setActiveUser] = React.useState('');
 
     const [leaveMeetingOpen, setLeaveMeetingOpen] = useState(false);

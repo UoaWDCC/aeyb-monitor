@@ -1,3 +1,5 @@
+import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
@@ -81,7 +83,9 @@ export default function NewMeeting(props) {
                     <div className='flex items-center justify-center fixed h-screen w-full top-0 left-0 '>
                         <div className='opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20' ></div >
                         <div className='text-5xl bg-white p-10 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative'>
-                            <button className='bg-red-400 p-2 rounded-md text-2xl text-white px-5 absolute top-0 right-0 mt-2 mr-2' onClick={handleExit}>✖</button>
+                            <button className='bg-red-400 p-2 hover:bg-red-500 rounded-md text-2xl text-white px-5 absolute top-0 right-0 mt-2 mr-2' onClick={handleExit}>
+                                <FontAwesomeIcon icon={faClose} />
+                            </button>
                             <h1 className='my-5'>Create new meeting</h1>
 
                             <form className='flex flex-col items-center text-lg w-3/4' onSubmit={handleSubmit}>
