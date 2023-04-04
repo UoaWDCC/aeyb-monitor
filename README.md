@@ -29,7 +29,7 @@ To setup prettier in VSCode:
 
 1. Install the [Prettier VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-# Scripts
+## Scripts
 
 `npm run removeModules` - Will remove all npm_modules
 
