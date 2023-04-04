@@ -32,6 +32,7 @@ To setup prettier in VSCode:
 # Scripts
 
 `npm run removeModules` - Will remove all npm_modules
+
 `npm run installAll` - Will install all dependencies in the root, frontend, and backend folder.
 
 ## Developers and Team Members
