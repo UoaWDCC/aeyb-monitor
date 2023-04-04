@@ -11,7 +11,7 @@
 
     To update the submodules if there are changes in the future, run `git submodule update --remote`
 
-2. Make sure you have the all the dependencies installed by doing either `npm install` or `yarn`, first within the root directory. (This will install all other dependencies in the frontend and backend folder)
+2. Make sure to install all the dependencies. This can be done in the root directory by doing `npm run installAll`
 
 ## Eslint
 
@@ -32,6 +32,7 @@ To setup prettier in VSCode:
 # Scripts
 
 `npm run removeModules` - Will remove all npm_modules
+`npm run installAll` - Will install all dependencies in the root, frontend, and backend folder.
 
 ## Developers and Team Members
 

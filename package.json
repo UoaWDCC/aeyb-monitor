@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "description": "aeyb fullstack",
     "scripts": {
-        "removeModules": "rm -rf node_modules && cd frontend && rm -rf node_modules && cd ../backend rm -rf node_modules",
-        "postinstall": "cd frontend && npm install && cd ../backend && npm install"
+        "removeModules": "rm -rf node_modules && cd frontend && rm -rf node_modules && cd ../backend && rm -rf node_modules",
+        "installAll": "npm install && cd frontend && npm install && cd ../backend && npm install"
     },
     "dependencies": {
         "typescript": "^4.6.4"
