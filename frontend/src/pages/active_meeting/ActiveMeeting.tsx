@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserList from './components/UserList';
 import AttendanceSelect from './components/AttendanceSelect';
 import Rating from './components/RadioGroupRating'
@@ -11,7 +11,7 @@ export enum AttendanceType {
 
 export default function ActiveMeeting() {
     const allUsers = ['Joe', 'Bob', 'Raymond', 'User 2', 'Mary', 'Jane', 'Susan'];
-    const [activeUser, setActiveUser] = React.useState('');
+    const [activeUser, setActiveUser] = useState('');
 
     const [leaveMeetingOpen, setLeaveMeetingOpen] = useState(false);
 
@@ -21,10 +21,10 @@ export default function ActiveMeeting() {
 
     const navigate = useNavigate();
 
-    const [message, setMessage] = React.useState('');
+    const [message, setMessage] = useState('');
     const DELAY = 1000;
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!message) { return; }
 
         const timer = window.setTimeout(() => setMessage(''), DELAY);

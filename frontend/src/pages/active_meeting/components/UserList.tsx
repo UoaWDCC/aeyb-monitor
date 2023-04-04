@@ -1,9 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 
 export default function UserList(props) {
     const { allUsers, setActiveUser } = props;
 
-    const [showUsers, setShowUsers] = React.useState(false);
+    const [showUsers, setShowUsers] = useState(false);
 
     function handleUserSearch(search) {
         if (search === '') {
@@ -18,7 +18,7 @@ export default function UserList(props) {
     }
 
     //Users to display in the list
-    const [users, setUsers] = React.useState(allUsers);
+    const [users, setUsers] = useState(allUsers);
 
 
     return (
