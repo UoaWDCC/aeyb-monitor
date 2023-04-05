@@ -2,23 +2,23 @@
 
 ## Setup
 
-1. To install the git submodules, run the following commands: 
-   ```sh
-    git submodule init
-    git submodule update
+1. To install the git submodules, run the following commands:
+
+    ```sh
+     git submodule init
+     git submodule update
     ```
+
     To update the submodules if there are changes in the future, run `git submodule update --remote`
 
-1. Make sure you have the all the dependencies installed by doing either `npm install` or `yarn`, first within the root directory and then in the `frontend` or `backend` directories, depending on which you're working with.
-
-    > **Note** 
-    > You'll likely only need to install the root dependencies once.
+2. Make sure to install all the dependencies. This can be done in the root directory by doing `npm run installAll`
 
 ## Eslint
 
 Eslint is a tool that helps indentify errors in your code.
 
 To setup eslint in VSCode:
+
 1. Install the [Eslint VSCode extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
 ## Prettier
@@ -26,18 +26,26 @@ To setup eslint in VSCode:
 Prettier is used to format your code on save.
 
 To setup prettier in VSCode:
+
 1. Install the [Prettier VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
+## Scripts
+
+`npm run removeModules` - Will remove all npm_modules
+
+`npm run installAll` - Will install all dependencies in the root, frontend, and backend folder.
+
 ## Developers and Team Members
-| Name          | Role                      |
-|---------------|---------------------------|
-| Ishaan Bhide  | Backend Developer         |
-| Josh Jeffers  | Backend Developer         |
-| Sarah Kim     | Backend Developer         |
-| Lauren Parker | Backend Developer         |
-| Luke McCallum | Frontend Developer        |
-| Violet Ong    | Frontend Developer        |
-| Rishi Shukla  | Frontend Developer        |
-| Eve Zhang     | Frontend Developer        |
-| Helen Yu      | Associate Project Manager |
-| Hillary Grey  | Project Manager           |
+
+| Name             | Role               |
+| ---------------- | ------------------ |
+| Vishva Dave      | Frontend Developer |
+| Dhruvkanth Puli  | Frontend Developer |
+| Eric Jiang       | Frontend Developer |
+| Vandan Bhatt     | Frontend Developer |
+| Chris Valenzuela | Backend Developer  |
+| Timothy Looi     | Backend Developer  |
+| Kevin Jin        | Backend Developer  |
+| Richard Cheng    | Backend Developer  |
+| Tyler Kim        | Tech Lead          |
+| Jacob Tan        | Project Manager    |
