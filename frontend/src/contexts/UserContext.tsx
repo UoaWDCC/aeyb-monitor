@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import useLocalStorage from '../hooks/UseLocastrorage';
 import API from '../shared/Types/api';
+import { CredentialResponse } from '@react-oauth/google';
 
 // Eventually move to config file
 axios.defaults.baseURL = 'http://localhost:5000';
@@ -22,7 +23,7 @@ export interface UserContextProps {
     fetcher: FetcherType,
     logout(): Promise<void>;
     relogin(): Promise<void>;
-    onLogin(res: GoogleLoginResponse): Promise<void>;
+    onLogin(res: CredentialResponse): Promise<void>;
 }
 
 export const useUserContext = () => useContext(UserContext);
@@ -55,8 +56,8 @@ export function UserContextProvider({ children }: { children?: ReactNode }) {
         }
     }
 
-    async function onLogin(googleData: GoogleLoginResponse) {
-        const data = await fetcher('POST /api/users/login', { credential: googleData.tokenId });
+    async function onLogin(googleData: CredentialResponse) {
+        const data = await fetcher('POST /api/users/login', { credential: googleData.credential });
         if (data) {
             setUser(data.user);
             setPermissions(data.permissions);
