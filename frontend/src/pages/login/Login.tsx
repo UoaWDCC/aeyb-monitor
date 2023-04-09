@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-// import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../images/edited/AEYB_A0_CircleBlackWardlineSmaller.png';
