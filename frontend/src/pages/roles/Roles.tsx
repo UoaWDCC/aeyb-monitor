@@ -44,7 +44,7 @@ function Roles() {
 
         setIsLoading(true);
         Promise.all([fetchRoles(), fetchUsers()]).finally(() => setIsLoading(false));
-    }, []);
+    }, [isLoading, userContext]);
 
     // Navigation back to profile page
     const returntoProfile = () => {
