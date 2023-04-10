@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext } from 'react'
 import UserDTO from '../shared/Types/dtos/UserDTO';
-import { UnimplementedFunction } from '../utils';
+import { UnimplementedFunction } from '../utility/unimplemented';
 import AEYBResponse from '../shared/Types/responses/utils';
 import Permission from '../shared/Types/utils/Permission';
 import { useNavigate } from 'react-router-dom';
