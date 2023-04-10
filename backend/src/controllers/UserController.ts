@@ -68,7 +68,7 @@ const loginUser = asyncHandler(async (req: Request<LoginRequest>, res: TypedResp
         let user = await User.findById(payload.userId);
         if (!user) {
             user = await User.create({
-                _id: payload.profileUrl,
+                _id: payload.userId,
                 name: payload.name,
                 profileUrl: payload.profileUrl,
             });
