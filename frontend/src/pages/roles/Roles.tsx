@@ -28,40 +28,45 @@ function Roles() {
             const data = await userContext.fetcher('GET /api/roles');
             if (data) {
                 const roles: Record<string, RoleDTO> = {};
-                data.roles.forEach(role => roles[role.id] = role);
+                data.roles.forEach((role) => (roles[role.id] = role));
                 setRoles(roles);
             }
-        }
+        };
 
         const fetchUsers = async () => {
             const data = await userContext.fetcher('GET /api/users');
             if (data) {
                 const users: Record<string, UserDTO> = {};
-                data.users.forEach(user => users[user.id] = user);
+                data.users.forEach((user) => (users[user.id] = user));
                 setUsers(users);
             }
-        }
+        };
 
         setIsLoading(true);
         Promise.all([fetchRoles(), fetchUsers()]).finally(() => setIsLoading(false));
-    }, [isLoading, userContext]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Navigation back to profile page
     const returntoProfile = () => {
-        navigate("/profilepage/")
-    }
+        navigate('/profilepage/');
+    };
 
     const handleAddRole = async (roleName: string) => {
-        const data = await userContext.fetcher('POST /api/roles', { name: roleName, color: '#262b6c', permissions: [] });
+        const data = await userContext.fetcher('POST /api/roles', {
+            name: roleName,
+            color: '#262b6c',
+            permissions: [],
+        });
         if (data) {
             setRoles({ ...roles, [data.role.id]: data.role });
         }
-    }
+    };
 
     const handleSetPermissions = (newPermissions: Permission[]) => {
         const updatedRole: RoleDTO = { ...roles[activeRole], permissions: newPermissions };
         setRoles({ ...roles, [updatedRole.id]: updatedRole });
-    }
+    };
 
     return (
         // Page container
@@ -70,18 +75,24 @@ function Roles() {
             <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
                 <div className="">
-                    <button className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]" onClick={returntoProfile} >
+                    <button
+                        className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]"
+                        onClick={returntoProfile}
+                    >
                         <IonIcon name="chevron-back-outline" />
                         back
                     </button>
                 </div>
-
             </div>
             <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
                 {/* Left column of roles and users */}
                 <div className="flex flex-col">
                     <div className="h-[40%]">
-                        <RoleList roles={Object.values(roles)} handleChangeActiveRole={setActiveRole} handleAddRole={handleAddRole} />
+                        <RoleList
+                            roles={Object.values(roles)}
+                            handleChangeActiveRole={setActiveRole}
+                            handleAddRole={handleAddRole}
+                        />
                     </div>
                     <div className="h-[40%]">
                         <UserList users={users} />
@@ -91,7 +102,11 @@ function Roles() {
                 {/* Right column of permissions */}
                 <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     {activeRole ? (
-                        <PermissionList activeRole={roles[activeRole].name} permissions={roles[activeRole].permissions} setPermissions={handleSetPermissions} />
+                        <PermissionList
+                            activeRole={roles[activeRole].name}
+                            permissions={roles[activeRole].permissions}
+                            setPermissions={handleSetPermissions}
+                        />
                     ) : (
                         <div className="flex flex-col gap-4">
                             <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
@@ -105,7 +120,7 @@ function Roles() {
                     )}
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
 
