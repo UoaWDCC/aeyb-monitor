@@ -5,7 +5,7 @@ import { getAllRoles, getRole, deleteRole, addRole, updateRole } from '../contro
 
 const RoleRouter = Router();
 
-RoleRouter.route('/').get(protect(Permission.VIEW_ROLES), getAllRoles).post(protect(), addRole);
+RoleRouter.route('/').get(protect(Permission.VIEW_ROLES), getAllRoles).post(protect(Permission.MANAGE_ROLES), addRole);
 RoleRouter.route('/:roleId')
     .get(protect(Permission.VIEW_ROLES), getRole)
     .delete(protect(Permission.MANAGE_ROLES), deleteRole)
