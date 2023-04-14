@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './sidebar.css'
-import logo from '../../images/AEYB_A0_Circle_resized.png'
+import logo from '../../images/edited/AEYB_A0_Circle_resized.png'
 import Menuitem from './menuitem/Menuitem'
 import { Outlet, useLocation } from 'react-router-dom';
 import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
