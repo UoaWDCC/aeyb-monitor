@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import MeetingDTO from "../shared/Types/dtos/MeetingDTO";
 import Permission from "../shared/Types/utils/Permission";
 import { useUserContext } from "./UserContext";
-import { UnimplementedFunction } from "../utility/unimplemented";
+import { UnimplementedFunction } from "../utils";
 
 export interface MeetingContextProps {
     meetings: Record<string, MeetingDTO>;
