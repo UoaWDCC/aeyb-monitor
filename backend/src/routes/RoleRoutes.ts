@@ -8,7 +8,7 @@ const RoleRouter = Router();
 RoleRouter.route('/').get(protect(Permission.VIEW_ROLES), getAllRoles).post(protect(), addRole);
 RoleRouter.route('/:roleId')
     .get(protect(Permission.VIEW_ROLES), getRole)
-    .delete(protect(Permission.DELETE_ROLES), deleteRole)
-    .patch(protect(Permission.UPDATE_ROLES), updateRole);
+    .delete(protect(Permission.MANAGE_ROLES), deleteRole)
+    .patch(protect(Permission.MANAGE_ROLES), updateRole);
 
 export default RoleRouter;

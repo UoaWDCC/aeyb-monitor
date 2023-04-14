@@ -26,10 +26,10 @@ UserRouter.route('/').get(protect(Permission.VIEW_USERS), getAllUsers);
 UserRouter.route('/@me').get(protect(), getSelf);
 UserRouter.route('/:userId')
     .get(protect(Permission.VIEW_USERS), getUser)
-    .patch(protect(Permission.UPDATE_USERS), updateUser);
+    .patch(protect(Permission.MANAGE_USERS), updateUser);
 
 UserRouter.route('/:userId/roles/')
-    .post(protect(Permission.GIVE_ROLE), giveRoles)
-    .delete(protect(Permission.REMOVE_ROLE), removeRoles);
+    .post(protect(Permission.MANAGE_ROLES), giveRoles)
+    .delete(protect(Permission.MANAGE_ROLES), removeRoles);
 
 export default UserRouter;
