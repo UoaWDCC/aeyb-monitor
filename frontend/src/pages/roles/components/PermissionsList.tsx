@@ -3,10 +3,10 @@ import Permission from '../../../shared/Types/utils/Permission';
 
 //groups each permission by type
 const PermissionsLists = {
-    roles: [Permission.VIEW_ROLES, Permission.ADD_ROLES, Permission.DELETE_ROLES, Permission.UPDATE_ROLES],
-    users: [Permission.VIEW_USERS, Permission.UPDATE_USERS, Permission.GIVE_ROLE, Permission.REMOVE_ROLE],
-    meetings: [Permission.VIEW_MEETINGS, Permission.ADD_MEETINGS, Permission.DELETE_MEETINGS, Permission.UPDATE_MEETINGS],
-};
+    roles: [Permission.VIEW_ROLES, Permission.MANAGE_ROLES],
+    users: [Permission.VIEW_USERS, Permission.MANAGE_USERS],
+    meetings: [Permission.VIEW_MEETINGS, Permission.MANAGE_MEETINGS]
+}
 
 const AllPermissions = Object.values(Permission);
 
