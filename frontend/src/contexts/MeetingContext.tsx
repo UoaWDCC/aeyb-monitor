@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import MeetingDTO from "../shared/Types/dtos/MeetingDTO";
-import Permission from "../shared/Types/utils/Permission";
+import MeetingDTO from "@shared/dtos/MeetingDTO";
+import Permission from "@shared/utils/Permission";
 import { useUserContext } from "./UserContext";
 import { UnimplementedFunction } from "../utils";
 

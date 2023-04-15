@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "composite": true /* Enable project compilation */,
         "noEmit": false /* referenced projects may not disabled emit */,
         "isolatedModules": true,
         "incremental": true,
@@ -13,10 +14,6 @@
         "alwaysStrict": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".", // needed for paths
-        "paths": {
-            "@shared/*": ["./shared/src/*"]
-        }
-    },
-    "exclude": ["node_modules"]
+        "lib": ["ES2015"]
+    }
 }

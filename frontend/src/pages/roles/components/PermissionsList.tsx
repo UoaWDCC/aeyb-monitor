@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Switch from '@mui/material/Switch';
-import Permission from '../../../shared/Types/utils/Permission';
-import RoleDTO from '../../../shared/Types/dtos/RoleDTO';
+import Permission from '@shared/utils/Permission';
+import RoleDTO from '@shared/dtos/RoleDTO';
 
 //groups each permission by type
 const PermissionsLists = {

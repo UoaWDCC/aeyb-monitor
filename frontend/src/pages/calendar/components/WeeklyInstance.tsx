@@ -1,4 +1,4 @@
-import MeetingDTO from '../../../shared/Types/dtos/MeetingDTO';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 import IonIcon from '@reacticons/ionicons';
 
 

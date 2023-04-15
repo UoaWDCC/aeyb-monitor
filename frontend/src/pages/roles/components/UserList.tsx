@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import UserDTO from '../../../shared/Types/dtos/UserDTO';
+import UserDTO from '@shared/dtos/UserDTO';
 
 interface Props {
     users: Record<string, UserDTO>;

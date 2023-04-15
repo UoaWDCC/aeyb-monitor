@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import MeetingDTO from '../../../shared/Types/dtos/MeetingDTO';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 import './meeting.css'
 import { getRelativeTime } from './meetingUtils';
 

@@ -7,10 +7,10 @@ import RoleList from './components/RoleList';
 import PermissionList from './components/PermissionsList';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../contexts/UserContext';
-import RoleDTO from '../../shared/Types/dtos/RoleDTO';
-import UserDTO from '../../shared/Types/dtos/UserDTO';
+import RoleDTO from '@shared/dtos/RoleDTO';
+import UserDTO from '@shared/dtos/UserDTO';
 import LoadingSpinner from './components/LoadingSpinner';
-import Permission from '../../shared/Types/utils/Permission';
+import Permission from '@shared/utils/Permission';
 
 function Roles() {
     const userContext = useUserContext();

@@ -5,8 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
-import { MeetingType } from '../../../shared/Types/dtos/MeetingDTO';
-import { AddMeetingRequest } from '../../../shared/Types/requests/MeetingRequests';
+import { MeetingType } from '@shared/dtos/MeetingDTO';
+import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 
 const defaultValues = {
     title: '',
