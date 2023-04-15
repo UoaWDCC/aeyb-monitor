@@ -8,10 +8,10 @@ const MeetingRouter = Router();
 
 MeetingRouter.route('/')
     .get(protect(Permission.VIEW_MEETINGS), getAllMeetings)
-    .post(protect(Permission.ADD_MEETINGS), addMeeting);
+    .post(protect(Permission.MANAGE_MEETINGS), addMeeting);
 MeetingRouter.route('/:meetingId')
     .get(protect(Permission.VIEW_MEETINGS), getMeeting)
-    .delete(protect(Permission.DELETE_MEETINGS), deleteMeeting)
-    .patch(protect(Permission.UPDATE_MEETINGS), updateMeeting);
+    .delete(protect(Permission.MANAGE_MEETINGS), deleteMeeting)
+    .patch(protect(Permission.MANAGE_MEETINGS), updateMeeting);
 
 export default MeetingRouter;
