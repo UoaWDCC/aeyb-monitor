@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import RoleDTO from '../../../shared/Types/dtos/RoleDTO';
+import RoleDTO from '@shared/dtos/RoleDTO';
 
 interface Props {
     roles: RoleDTO[],

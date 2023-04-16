@@ -2,16 +2,13 @@ import { Router } from 'express';
 import protect from '../middleware/AuthMiddleware';
 
 import { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting } from '../controllers/MeetingController';
-import Permission from '../shared/Types/utils/Permission';
 
 const MeetingRouter = Router();
 
-MeetingRouter.route('/')
-    .get(protect(Permission.VIEW_MEETINGS), getAllMeetings)
-    .post(protect(Permission.MANAGE_MEETINGS), addMeeting);
+MeetingRouter.route('/').get(protect('VIEW_MEETINGS'), getAllMeetings).post(protect('MANAGE_MEETINGS'), addMeeting);
 MeetingRouter.route('/:meetingId')
-    .get(protect(Permission.VIEW_MEETINGS), getMeeting)
-    .delete(protect(Permission.MANAGE_MEETINGS), deleteMeeting)
-    .patch(protect(Permission.MANAGE_MEETINGS), updateMeeting);
+    .get(protect('VIEW_MEETINGS'), getMeeting)
+    .delete(protect('MANAGE_MEETINGS'), deleteMeeting)
+    .patch(protect('MANAGE_MEETINGS'), updateMeeting);
 
 export default MeetingRouter;

@@ -5,7 +5,7 @@ import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import User from '../models/UserModel';
 import { getPermissions } from '../controllers/UserController';
 import { TypedRequest } from '../types/UtilTypes';
-import Permission from '../shared/Types/utils/Permission';
+import { Permission } from '@shared/utils/Permission';
 
 type AuthenticationFunction = (req: Request<unknown>, res: Response, next: NextFunction) => void;
 

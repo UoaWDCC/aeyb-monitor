@@ -12,8 +12,11 @@
         "noFallthroughCasesInSwitch": true,
         "alwaysStrict": true,
         "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".", // needed for paths
+        "paths": {
+            "@shared/*": ["./shared/src/*"]
+        }
     },
-
     "exclude": ["node_modules"]
 }

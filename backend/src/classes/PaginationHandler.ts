@@ -1,9 +1,9 @@
 import { Query } from 'mongoose';
 import InvalidError from '../errors/InvalidError';
 import PaginationConfig from '../types/PaginationConfig';
-import { PaginationQuery } from '../shared/Types/queries/utils';
-import { PaginatedResponse } from '../shared/Types/responses/utils';
-import { PaginationOptions } from '../shared/Types/utils/Pagination';
+import { PaginationQuery } from '@shared/queries/utils';
+import { PaginatedResponse } from '@shared/responses/utils';
+import { PaginationOptions } from '@shared/utils/Pagination';
 
 export default class PaginationHandler {
     public static createOptions(config?: Partial<PaginationConfig>): PaginationConfig {

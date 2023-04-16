@@ -1,5 +1,5 @@
 import { response } from 'express';
-import { SuccessfulResponse } from '../shared/Types/responses/utils/SuccessfulResponse';
+import { SuccessfulResponse } from '@shared/responses/utils/SuccessfulResponse';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 /**

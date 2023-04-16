@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
 import Switch from '@mui/material/Switch';
-import Permission from '../../../shared/Types/utils/Permission';
-import RoleDTO from '../../../shared/Types/dtos/RoleDTO';
+import { Permission } from '@shared/utils/Permission';
 
 //groups each permission by type
-const PermissionsLists = {
-    roles: [Permission.VIEW_ROLES, Permission.MANAGE_ROLES],
-    users: [Permission.VIEW_USERS, Permission.MANAGE_USERS],
-    meetings: [Permission.VIEW_MEETINGS, Permission.MANAGE_MEETINGS]
+const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Permission[] } = {
+    roles: ["VIEW_ROLES", "MANAGE_ROLES"],
+    users: ["VIEW_USERS", "MANAGE_USERS"],
+    meetings: ["VIEW_MEETINGS", "MANAGE_MEETINGS"]
 }
 
-const AllPermissions = Object.values(Permission);
+const allPermissions = Object.values(PermissionsLists).flat()
 
 interface Props {
     activeRole: string;
@@ -18,9 +16,9 @@ interface Props {
     setPermissions: (newPermissions: Permission[]) => void;
 }
 
-export default function PermissionList(props: Props) {
+export default function PermissionsList(props: Props) {
     //toggle all / section states
-    const allChecked = Object.values(Permission).every(permission => props.permissions.includes(permission))
+    const allChecked = allPermissions.every(permission => props.permissions.includes(permission));
 
     //Toggles all permissions in a section
     function toggleSection(sectionPermissions: Permission[], isChecked: boolean) {
@@ -40,7 +38,7 @@ export default function PermissionList(props: Props) {
                     <h2 className="text-2xl">Select all</h2>
                     <Switch
                         checked={allChecked}
-                        onChange={(e) => props.setPermissions(e.target.checked ? AllPermissions : [])}
+                        onChange={(e) => props.setPermissions(e.target.checked ? allPermissions : [])}
                     />
                 </div>
             </div>
@@ -99,3 +97,4 @@ export default function PermissionList(props: Props) {
         </>
     );
 }
+ //
