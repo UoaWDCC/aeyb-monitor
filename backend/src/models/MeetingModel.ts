@@ -38,11 +38,11 @@ const meetingSchema = new Schema<MeetingDocument>({
     description: {
         type: String,
     },
-    // type: {
-    //     type: String,
-    //     enum: MeetingType,
-    //     required: [true, 'You must specify the type of event'],
-    // },
+    type: {
+        type: String,
+        enum: ['meeting', 'event'],
+        required: [true, 'You must specify the type of event'],
+    },
 });
 
 applyToJsonOptions(meetingSchema);

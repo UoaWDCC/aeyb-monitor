@@ -8,6 +8,7 @@ const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Pe
     meetings: ["VIEW_MEETINGS", "MANAGE_MEETINGS"]
 }
 
+const allPermissions = Object.values(PermissionsLists).flat()
 
 interface Props {
     activeRole: string;
@@ -17,7 +18,7 @@ interface Props {
 
 export default function PermissionsList(props: Props) {
     //toggle all / section states
-    // const allChecked = UserPermissions.forEach(permission => props.permissions.includes(permission))
+    const allChecked = allPermissions.every(permission => props.permissions.includes(permission));
 
     //Toggles all permissions in a section
     function toggleSection(sectionPermissions: Permission[], isChecked: boolean) {
@@ -35,10 +36,10 @@ export default function PermissionsList(props: Props) {
                 {/* Select all */}
                 <div className="flex sm:justify-end pt-2">
                     <h2 className="text-2xl">Select all</h2>
-                    {/* <Switch
+                    <Switch
                         checked={allChecked}
-                        onChange={(e) => props.setPermissions(e.target.checked ? AllPermissions : [])}
-                    /> */}
+                        onChange={(e) => props.setPermissions(e.target.checked ? allPermissions : [])}
+                    />
                 </div>
             </div>
 

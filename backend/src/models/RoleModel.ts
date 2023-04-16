@@ -23,12 +23,12 @@ const roleSchema = new mongoose.Schema<RoleDocument>({
         },
         default: '#ffffff',
     },
-    // permissions: [
-    //     {
-    //         type: String,
-    //         enum: Permission,
-    //     },
-    // ],
+    permissions: [
+        {
+            type: String,
+            enum: ['VIEW_ROLES', 'MANAGE_ROLES', 'VIEW_USERS', 'MANAGE_USERS', 'VIEW_MEETINGS', 'MANAGE_MEETINGS'],
+        },
+    ],
 });
 
 applyToJsonOptions(roleSchema);
