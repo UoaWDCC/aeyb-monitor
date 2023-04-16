@@ -53,7 +53,7 @@ export default function NewMeeting(props) {
             time: formValues.time.getTime(),
             location: formValues.location,
             description: formValues.description,
-            type: "meeting" as MeetingType,
+            type: "meeting",
             name: formValues.title,
             attendance: {
                 attendedUsers: [],
@@ -63,7 +63,7 @@ export default function NewMeeting(props) {
                     roleIds: []
                 }
             }
-        }
+        } satisfies AddMeetingRequest;
 
         console.log(formValues);
         const data = await userContext.fetcher('POST /api/meetings', meetingRequest);
