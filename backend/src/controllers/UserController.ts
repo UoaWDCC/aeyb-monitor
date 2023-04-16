@@ -189,8 +189,7 @@ function isPopulatedUser(user: UserDocument | UserPopulatedDocument): user is Us
 }
 
 async function getPermissions(user: UserPopulatedDocument): Promise<Set<Permission>> {
-    const perms = new Set(user.roles.flatMap((role) => role.permissions));
-    return perms;
+    return new Set(user.roles.flatMap((role) => role.permissions));
 }
 
 /**
