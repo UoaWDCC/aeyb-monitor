@@ -2,16 +2,7 @@
 
 ## Setup
 
-1. To install the git submodules, run the following commands:
-
-    ```sh
-     git submodule init
-     git submodule update
-    ```
-
-    To update the submodules if there are changes in the future, run `git submodule update --remote`
-
-2. Make sure to install all the dependencies. This can be done in the root directory by doing `npm run installAll`
+1. Make sure to install all the dependencies. This can be done in the root directory by doing `npm run installAll`
 
 ## Eslint
 
