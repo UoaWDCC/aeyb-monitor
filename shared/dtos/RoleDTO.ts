@@ -1,4 +1,4 @@
-import Permission from '../utils/Permission';
+import { Permission } from '../utils/Permission';
 
 export default interface RoleDTO {
     id: string;

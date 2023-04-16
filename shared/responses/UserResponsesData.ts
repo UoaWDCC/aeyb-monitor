@@ -1,6 +1,6 @@
 import RoleDTO from '../dtos/RoleDTO';
 import UserDTO from '../dtos/UserDTO';
-import Permission from '../utils/Permission';
+import { Permission } from '../utils/Permission';
 
 export interface LoginData extends GetUserData {
     /** The JWT token that can be used to authenticate future requests. */

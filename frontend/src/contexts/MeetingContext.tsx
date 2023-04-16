@@ -1,6 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import MeetingDTO from "@shared/dtos/MeetingDTO";
-import Permission from "@shared/utils/Permission";
 import { useUserContext } from "./UserContext";
 import { UnimplementedFunction } from "../utils";
 
@@ -21,7 +20,7 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
     const [meetings, setMeetings] = useState<Record<string, MeetingDTO>>({});
 
     useEffect(() => {
-        if (userContext.user && userContext.hasPermission(Permission.VIEW_MEETINGS)) {
+        if (userContext.user && userContext.hasPermission("VIEW_MEETINGS")) {
             userContext.fetcher('GET /api/meetings', undefined, undefined, {
                 passed: 'true',
             }).then(data => {

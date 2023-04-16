@@ -53,7 +53,7 @@ export default function NewMeeting(props) {
             time: formValues.time.getTime(),
             location: formValues.location,
             description: formValues.description,
-            type: MeetingType.Meeting,
+            type: "meeting" as MeetingType,
             name: formValues.title,
             attendance: {
                 attendedUsers: [],

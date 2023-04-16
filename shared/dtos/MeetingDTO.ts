@@ -1,10 +1,8 @@
 import AttendanceDTO from './AttendanceDTO';
 import { UnpopulatedUserDTO } from './UserDTO';
 
-export enum MeetingType {
-    Meeting = 'meeting',
-    Event = 'event',
-}
+export const MeetingTypes = ['meeting', 'event'] as const;
+export type MeetingType = typeof MeetingTypes[number];
 
 export default interface MeetingDTO {
     id: string;

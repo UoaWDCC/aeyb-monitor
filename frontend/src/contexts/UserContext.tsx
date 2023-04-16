@@ -2,12 +2,12 @@ import { createContext, ReactNode, useContext } from 'react'
 import UserDTO from '@shared/dtos/UserDTO';
 import { UnimplementedFunction } from '../utils';
 import AEYBResponse from '@shared/responses/utils';
-import Permission from '@shared/utils/Permission';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import useLocalStorage from '../hooks/UseLocastrorage';
 import API from '@shared/api';
 import { CredentialResponse } from '@react-oauth/google';
+import { Permission } from '@shared/utils/Permission';
 
 // Eventually move to config file
 axios.defaults.baseURL = 'http://localhost:5000';
@@ -18,7 +18,7 @@ export type FetcherType = <Url extends keyof API>(
 
 export interface UserContextProps {
     user: UserDTO | null;
-    hasPermission: (permission: Permission | string) => boolean;
+    hasPermission: (permission: Permission) => boolean;
     fetcher: FetcherType,
     logout(): Promise<void>;
     relogin(): Promise<void>;

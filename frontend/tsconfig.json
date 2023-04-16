@@ -13,7 +13,7 @@
         "jsx": "react-jsx",
         "baseUrl": ".",
         "paths": {
-            "@shared/*": ["../shared/src/*"]
+            "@shared/*": ["../shared/*"]
         }
     },
     "include": ["src", "vite.config.ts"]

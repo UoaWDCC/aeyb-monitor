@@ -1,9 +1,0 @@
-{
-    "name": "aeyb-shared",
-    "version": "1.0.0",
-    "description": "aeyb shared types and utilities",
-    "repository": "https://github.com/UoaWDCC/AEYB-Shared.git",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    }
-}

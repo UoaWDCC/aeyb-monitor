@@ -4,13 +4,13 @@ import './Roles.css';
 
 import UserList from './components/UserList';
 import RoleList from './components/RoleList';
-import PermissionList from './components/PermissionsList';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../contexts/UserContext';
 import RoleDTO from '@shared/dtos/RoleDTO';
 import UserDTO from '@shared/dtos/UserDTO';
 import LoadingSpinner from './components/LoadingSpinner';
-import Permission from '@shared/utils/Permission';
+import { Permission } from '@shared/utils/Permission';
+import PermissionsList from './components/PermissionsList';
 
 function Roles() {
     const userContext = useUserContext();
@@ -102,7 +102,7 @@ function Roles() {
                 {/* Right column of permissions */}
                 <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     {activeRole ? (
-                        <PermissionList
+                        <PermissionsList
                             activeRole={roles[activeRole].name}
                             permissions={roles[activeRole].permissions}
                             setPermissions={handleSetPermissions}
