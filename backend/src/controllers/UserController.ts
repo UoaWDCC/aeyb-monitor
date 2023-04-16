@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import config from '../types/Config';
 import { OAuth2Client } from 'google-auth-library';
 import { TypedRequestParams, TypedResponse } from '../types/UtilTypes';
-import { UserIdParam } from '../shared/Types/params';
+import { UserIdParam } from '@shared/params';
 import { TypedRequest } from '../types/UtilTypes';
 import Role, { RoleDocument } from '../models/RoleModel';
 import GooglePayload from '../types/GooglePayload';
@@ -14,7 +14,7 @@ import {
     LoginRequest,
     RemoveRolesRequest,
     UpdateUserRequest,
-} from '../shared/Types/requests/UserRequests';
+} from '@shared/requests/UserRequests';
 import {
     GetAllUsersData,
     GetSelfData,
@@ -23,8 +23,8 @@ import {
     LoginData,
     RemoveRolesData,
     UpdateUserData,
-} from '../shared/Types/responses/UserResponsesData';
-import Permission from '../shared/Types/utils/Permission';
+} from '@shared/responses/UserResponsesData';
+import { Permission } from '@shared/utils/Permission';
 import { Request } from 'express';
 
 const client = new OAuth2Client(config.clientID);
@@ -189,12 +189,11 @@ function isPopulatedUser(user: UserDocument | UserPopulatedDocument): user is Us
 }
 
 async function getPermissions(user: UserPopulatedDocument): Promise<Set<Permission>> {
-    // https://newbedev.com/how-do-i-convert-a-string-to-enum-in-typescript
-    return new Set(
-        user.roles
-            .flatMap((role) => role.permissions)
-            .map((permission) => Permission[permission as keyof typeof Permission]),
-    );
+    console.log(user.roles);
+    const perms = new Set(user.roles.flatMap((role) => role.permissions).map((permission) => permission));
+    const blah = user.roles.flatMap((role) => role.permissions);
+    console.log(blah);
+    return perms;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import AttendanceDTO from '../shared/Types/dtos/AttendanceDTO';
+import AttendanceDTO from '@shared/dtos/AttendanceDTO';
 
 export const AttendanceSchema = new Schema<AttendanceDTO>(
     {

@@ -2,16 +2,16 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { MeetingIdParam } from '../shared/Types/params';
+import { MeetingIdParam } from '@shared/params';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,
     GetAllMeetingsData,
     GetMeetingData,
     UpdateMeetingData,
-} from '../shared/Types/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateMeetingRequest } from '../shared/Types/requests/MeetingRequests';
-import { GetAllMeetingsQuery } from '../shared/Types/queries/MeetingQueries';
+} from '@shared/responses/MeetingResponses';
+import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
+import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 
 const paginationOptions = PaginationHandler.createOptions();
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import RoleDTO from '../shared/Types/dtos/RoleDTO';
-import Permission from '../shared/Types/utils/Permission';
+import RoleDTO from '@shared/dtos/RoleDTO';
+import { Permission } from '@shared/utils/Permission';
 import { DocumentModel } from '../types/UtilTypes';
 import { applyToJsonOptions } from './Utils';
 
@@ -23,12 +23,12 @@ const roleSchema = new mongoose.Schema<RoleDocument>({
         },
         default: '#ffffff',
     },
-    permissions: [
-        {
-            type: String,
-            enum: Permission,
-        },
-    ],
+    // permissions: [
+    //     {
+    //         type: String,
+    //         enum: Permission,
+    //     },
+    // ],
 });
 
 applyToJsonOptions(roleSchema);

@@ -10,7 +10,6 @@ import {
     getSelf,
 } from '../controllers/UserController';
 import protect from '../middleware/AuthMiddleware';
-import Permission from '../shared/Types/utils/Permission';
 import config from '../types/Config';
 
 const UserRouter = Router();
@@ -22,14 +21,12 @@ if (config.nodeEnv === 'development') {
 
 UserRouter.post('/login', loginUser);
 
-UserRouter.route('/').get(protect(Permission.VIEW_USERS), getAllUsers);
+UserRouter.route('/').get(protect('VIEW_USERS'), getAllUsers);
 UserRouter.route('/@me').get(protect(), getSelf);
-UserRouter.route('/:userId')
-    .get(protect(Permission.VIEW_USERS), getUser)
-    .patch(protect(Permission.MANAGE_USERS), updateUser);
+UserRouter.route('/:userId').get(protect('VIEW_USERS'), getUser).patch(protect('MANAGE_USERS'), updateUser);
 
 UserRouter.route('/:userId/roles/')
-    .post(protect(Permission.MANAGE_ROLES), giveRoles)
-    .delete(protect(Permission.MANAGE_ROLES), removeRoles);
+    .post(protect('MANAGE_ROLES'), giveRoles)
+    .delete(protect('MANAGE_ROLES'), removeRoles);
 
 export default UserRouter;

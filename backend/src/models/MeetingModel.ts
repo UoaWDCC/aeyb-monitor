@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import MeetingDTO, { MeetingType } from '../shared/Types/dtos/MeetingDTO';
+import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
 import { DocumentModel } from '../types/UtilTypes';
 import { AttendanceSchema } from './AttendanceModel';
 import { UserDocument } from './UserModel';
@@ -38,11 +38,11 @@ const meetingSchema = new Schema<MeetingDocument>({
     description: {
         type: String,
     },
-    type: {
-        type: String,
-        enum: MeetingType,
-        required: [true, 'You must specify the type of event'],
-    },
+    // type: {
+    //     type: String,
+    //     enum: MeetingType,
+    //     required: [true, 'You must specify the type of event'],
+    // },
 });
 
 applyToJsonOptions(meetingSchema);

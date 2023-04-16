@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Document, Types } from 'mongoose';
 import { UserPopulatedDocument } from '../models/UserModel';
-import AEYBResponse from '../shared/Types/responses/utils';
+import AEYBResponse from '@shared/responses/utils';
 
 export type DocumentModel<T, IdType = Types.ObjectId> = T & Omit<Document<IdType>, 'id'>;
 

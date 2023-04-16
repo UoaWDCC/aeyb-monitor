@@ -1,5 +1,5 @@
 import { Schema, model, Types, Model } from 'mongoose';
-import UserDTO, { UnpopulatedUserDTO } from '../shared/Types/dtos/UserDTO';
+import UserDTO, { UnpopulatedUserDTO } from '@shared/dtos/UserDTO';
 import { DocumentModel } from '../types/UtilTypes';
 import { applyToJsonOptions } from './Utils';
 
