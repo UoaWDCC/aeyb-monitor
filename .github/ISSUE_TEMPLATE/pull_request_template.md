@@ -1,6 +1,9 @@
-Closes: [Replace this with what ticket iter it closed e.g. #12]
+**Closes:** [Replace this with what ticket iter it closed e.g. #12]
 
-What was done:
+**What was done:**
 
-How to test:
-- [ ]
+**How to test:**
+
+-   [ ]
+
+**Screenshots of UI changes (optional):**
