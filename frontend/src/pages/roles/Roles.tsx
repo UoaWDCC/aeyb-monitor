@@ -68,6 +68,12 @@ function Roles() {
         setRoles({ ...roles, [updatedRole.id]: updatedRole });
     };
 
+    const handleSaveRole = async () => {
+        await userContext.fetcher('PATCH /api/roles/:roleId', {
+            permissions: roles[activeRole].permissions
+        }, { roleId: roles[activeRole].id });
+    }
+
     return (
         // Page container
         <div className=" md:pl-[90px] bg-white overflow-scroll h-screen md:ml-4">
@@ -102,11 +108,14 @@ function Roles() {
                 {/* Right column of permissions */}
                 <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     {activeRole ? (
-                        <PermissionsList
-                            activeRole={roles[activeRole].name}
-                            permissions={roles[activeRole].permissions}
-                            setPermissions={handleSetPermissions}
-                        />
+                        <>
+                            <PermissionsList
+                                activeRole={roles[activeRole].name}
+                                permissions={roles[activeRole].permissions}
+                                setPermissions={handleSetPermissions}
+                            />
+                            <button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5">Save</button>
+                        </>
                     ) : (
                         <div className="flex flex-col gap-4">
                             <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
