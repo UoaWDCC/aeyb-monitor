@@ -7,6 +7,7 @@ import { Config } from '../types/Config';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
+import { createDefaultRoles } from '../services/RoleServices';
 
 export default class Server {
     private _app: Express;
@@ -24,6 +25,7 @@ export default class Server {
     private init(): Server {
         // Make sure the db is connected before registering routes
         this.connectDB().then(() => this.configureApp());
+        createDefaultRoles();
         return this;
     }
 

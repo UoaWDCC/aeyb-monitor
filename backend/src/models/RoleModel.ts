@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import RoleDTO from '@shared/dtos/RoleDTO';
-import { Permission } from '@shared/utils/Permission';
 import { DocumentModel } from '../types/UtilTypes';
 import { applyToJsonOptions } from './Utils';
 
