@@ -5,7 +5,7 @@ import { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting } 
 
 const MeetingRouter = Router();
 
-MeetingRouter.route('/').get(protect('VIEW_MEETINGS'), getAllMeetings).post(protect('MANAGE_MEETINGS'), addMeeting);
+MeetingRouter.route('/').get(protect(), getAllMeetings).post(protect('MANAGE_MEETINGS'), addMeeting);
 MeetingRouter.route('/:meetingId')
     .get(protect('VIEW_MEETINGS'), getMeeting)
     .delete(protect('MANAGE_MEETINGS'), deleteMeeting)
