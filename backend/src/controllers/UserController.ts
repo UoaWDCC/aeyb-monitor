@@ -118,8 +118,8 @@ async function validateIdToken(credential: string, res: TypedResponse<LoginData>
     }
 
     const domain = payload.hd;
-    // Make sure users logging in have the correct email domain
-    if (domain !== config.googleDomain) {
+    // Make sure users logging in have the correct email domain and this only happens in prod
+    if (config.nodeEnv === 'production' && domain !== config.googleDomain) {
         return res.unauthorized('Invalid google domain');
     }
 
