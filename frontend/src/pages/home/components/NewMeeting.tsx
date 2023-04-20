@@ -7,6 +7,7 @@ import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import { MeetingType } from '@shared/dtos/MeetingDTO';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
+import Button from 'src/utility_components/Button';
 
 const defaultValues = {
     title: '',
@@ -131,7 +132,7 @@ export default function NewMeeting(props) {
                                     value={formValues.description}
                                     onChange={handleInputChange}
                                 />
-                                <button className='bg-[#7d6ca3] text-white p-2 rounded-md text-3xl  px-5 my-2' type="submit">Submit</button>
+                                <Button className='bg-[#7d6ca3] text-white p-2 rounded-md text-3xl  px-5 my-2' type="submit" text="Submit" />
 
                             </form>
                         </div>
