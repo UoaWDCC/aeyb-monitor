@@ -5,6 +5,7 @@ import PostMeeting from './components/PostMeeting';
 import { useMeetingContext } from '../../contexts/MeetingContext';
 import NewMeeting from './components/NewMeeting';
 import { useState } from 'react';
+import Button from 'src/utility_components/Button';
 
 export default function Homepage() {
   const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
@@ -42,7 +43,7 @@ export default function Homepage() {
             <div id="upcomingContainer" className='mContainer'>
               <div className='flex justify-between'>
                 <p className='containerTtl'>Upcoming meetings:</p>
-                <button className='bg-[#7d6ca3] text-white m-2 px-2 rounded-md' onClick={() => setIsNewMeetingOpen(true)} >+ New Meeting</button>
+                <Button className='bg-[#7d6ca3] text-white m-2 px-2 rounded-md' onClick={() => setIsNewMeetingOpen(true)} text="+ New Meeting" />
               </div>
               {renderUpcomingMeetings()}
             </div>
