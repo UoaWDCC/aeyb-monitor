@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Rating from './components/RadioGroupRating'
 import { useNavigate } from 'react-router-dom';
+import Button from 'src/utility_components/Button';
 
 export default function AfterMeeting() {
     const [rating, setRating] = useState(3);
@@ -51,14 +52,12 @@ export default function AfterMeeting() {
                         <div className='text-5xl bg-white p-10 opacity-100 z-30 rounded-lg'>
                             Are you sure you want to submit?
                             <div className='flex justify-around p-5 mt-20'>
-                                <button className='bg-gray-400 p-2 rounded-md text-3xl  px-5' onClick={() => setLeaveMeetingOpen(false)}>Cancel</button>
-                                <button
-                                    className=' bg-red-300 p-2 rounded-xl text-3xl px-5'
+                                <Button className='bg-gray-400 p-2 rounded-md text-3xl  px-5' onClick={() => setLeaveMeetingOpen(false)} text="Cancel" />
+                                <Button className='bg-red-300 p-2 rounded-xl text-3xl px-5'
                                     onClick={() => {
                                         handleSubmit();
                                         navToHomePage();
-                                    }}
-                                >Submit</button>
+                                    }} text="Submits" />
 
                             </div>
                         </div>
