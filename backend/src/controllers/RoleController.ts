@@ -59,7 +59,7 @@ const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: TypedRespon
  */
 const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: TypedResponse<UpdateRoleData>) => {
     const role = await Role.findOneAndUpdate(
-        { _id: req.params.roleId, name: { $ne: ['Default', 'Admin'] } },
+        { _id: req.params.roleId, name: { $nin: ['Default', 'Admin'] } },
         req.body,
         {
             new: true,
