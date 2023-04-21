@@ -26,6 +26,7 @@ import {
 } from '@shared/responses/UserResponsesData';
 import { Permission } from '@shared/utils/Permission';
 import { Request } from 'express';
+import { createNewUser } from '../services/UserService';
 
 const client = new OAuth2Client(config.clientID);
 
@@ -67,11 +68,7 @@ const loginUser = asyncHandler(async (req: Request<LoginRequest>, res: TypedResp
 
         let user = await User.findById(payload.userId);
         if (!user) {
-            user = await User.create({
-                _id: payload.userId,
-                name: payload.name,
-                profileUrl: payload.profileUrl,
-            });
+            user = await createNewUser(payload);
         } else if (user.name !== payload.name || user.profileUrl !== payload.profileUrl) {
             // If the profile picture or name doesn't match, it must have been updated so we need to update our internal record
             const tempUser = await User.findByIdAndUpdate(

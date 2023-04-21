@@ -58,13 +58,17 @@ const addRole = asyncHandler(async (req: TypedRequest<RoleDTO>, res: TypedRespon
  * @route 	PATCH /api/roles/:roleId
  */
 const updateRole = asyncHandler(async (req: TypedRequest<RoleDTO, RoleIdParam>, res: TypedResponse<UpdateRoleData>) => {
-    const role = await Role.findByIdAndUpdate(req.params.roleId, req.body, {
-        new: true,
-        runValidators: true,
-    });
+    const role = await Role.findOneAndUpdate(
+        { _id: req.params.roleId, name: { $ne: ['Default', 'Admin'] } },
+        req.body,
+        {
+            new: true,
+            runValidators: true,
+        },
+    );
 
     if (!role) {
-        return res.notFound(`There is no role with the id ${req.params.roleId}`);
+        return res.notFound(`There is no valid role with the id ${req.params.roleId}`);
     }
 
     res.ok({ role });
