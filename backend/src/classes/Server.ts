@@ -7,9 +7,6 @@ import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
 import { createDefaultRoles } from '../services/RoleServices';
-import dotenv from 'dotenv';
-
-dotenv.config();
 export default class Server {
     private _app: Express;
 
