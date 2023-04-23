@@ -16,7 +16,7 @@
         "google-auth-library": "^8.0.2",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.3.3",
-        "ts-node": "^10.7.0"
+        "zod": "^3.21.4"
     },
     "devDependencies": {
         "@types/cors": "^2.8.12",
@@ -25,7 +25,6 @@
         "concurrently": "^8.0.1",
         "dotenv": "^16.0.3",
         "esbuild": "^0.17.18",
-        "nodemon": "^2.0.16",
-        "zod": "^3.21.4"
+        "nodemon": "^2.0.16"
     }
 }
