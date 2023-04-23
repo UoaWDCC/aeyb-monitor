@@ -23,6 +23,7 @@
         "@types/express": "^4.17.13",
         "@types/jsonwebtoken": "^8.5.8",
         "concurrently": "^8.0.1",
+        "dotenv": "^16.0.3",
         "esbuild": "^0.17.18",
         "nodemon": "^2.0.16"
     }
