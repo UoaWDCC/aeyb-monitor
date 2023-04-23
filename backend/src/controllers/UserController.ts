@@ -27,7 +27,7 @@ import { Permission } from '@shared/utils/Permission';
 import { Request } from 'express';
 import { createNewUser } from '../services/UserService';
 
-const client = new OAuth2Client(process.env.CLIENTID);
+const client = new OAuth2Client(process.env.CLIENT_ID);
 
 /**
  * @desc    An endpoint that is only accessible during development for getting a JWT token for the specified user id.
@@ -101,7 +101,7 @@ const loginUser = asyncHandler(async (req: Request<LoginRequest>, res: TypedResp
 async function validateIdToken(credential: string, res: TypedResponse<LoginData>): Promise<GooglePayload | void> {
     const ticket = await client.verifyIdToken({
         idToken: credential,
-        audience: process.env.CLIENTID,
+        audience: process.env.CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
@@ -115,7 +115,7 @@ async function validateIdToken(credential: string, res: TypedResponse<LoginData>
 
     const domain = payload.hd;
     // Make sure users logging in have the correct email domain and this only happens in prod
-    if (process.env.NODEENV === 'production' && domain !== process.env.GOOGLEDOMAIN) {
+    if (process.env.NODE_ENV === 'production' && domain !== process.env.GOOGLE_DOMAIN) {
         return res.unauthorized('Invalid google domain');
     }
 
@@ -123,7 +123,7 @@ async function validateIdToken(credential: string, res: TypedResponse<LoginData>
 }
 
 function generateJWT(userId: string): string {
-    return jwt.sign({ sub: userId }, process.env.JWTSECRET, {
+    return jwt.sign({ sub: userId }, process.env.JWT_SECRET, {
         expiresIn: '30d',
     });
 }

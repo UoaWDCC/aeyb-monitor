@@ -30,7 +30,7 @@ export default class Server {
 
     private async connectDB() {
         // Connect to MongoDB database
-        mongoose.connect(process.env.MONGOURI).then(() => {
+        mongoose.connect(process.env.MONGO_URI).then(() => {
             console.log('Connected to the Mongodb database.');
         });
     }

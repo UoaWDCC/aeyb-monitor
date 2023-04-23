@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 const envVariables = z.object({
     PORT: z.number(),
-    NODEENV: z.string(),
-    MONGOURI: z.string(),
-    GOOGLEDOMAIN: z.string(),
-    CLIENTID: z.string(),
-    JWTSECRET: z.string(),
+    NODE_ENV: z.string(),
+    MONGO_URI: z.string(),
+    GOOGLE_DOMAIN: z.string(),
+    CLIENT_ID: z.string(),
+    JWT_SECRET: z.string(),
 });
 
 envVariables.parse(process.env);

@@ -18,7 +18,7 @@ export default function protect(permission?: Permission): AuthenticationFunction
             const token = req.headers.authorization.split(' ')[1];
 
             // Verify token:
-            const decoded = jwt.verify(token, process.env.JWTSECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const user = await User.findByIdWithRoles((decoded.sub as string) ?? '');
             if (!user) {
                 return res.unauthorized('Invalid bearer token');

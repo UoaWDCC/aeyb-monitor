@@ -14,7 +14,7 @@ import protect from '../middleware/AuthMiddleware';
 const UserRouter = Router();
 
 // Only make this route available in development
-if (process.env.NODEENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
     UserRouter.post('/devlogin', devLoginUser);
 }
 
