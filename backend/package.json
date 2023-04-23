@@ -25,6 +25,7 @@
         "concurrently": "^8.0.1",
         "dotenv": "^16.0.3",
         "esbuild": "^0.17.18",
-        "nodemon": "^2.0.16"
+        "nodemon": "^2.0.16",
+        "zod": "^3.21.4"
     }
 }
