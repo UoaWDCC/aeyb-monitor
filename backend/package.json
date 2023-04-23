@@ -4,7 +4,7 @@
     "description": "AEYB backend",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "concurrently -c \"blue,magenta\" -n server,build \"nodemon ./dist/index.js\" \"esbuild ./src/index.ts --platform=node --outfile=dist/index.js --bundle --watch\"",
+        "dev": "concurrently -c \"magenta,blue\" -n build,server \"esbuild ./src/index.ts --platform=node --outfile=dist/index.js --bundle --watch\" \"nodemon ./dist/index.js\"",
         "start": "node .",
         "build": "npx tsc --build"
     },
