@@ -10,7 +10,7 @@ import { CredentialResponse } from '@react-oauth/google';
 import { Permission } from '@shared/utils/Permission';
 
 // Eventually move to config file
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = import.meta.env.BASE_API_URL;
 
 export type FetcherType = <Url extends keyof API>(
     url: Url, payload?: API[Url]["req"], params?: API[Url]["params"], queryParams?: API[Url]["query"]
