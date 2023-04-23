@@ -3,7 +3,7 @@ Make sure that you're working in the backend directory :)
 ## Installation
 
 1. Install dependencies using npm (`npm install`) or yarn (`yarn`).
-2. Copy the `config.example.json` file and rename it to `config.json`. Update any of the fields if required. An up to date version of this file can be found in the shared google drive.
+2. Copy the `.env.tempalte` file and rename it to `.env`. Update any of the fields if required. An up to date version of this file can be found in the shared google drive.
 
 ## Scripts
 
