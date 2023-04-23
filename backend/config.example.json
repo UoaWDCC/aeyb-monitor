@@ -1,8 +1,0 @@
-{
-    "port": 5000,
-    "NODE_ENV": "development",
-    "MONGO_URI": "mongodb+srv://<username>:<password>@<cluster>.ewbpt.mongodb.net/<database>?retryWrites=true&w=majority",
-    "GOOGLE_DOMAIN": "ayv.org.nz",
-    "CLIENT_ID": "Google CLIENT ID",
-    "JWT_SECRET": "Your JWT secret"
-}
