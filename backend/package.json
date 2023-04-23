@@ -4,9 +4,9 @@
     "description": "AEYB backend",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "concurrently -c \"magenta,blue\" -n build,server \"esbuild ./src/index.ts --platform=node --outfile=dist/index.js --bundle --watch\" \"nodemon ./dist/index.js\"",
+        "dev": "concurrently -c \"magenta,blue\" -n build,server \"npm run build -- --watch\" \"npm run build && nodemon ./dist/index.js\"",
         "start": "node .",
-        "build": "npx tsc --build"
+        "build": "esbuild ./src/index.ts --platform=node --outfile=dist/index.js --bundle"
     },
     "dependencies": {
         "cors": "^2.8.5",
