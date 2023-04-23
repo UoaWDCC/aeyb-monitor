@@ -6,9 +6,10 @@ import MeetingRouter from '../routes/MeetingRoutes';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { createDefaultRoles } from '../services/RoleServices';
+import dotenv from 'dotenv';
 
+dotenv.config();
 export default class Server {
     private _app: Express;
 
@@ -21,7 +22,6 @@ export default class Server {
     }
 
     private init(): Server {
-        dotenv.config();
         // Make sure the db is connected before registering routes
         this.connectDB().then(() => this.configureApp());
         createDefaultRoles();
