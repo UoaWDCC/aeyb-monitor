@@ -3,21 +3,17 @@ import UserRouter from '../routes/UserRoutes';
 import RoleRouter from '../routes/RoleRoutes';
 import PermissionRouter from '../routes/PermissionRoutes';
 import MeetingRouter from '../routes/MeetingRoutes';
-import { Config } from '../types/Config';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
 import { createDefaultRoles } from '../services/RoleServices';
-
 export default class Server {
     private _app: Express;
-    private config: Config;
 
-    constructor(config: Config) {
-        this.config = config;
+    constructor() {
         this._app = express();
 
-        this._app.listen(this.config.port, () => console.log(`Server started on port ${this.config.port}`));
+        this._app.listen(process.env.PORT, () => console.log(`Server started on port ${process.env.PORT}`));
 
         this.init();
     }
@@ -31,7 +27,7 @@ export default class Server {
 
     private async connectDB() {
         // Connect to MongoDB database
-        mongoose.connect(this.config.mongoURI).then(() => {
+        mongoose.connect(process.env.MONGO_URI).then(() => {
             console.log('Connected to the Mongodb database.');
         });
     }

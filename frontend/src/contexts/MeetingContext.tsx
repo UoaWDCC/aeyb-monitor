@@ -23,6 +23,7 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
         if (userContext.user && userContext.hasPermission("VIEW_MEETINGS")) {
             userContext.fetcher('GET /api/meetings', undefined, undefined, {
                 passed: 'true',
+                limit: Number.MAX_SAFE_INTEGER.toString(),
             }).then(data => {
                 if (data) {
                     const meetings: Record<string, MeetingDTO> = {};

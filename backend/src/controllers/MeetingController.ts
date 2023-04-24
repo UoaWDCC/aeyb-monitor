@@ -87,7 +87,8 @@ const updateMeeting = asyncHandler(
         });
 
         if (!meeting) {
-            return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
         }
         res.ok({ meeting: await meeting.asPopulated() });
     },
