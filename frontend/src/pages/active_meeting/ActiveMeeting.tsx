@@ -3,6 +3,7 @@ import UserList from './components/UserList';
 import AttendanceSelect from './components/AttendanceSelect';
 import Rating from './components/RadioGroupRating'
 import { useNavigate } from 'react-router-dom';
+import Button from 'src/utility_components/Button';
 
 
 export enum AttendanceType {
@@ -67,7 +68,7 @@ export default function ActiveMeeting() {
 
                                 <textarea id="comment" className=' my-5 w-full border-[#262b6c] border-2 p-2 resize-none' placeholder='Enter Comments' rows={10}></textarea>
 
-                                <button className='bg-[#262b6c] text-white p-2 rounded-md' onClick={handleSubmit}>Submit for {activeUser}</button>
+                                <Button className='bg-[#262b6c] text-white p-2 rounded-md' onClick={handleSubmit} text={`Submit for ${activeUser}`} />
 
                                 <div className="w-full mt-2">
                                     {message && <div className="rounded-md bg-green-100 text-green-900 p-2 text-center">{message}</div>}
@@ -76,7 +77,7 @@ export default function ActiveMeeting() {
                             </div>
                     }
 
-                    <button className='mt-5 text-red-600 font-extrabold border-2 border-red-600 p-2 rounded-md w-1/3' onClick={() => setLeaveMeetingOpen(true)}>END MEETING</button>
+                    <Button className='mt-5 text-red-600 font-extrabold border-2 border-red-600 p-2 rounded-md w-1/3' onClick={() => setLeaveMeetingOpen(true)} text="END MEETING" />
                 </div>
             </div>
             {
@@ -86,9 +87,8 @@ export default function ActiveMeeting() {
                         <div className='text-5xl bg-white p-10 opacity-100 z-40 rounded-lg'>
                             Are you sure you want to end the meeting?
                             <div className='flex justify-around p-5 mt-20'>
-                                <button className='bg-gray-400 p-2 rounded-md text-3xl  px-5' onClick={() => setLeaveMeetingOpen(false)}>Cancel</button>
-                                <button className=' bg-red-300 p-2 rounded-xl text-3xl px-5' onClick={() => navigate(`../homepage`, { replace: true })}>End Meeting</button>
-
+                                <Button className='bg-gray-400 p-2 rounded-md text-3xl  px-5' onClick={() => setLeaveMeetingOpen(false)} text="Cancel" />
+                                <Button className=' bg-red-300 p-2 rounded-xl text-3xl px-5' onClick={() => navigate(`../homepage`, { replace: true })} text="End Meeting" />
                             </div>
                         </div>
                     </div>
