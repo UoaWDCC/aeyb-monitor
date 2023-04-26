@@ -11,6 +11,7 @@ import UserDTO from '@shared/dtos/UserDTO';
 import LoadingSpinner from './components/LoadingSpinner';
 import { Permission } from '@shared/utils/Permission';
 import PermissionsList from './components/PermissionsList';
+import Button from 'src/utility_components/Button';
 
 function Roles() {
     const userContext = useUserContext();
@@ -81,13 +82,11 @@ function Roles() {
             <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
                 <div className="">
-                    <button
-                        className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]"
-                        onClick={returntoProfile}
-                    >
+                    <Button className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]"
+                        onClick={returntoProfile}>
                         <IonIcon name="chevron-back-outline" />
                         back
-                    </button>
+                    </Button>
                 </div>
             </div>
             <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
@@ -114,7 +113,7 @@ function Roles() {
                                 permissions={roles[activeRole].permissions}
                                 setPermissions={handleSetPermissions}
                             />
-                            <button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5">Save</button>
+                            <Button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5" text="Save" />
                         </>
                     ) : (
                         <div className="flex flex-col gap-4">
