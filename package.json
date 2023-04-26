@@ -7,9 +7,9 @@
         "installAll": "npm install && cd frontend && npm install && cd ../backend && npm install"
     },
     "dependencies": {
-        "typescript": "^4.6.4"
     },
     "devDependencies": {
+        "typescript": "^4.6.4",
         "prettier": "^2.6.2",
         "@types/node": "^17.0.30",
         "@typescript-eslint/eslint-plugin": "^5.23.0",

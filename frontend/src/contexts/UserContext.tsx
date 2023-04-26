@@ -1,16 +1,16 @@
-import { createContext, ReactNode, useContext } from 'react'
-import UserDTO from '@shared/dtos/UserDTO';
-import { UnimplementedFunction } from '../utils';
-import AEYBResponse from '@shared/responses/utils';
-import { useNavigate } from 'react-router-dom';
-import axios, { AxiosResponse } from 'axios';
-import useLocalStorage from '../hooks/UseLocastrorage';
-import API from '@shared/api';
 import { CredentialResponse } from '@react-oauth/google';
+import API from '@shared/api';
+import UserDTO from '@shared/dtos/UserDTO';
+import AEYBResponse from '@shared/responses/utils';
 import { Permission } from '@shared/utils/Permission';
+import axios, { AxiosResponse } from 'axios';
+import { createContext, ReactNode, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '../hooks/UseLocalStorage';
+import { UnimplementedFunction } from '../utils';
 
 // Eventually move to config file
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = import.meta.env.VITE_BASE_API_URL;
 
 export type FetcherType = <Url extends keyof API>(
     url: Url, payload?: API[Url]["req"], params?: API[Url]["params"], queryParams?: API[Url]["query"]

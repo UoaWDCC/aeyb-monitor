@@ -10,12 +10,11 @@ import {
     getSelf,
 } from '../controllers/UserController';
 import protect from '../middleware/AuthMiddleware';
-import config from '../types/Config';
 
 const UserRouter = Router();
 
 // Only make this route available in development
-if (config.nodeEnv === 'development') {
+if (process.env.NODE_ENV === 'development') {
     UserRouter.post('/devlogin', devLoginUser);
 }
 

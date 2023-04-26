@@ -3,7 +3,7 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../images/edited/AEYB_A0_CircleBlackWardlineSmaller.png';
 import { useUserContext } from '../../contexts/UserContext';
-import useLocalStorage from '../../hooks/UseLocastrorage';
+import useLocalStorage from '../../hooks/UseLocalStorage';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 

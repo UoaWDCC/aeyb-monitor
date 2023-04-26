@@ -1,7 +1,9 @@
 import Server from './classes/Server';
-import config from './types/Config';
 import './types/ResponseAugmentation'; // Apply augmentation
+import dotenv from 'dotenv';
 
-const server = new Server(config);
+dotenv.config();
+
+const server = new Server();
 
 export default server;
