@@ -9,3 +9,7 @@ export interface RoleIdParam {
 export interface MeetingIdParam {
     meetingId: string;
 }
+
+export interface LocationIdParam {
+    locationId: string;
+}

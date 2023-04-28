@@ -1,7 +1,8 @@
-import { MeetingIdParam, RoleIdParam, UserIdParam } from './params';
+import { LocationIdParam, MeetingIdParam, RoleIdParam, UserIdParam } from './params';
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
 import { AddMeetingRequest, UpdateMeetingRequest } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
+import { AddLocationRequest, UpdateLocationRequest } from './requests/LocationRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
 import { AddMeetingData, GetAllMeetingsData, UpdateMeetingData } from './responses/MeetingResponses';
 import { GetAllPermissionsData } from './responses/PermissionResponsesData';
@@ -15,6 +16,13 @@ import {
     GiveRolesData,
     RemoveRolesData,
 } from './responses/UserResponsesData';
+import {
+    GetAllLocationData,
+    GetLocationData,
+    AddLocationData,
+    UpdateLocationData,
+    DeleteLocationData,
+} from './responses/LocationResponses';
 
 export interface Endpoint<Req, Res, Params = undefined, Query = undefined> {
     req: Req;
@@ -49,4 +57,11 @@ export default interface API {
     'POST /api/meetings': Endpoint<AddMeetingRequest, AddMeetingData>;
     'PATCH /api/meetings/:meetingId': Endpoint<UpdateMeetingRequest, UpdateMeetingData, MeetingIdParam>;
     'DELETE /api/meetings/:meetingId': Endpoint<undefined, undefined, MeetingIdParam>;
+
+    // Location endpoints
+    'GET /api/locations': Endpoint<undefined, GetAllLocationData>;
+    'GET /api/roles/:locationId': Endpoint<undefined, GetLocationData, LocationIdParam>;
+    'POST /api/location': Endpoint<AddLocationRequest, AddLocationData>;
+    //'PATCH /api/locations/:locationId': Endpoint<UpdateLocationRequest, UpdateUserData, RoleIdParam>;
+    'DELETE /api/roles/:locationId': Endpoint<undefined, DeleteLocationData, LocationIdParam>;
 }
