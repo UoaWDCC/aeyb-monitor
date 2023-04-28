@@ -31,10 +31,7 @@ const meetingSchema = new Schema<MeetingDocument>({
         type: String,
         required: [true, 'You must specify the where the meeting was held'],
     },
-    attendance: {
-        type: AttendanceSchema,
-        required: [true, 'You must specify the attendance'],
-    },
+    attendance: [AttendanceSchema],
     description: {
         type: String,
     },
