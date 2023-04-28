@@ -58,8 +58,8 @@ export default function Sidebar() {
     return (
         <>
             <div className={'sidebar ' + (isMenuOpen ? 'w-[250px]' : 'w-[90px]')}>
-                <div className='mb-[7vh] flex items-center'>
-                    <div className='bg-white aspect-square w-[89px] z-10'>
+                <div className={'mb-[7vh] flex flex-row items-center w-[90px]'}>
+                    <div className={'bg-white aspect-square z-10 w-[89px]'}>
                         <img
                             onClick={toggleMenu}
                             className='aspect-square h-[60px] m-[15px] transition-all duration-200 active:left-[0.5px] active:top-[0.5px]'
@@ -67,7 +67,7 @@ export default function Sidebar() {
                             alt="AEYB logo"
                         />
                     </div>
-                    <div className={'relative z-0 min-w-[120px] transition-all duration-500 flex flex-col gap-y-2 ' + (isMenuOpen ? 'left-[20px]' : 'left-[-300px]')}>
+                    <div className={'absolute z-0 min-w-[120px] transition-all duration-500 flex flex-col gap-y-2 ' + (isMenuOpen ? 'left-[110px]' : 'left-[-300px]')}>
                         <div>
                             <div className="text-sm">Welcome,</div>
                             <div className='font-bold leading-4 text-lg'>{userContext.user.name}</div>
