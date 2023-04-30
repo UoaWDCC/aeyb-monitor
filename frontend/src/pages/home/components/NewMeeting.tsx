@@ -7,6 +7,7 @@ import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import { MeetingType } from '@shared/dtos/MeetingDTO';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
+import DatePickerUtil from 'src/utility_components/DatePickerUtil';
 
 const defaultValues = {
     title: '',
@@ -114,33 +115,8 @@ export default function NewMeeting(props) {
                                     required={true}
                                 />
 
-                                <div className='my-2 w-fit px-2'>
-                                    <DatePicker
-                                        className='border-[#7d6ca3] border-2 rounded-md px-5 min-w-[260px]'
-                                        selected={formValues.startTime}
-                                        showTimeSelect
-                                        timeFormat="HH:mm"
-                                        timeIntervals={15}
-                                        timeCaption="time"
-                                        dateFormat="d MMMM, yyyy h:mm aa"
-                                        minDate={new Date()}
-                                        onChange={handleStartChange}
-                                    />
-                                </div>
-
-                                <div className='my-2 w-fit px-2'>
-                                    <DatePicker
-                                        className='border-[#7d6ca3] border-2 rounded-md px-5 min-w-[260px]'
-                                        selected={formValues.finishTime}
-                                        showTimeSelect
-                                        timeFormat="HH:mm"
-                                        timeIntervals={15}
-                                        timeCaption="time"
-                                        dateFormat="d MMMM, yyyy h:mm aa"
-                                        minDate={new Date()}
-                                        onChange={handleFinishChange}
-                                    />
-                                </div>
+                                <DatePickerUtil value={formValues.startTime} handleChange={handleStartChange} />
+                                <DatePickerUtil value={formValues.finishTime} handleChange={handleFinishChange} />
 
                                 <textarea
                                     className=' my-2 w-full border-[#7d6ca3] border-2 p-2 rounded-md resize-none'
