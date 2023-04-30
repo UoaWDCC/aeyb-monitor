@@ -1,20 +1,19 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react'
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
-import { MeetingType } from '@shared/dtos/MeetingDTO';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from 'src/utility_components/DatePickerUtil';
+import { addOneHour, roundToHour } from 'src/utils/timeUtil';
 
 const defaultValues = {
     title: '',
     location: '',
     description: '',
-    startTime: new Date(),
-    finishTime: new Date()
+    startTime: roundToHour(new Date()),
+    finishTime: addOneHour(roundToHour(new Date())),
 }
 
 export default function NewMeeting(props) {
@@ -56,6 +55,12 @@ export default function NewMeeting(props) {
 
     async function handleSubmit(event) {
         event.preventDefault();
+
+        if (formValues.startTime.getTime() > formValues.finishTime.getTime()) {
+            alert('Start time cannot be later than finish time');
+            return;
+        }
+
         const meetingRequest: AddMeetingRequest = {
             startTime: formValues.startTime.getTime(),
             finishTime: formValues.finishTime.getTime(),
