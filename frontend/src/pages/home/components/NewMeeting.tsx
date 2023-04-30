@@ -21,7 +21,6 @@ export default function NewMeeting(props) {
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
 
-
     const { isNewMeetingOpen, setIsNewMeetingOpen } = props
     const [formValues, setFormValues] = useState(defaultValues);
 
@@ -55,6 +54,11 @@ export default function NewMeeting(props) {
 
     async function handleSubmit(event) {
         event.preventDefault();
+
+        if (formValues.startTime.getTime() < Date.now()) {
+            alert('Start time cannot be in the past');
+            return;
+        }
 
         if (formValues.startTime.getTime() > formValues.finishTime.getTime()) {
             alert('Start time cannot be later than finish time');
