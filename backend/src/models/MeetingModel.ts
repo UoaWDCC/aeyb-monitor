@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { DocumentModel } from '../types/UtilTypes';
 import { AttendanceSchema } from './AttendanceModel';
 import { UserDocument } from './UserModel';

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { getRelativeTime } from '../meetingUtils';
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import './livemeeting.css'
+import { getRelativeTime } from 'src/utils/timeUtil';
 
 export default function LiveMeeting(props: { meeting: MeetingDTO }) {
 
