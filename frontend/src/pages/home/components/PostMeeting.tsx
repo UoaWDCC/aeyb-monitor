@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import './meeting.css'
-import { getRelativeTime } from './meetingUtils';
+import { getRelativeTime } from '../../../utils/timeUtil';
 
 export default function PostMeeting(props: { meeting: MeetingDTO }) {
 
