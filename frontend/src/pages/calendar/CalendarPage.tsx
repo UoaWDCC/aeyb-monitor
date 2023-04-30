@@ -19,7 +19,7 @@ const CalendarPage = (): ReactElement => {
   const meetingContext = useMeetingContext();
   const renderWeeklyMeetings = () => {
     return Object.values(meetingContext.meetings)
-      .filter(meeting => (meeting.time <= week.getTime() && meeting.time >= firstWeekTime))
+      .filter(meeting => (meeting.startTime <= week.getTime() && meeting.startTime >= firstWeekTime))
       .map(meeting => <WeeklyInstance key={meeting.id} meeting={meeting} />)
   }
 
