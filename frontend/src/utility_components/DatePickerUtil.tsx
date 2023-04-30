@@ -2,7 +2,12 @@ import React from 'react'
 import DatePicker from "react-datepicker";
 
 
-export default function DatePickerUtil({ value, handleChange }) {
+type DatePickerUtilProps = {
+    value: Date,
+    handleChange: (date: Date) => void
+}
+
+export default function DatePickerUtil({ value, handleChange }: DatePickerUtilProps) {
     return (
         <div className='my-2 w-fit px-2'>
             <DatePicker
