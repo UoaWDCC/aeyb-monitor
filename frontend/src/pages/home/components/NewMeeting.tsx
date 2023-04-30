@@ -6,7 +6,7 @@ import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
-import { addOneHour, roundToHour } from 'src/utils/timeUtil';
+import { addOneHour, roundToHour } from '../../../utils/timeUtil';
 
 const defaultValues = {
     title: '',
