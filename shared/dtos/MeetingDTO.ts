@@ -12,7 +12,7 @@ export default interface MeetingDTO {
 
     /** The time value in ms when this meeting is scheduled for. */
     startTime: number;
-    endTime: number;
+    finishTime: number;
     location: string;
     attendance: AttendanceDTO;
 

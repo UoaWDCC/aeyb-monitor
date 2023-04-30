@@ -15,20 +15,20 @@ export default function Homepage() {
 
   const renderLiveMeetings = () => {
     return Object.values(meetingContext.meetings)
-      .filter(meeting => meeting.time <= now && meeting.time + 3_600_000 >= now)
+      .filter(meeting => meeting.startTime <= now && meeting.startTime + 3_600_000 >= now)
       .map(meeting => <LiveMeeting key={meeting.id} meeting={meeting} />)
   }
 
   const renderUpcomingMeetings = () => {
     return Object.values(meetingContext.meetings)
-      .filter(meeting => meeting.time >= now)
+      .filter(meeting => meeting.startTime >= now)
       .map(meeting => <UpcomingMeeting key={meeting.id} meeting={meeting} />)
   }
 
   const renderPostMeetings = () => {
     return Object.values(meetingContext.meetings)
-      .sort((a, b) => b.time - a.time)
-      .filter(meeting => meeting.time + 3_600_000 <= now)
+      .sort((a, b) => b.startTime - a.startTime)
+      .filter(meeting => meeting.startTime + 3_600_000 <= now)
       .map(meeting => <PostMeeting key={meeting.id} meeting={meeting} />)
   }
 

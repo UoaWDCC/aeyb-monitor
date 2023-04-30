@@ -23,9 +23,13 @@ const meetingSchema = new Schema<MeetingDocument>({
         ref: 'User',
         required: [true, "You must specify the creator's id"],
     },
-    time: {
+    startTime: {
         type: Number,
         required: [true, 'You must specify when the event starts in ms'],
+    },
+    finishTime: {
+        type: Number,
+        required: [true, 'You must specify when the event end in ms'],
     },
     location: {
         type: String,

@@ -38,6 +38,12 @@ export default function NewMeeting(props) {
             startTime: date,
         })
     }
+    const handleFinishChange = (date) => {
+        setFormValues({
+            ...formValues,
+            finishTime: date,
+        })
+    }
 
 
     function handleExit() {
@@ -51,6 +57,7 @@ export default function NewMeeting(props) {
         event.preventDefault();
         const meetingRequest: AddMeetingRequest = {
             startTime: formValues.startTime.getTime(),
+            finishTime: formValues.finishTime.getTime(),
             location: formValues.location,
             description: formValues.description,
             type: "meeting",
@@ -71,8 +78,6 @@ export default function NewMeeting(props) {
             meetingContext.addMeeting(data.meeting);
             setFormValues(defaultValues);
             setIsNewMeetingOpen(false);
-        } else {
-
         }
     }
 
@@ -120,6 +125,20 @@ export default function NewMeeting(props) {
                                         dateFormat="d MMMM, yyyy h:mm aa"
                                         minDate={new Date()}
                                         onChange={handleStartChange}
+                                    />
+                                </div>
+
+                                <div className='my-2 w-fit px-2'>
+                                    <DatePicker
+                                        className='border-[#7d6ca3] border-2 rounded-md px-5 min-w-[260px]'
+                                        selected={formValues.finishTime}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        timeCaption="time"
+                                        dateFormat="d MMMM, yyyy h:mm aa"
+                                        minDate={new Date()}
+                                        onChange={handleFinishChange}
                                     />
                                 </div>
 
