@@ -12,14 +12,14 @@ const defaultValues = {
     title: '',
     location: '',
     description: '',
-    time: new Date(),
+    startTime: new Date(),
+    finishTime: new Date()
 }
 
 export default function NewMeeting(props) {
 
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
-
 
 
     const { isNewMeetingOpen, setIsNewMeetingOpen } = props
@@ -32,10 +32,10 @@ export default function NewMeeting(props) {
             [name]: value,
         });
     };
-    const handleDateChange = (date) => {
+    const handleStartChange = (date) => {
         setFormValues({
             ...formValues,
-            time: date,
+            startTime: date,
         })
     }
 
@@ -50,7 +50,7 @@ export default function NewMeeting(props) {
     async function handleSubmit(event) {
         event.preventDefault();
         const meetingRequest: AddMeetingRequest = {
-            time: formValues.time.getTime(),
+            startTime: formValues.startTime.getTime(),
             location: formValues.location,
             description: formValues.description,
             type: "meeting",
@@ -112,14 +112,14 @@ export default function NewMeeting(props) {
                                 <div className='my-2 w-fit px-2'>
                                     <DatePicker
                                         className='border-[#7d6ca3] border-2 rounded-md px-5 min-w-[260px]'
-                                        selected={formValues.time}
+                                        selected={formValues.startTime}
                                         showTimeSelect
                                         timeFormat="HH:mm"
                                         timeIntervals={15}
                                         timeCaption="time"
                                         dateFormat="d MMMM, yyyy h:mm aa"
                                         minDate={new Date()}
-                                        onChange={handleDateChange}
+                                        onChange={handleStartChange}
                                     />
                                 </div>
 
