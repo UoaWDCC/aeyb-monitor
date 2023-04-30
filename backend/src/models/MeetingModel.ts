@@ -29,7 +29,7 @@ const meetingSchema = new Schema<MeetingDocument>({
     },
     finishTime: {
         type: Number,
-        required: [true, 'You must specify when the event end in ms'],
+        required: [true, 'You must specify when the event ends in ms'],
     },
     location: {
         type: String,
