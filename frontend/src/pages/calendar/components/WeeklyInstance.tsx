@@ -4,9 +4,9 @@ import IonIcon from '@reacticons/ionicons';
 
 function WeeklyInstance(props: { meeting: MeetingDTO }) {
     // day and date components
-    function nth(n) { return ["st", "nd", "rd"][((n + 90) % 100 - 10) % 10 - 1] || "th" }
+    function nth(n: number) { return ["st", "nd", "rd"][((n + 90) % 100 - 10) % 10 - 1] || "th" }
     const days = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
-    const date = new Date(props.meeting.time);
+    const date = new Date(props.meeting.startTime);
 
     return (
         <div>

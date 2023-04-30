@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { DocumentModel } from '../types/UtilTypes';
 import { AttendanceSchema } from './AttendanceModel';
 import { UserDocument } from './UserModel';
@@ -23,9 +23,13 @@ const meetingSchema = new Schema<MeetingDocument>({
         ref: 'User',
         required: [true, "You must specify the creator's id"],
     },
-    time: {
+    startTime: {
         type: Number,
         required: [true, 'You must specify when the event starts in ms'],
+    },
+    finishTime: {
+        type: Number,
+        required: [true, 'You must specify when the event ends in ms'],
     },
     location: {
         type: String,
