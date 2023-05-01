@@ -1,6 +1,7 @@
 // import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Location from '../models/LocationModel';
+import Meeting from '../models/MeetingModel';
 import { LocationIdParam } from '@shared/params';
 import { TypedRequest, TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import LocationDTO from '@shared/dtos/LocationDTO';
@@ -11,6 +12,7 @@ import {
     UpdateLocationData,
     DeleteLocationData,
 } from '@shared/responses/LocationResponses';
+import User from 'src/models/UserModel';
 
 /**
  * @desc 	Get all the location
@@ -79,7 +81,10 @@ const updateLocation = asyncHandler(
 const deleteLocation = asyncHandler(
     async (req: TypedRequestParams<LocationIdParam>, res: TypedResponse<DeleteLocationData>) => {
         // TODO: First check if no meetings have the locations before deleting
-
+        const meeting = await Meeting.find({ location: req.params.locationId });
+        if (meeting) {
+            return res.error(500, 'There is a meeting with this location');
+        }
         // Delete the Location
         const response = await Location.findByIdAndDelete(req.params.locationId);
         if (!response) {
