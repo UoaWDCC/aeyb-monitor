@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { getRelativeTime } from '../meetingUtils';
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import './livemeeting.css'
+import { getRelativeTime } from '../../../../utils/timeUtil';
 
 export default function LiveMeeting(props: { meeting: MeetingDTO }) {
 
-    const [timeLeft, setTimeLeft] = useState(getRelativeTime(props.meeting.time + 3_600_000))
+    const [timeLeft, setTimeLeft] = useState(getRelativeTime(props.meeting.finishTime))
 
     useEffect(() => {
-        const interval = setInterval(() => setTimeLeft(getRelativeTime(props.meeting.time + 3_600_000)), 1_000);
+        const interval = setInterval(() => setTimeLeft(getRelativeTime(props.meeting.finishTime)), 60_000);
         return () => clearInterval(interval);
-    }, [props.meeting.time]);
+    }, [props.meeting.startTime, props.meeting.finishTime]);
 
     const navigate = useNavigate();
 
