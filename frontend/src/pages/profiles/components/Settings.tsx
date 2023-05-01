@@ -1,10 +1,12 @@
 import IonIcon from '@reacticons/ionicons';
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useUserContext } from 'src/contexts/UserContext';
 
 import Roles from '../../roles/Roles';
 
 const SettingsBar = () => {
+    const userContext = useUserContext();
     const navigate = useNavigate();
     const navToRoles = () => {
         navigate("/profilepage/roles");
@@ -20,10 +22,12 @@ const SettingsBar = () => {
                 <p className='w-3/4 h-full'>Meeting Stats</p>
                 <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
             </button>
-            <button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 hover:text-[#465188]' onClick={navToRoles}>
-                <p className=' w-3/4 h-full'>Roles</p>
-                <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
-            </button>
+            {userContext.hasPermission('VIEW_ROLES') && (
+                <button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 hover:text-[#465188]' onClick={navToRoles}>
+                    <p className=' w-3/4 h-full'>Roles</p>
+                    <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
+                </button>
+            )}
 
             <Routes>
                 <Route path="/roles" element={<Roles />} />
