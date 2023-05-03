@@ -1,6 +1,6 @@
 import Switch from '@mui/material/Switch';
 import { Permission } from '@shared/utils/Permission';
-import { useUserContext } from 'src/contexts/UserContext';
+import { useUserContext } from '../../../contexts/UserContext';
 
 //groups each permission by type
 const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Permission[] } = {

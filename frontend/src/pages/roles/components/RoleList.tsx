@@ -4,7 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import RoleDTO from '@shared/dtos/RoleDTO';
-import { useUserContext } from 'src/contexts/UserContext';
+import { useUserContext } from '../../../contexts/UserContext';
 
 interface Props {
     roles: RoleDTO[],
