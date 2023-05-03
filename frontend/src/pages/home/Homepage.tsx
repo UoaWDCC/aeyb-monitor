@@ -5,31 +5,34 @@ import PostMeeting from './components/PostMeeting';
 import { useMeetingContext } from '../../contexts/MeetingContext';
 import NewMeeting from './components/NewMeeting';
 import { useState } from 'react';
+import { useUserContext } from '../../contexts/UserContext';
 
 export default function Homepage() {
   const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
-
-
+  const userContext = useUserContext();
   const meetingContext = useMeetingContext();
   const now = Date.now();
 
   const renderLiveMeetings = () => {
-    return Object.values(meetingContext.meetings)
-      .filter(meeting => meeting.startTime <= now && meeting.finishTime >= now)
-      .map(meeting => <LiveMeeting key={meeting.id} meeting={meeting} />)
+    return (
+      userContext.hasPermission('VIEW_MEETINGS') && Object.values(meetingContext.meetings)
+        .filter(meeting => meeting.startTime <= now && meeting.finishTime >= now)
+        .map(meeting => <LiveMeeting key={meeting.id} meeting={meeting} />)
+    )
   }
 
+
   const renderUpcomingMeetings = () => {
-    return Object.values(meetingContext.meetings)
+    return (userContext.hasPermission('VIEW_MEETINGS') && Object.values(meetingContext.meetings)
       .filter(meeting => meeting.startTime >= now)
-      .map(meeting => <UpcomingMeeting key={meeting.id} meeting={meeting} />)
+      .map(meeting => <UpcomingMeeting key={meeting.id} meeting={meeting} />))
   }
 
   const renderPostMeetings = () => {
-    return Object.values(meetingContext.meetings)
+    return (userContext.hasPermission('VIEW_MEETINGS') && Object.values(meetingContext.meetings)
       .sort((a, b) => b.startTime - a.startTime)
       .filter(meeting => meeting.finishTime <= now)
-      .map(meeting => <PostMeeting key={meeting.id} meeting={meeting} />)
+      .map(meeting => <PostMeeting key={meeting.id} meeting={meeting} />))
   }
 
   return (
@@ -42,13 +45,13 @@ export default function Homepage() {
           <div id='meetingContainer'>
             <div id="upcomingContainer" className='mContainer'>
               <div className='flex justify-between'>
-                <p className='containerTtl'>Upcoming meetings:</p>
-                <button className='bg-[#7d6ca3] text-white m-2 px-2 rounded-md' onClick={() => setIsNewMeetingOpen(true)} >+ New Meeting</button>
+                {userContext.hasPermission('VIEW_MEETINGS') && <p className='containerTtl'>Upcoming meetings:</p>}
+                {userContext.hasPermission('MANAGE_MEETINGS') && <button className='bg-[#7d6ca3] text-white m-2 px-2 rounded-md' onClick={() => setIsNewMeetingOpen(true)} >+ New Meeting</button>}
               </div>
               {renderUpcomingMeetings()}
             </div>
             <div id="postmeetingContainer" className='mContainer'>
-              <p className='containerTtl'>Post-meetings stats:</p>
+              {userContext.hasPermission('VIEW_MEETINGS') && <p className='containerTtl'>Post-meetings stats:</p>}
               {renderPostMeetings()}
             </div>
           </div>

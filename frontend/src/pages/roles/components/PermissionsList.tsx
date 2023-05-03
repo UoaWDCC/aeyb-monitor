@@ -1,5 +1,6 @@
 import Switch from '@mui/material/Switch';
 import { Permission } from '@shared/utils/Permission';
+import { useUserContext } from '../../../contexts/UserContext';
 
 //groups each permission by type
 const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Permission[] } = {
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export default function PermissionsList(props: Props) {
+    const userContext = useUserContext();
     //toggle all / section states
     const allChecked = allPermissions.every(permission => props.permissions.includes(permission));
 
@@ -39,6 +41,7 @@ export default function PermissionsList(props: Props) {
                     <Switch
                         checked={allChecked}
                         onChange={(e) => props.setPermissions(e.target.checked ? allPermissions : [])}
+                        disabled={!userContext.hasPermission('MANAGE_ROLES')}
                     />
                 </div>
             </div>
@@ -59,6 +62,7 @@ export default function PermissionsList(props: Props) {
                                     <Switch
                                         onChange={(e) => toggleSection(value, e.target.checked)}
                                         checked={value.every((permission) => props.permissions.includes(permission))}
+                                        disabled={!userContext.hasPermission('MANAGE_ROLES')}
                                     />
                                 </div>
                                 {/* Map through each permission in the section */}
@@ -85,6 +89,7 @@ export default function PermissionsList(props: Props) {
                                                         ? [...props.permissions, permission]
                                                         : props.permissions.filter(perm => perm !== permission))
                                                 }}
+                                                disabled={!userContext.hasPermission('MANAGE_ROLES')}
                                             />
                                         </div>
                                     );
