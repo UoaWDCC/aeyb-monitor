@@ -5,7 +5,7 @@ import PostMeeting from './components/PostMeeting';
 import { useMeetingContext } from '../../contexts/MeetingContext';
 import NewMeeting from './components/NewMeeting';
 import { useState } from 'react';
-import { useUserContext } from 'src/contexts/UserContext';
+import { useUserContext } from '../../contexts/UserContext';
 
 export default function Homepage() {
   const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
