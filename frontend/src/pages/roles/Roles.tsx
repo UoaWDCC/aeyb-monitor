@@ -114,7 +114,8 @@ function Roles() {
                                 permissions={roles[activeRole].permissions}
                                 setPermissions={handleSetPermissions}
                             />
-                            <button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5">Save</button>
+                            {userContext.hasPermission('MANAGE_ROLES') && <button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5">Save</button>}
+
                         </>
                     ) : (
                         <div className="flex flex-col gap-4">
