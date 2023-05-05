@@ -11,7 +11,7 @@ import {
 
 const LocationRouter = Router();
 
-LocationRouter.route('/').get(getAllLocations).post(addLocation);
+LocationRouter.route('/').get(protect(), getAllLocations).post(protect('MANAGE_LOCATIONS'), addLocation);
 LocationRouter.route('/:meetingId')
     .get(protect('VIEW_LOCATIONS'), getLocation)
     .delete(protect('MANAGE_LOCATIONS'), deleteLocation)
