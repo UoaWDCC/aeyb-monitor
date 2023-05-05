@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
 import { createDefaultRoles } from '../services/RoleServices';
+import LocationRouter from 'src/routes/LocationRoutes';
 export default class Server {
     private _app: Express;
 
@@ -43,6 +44,7 @@ export default class Server {
         this._app.use('/api/roles', RoleRouter);
         this._app.use('/api/permissions', PermissionRouter);
         this._app.use('/api/meetings', MeetingRouter);
+        this._app.use('/api/locations', LocationRouter);
         console.log('Routers registered');
 
         this._app.use(ErrorHandler); // Use error handler to catch any errors in routes
