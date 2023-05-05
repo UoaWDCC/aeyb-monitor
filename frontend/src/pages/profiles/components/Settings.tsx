@@ -13,18 +13,33 @@ const SettingsBar = () => {
 
     return (
         <div className='flex flex-col w-3/4 md:w-3/5 mt-[5%] text-3xl text-[#262B6C]'>
-            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10'>
+            {/* <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10'>
                 <p className='w-3/4 h-full'>Personal Stats</p>
                 <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
-            </Button>
+            </Button> 
             <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10'>
                 <p className='w-3/4 h-full'>Meeting Stats</p>
                 <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
-            </Button>
+            </Button> 
             <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10' onClick={navToRoles}>
                 <p className='w-3/4 h-full'>Roles</p>
                 <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
             </Button>
+            */}
+
+            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 transition-transform transform hover:translate-x-2'>
+                <p className='w-3/4 h-full'>Personal Stats</p>
+                <div className='w-1/4 h-full text-right '><IonIcon name="chevron-forward-outline" /></div>
+            </Button>
+            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 transition-transform transform hover:translate-x-2'>
+                <p className='w-3/4 h-full'>Meeting Stats</p>
+                <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
+            </Button>
+            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 transition-transform transform hover:translate-x-2' onClick={navToRoles}>
+                <p className='w-3/4 h-full'>Roles</p>
+                <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
+            </Button>
+
 
             <Routes>
                 <Route path="/roles" element={<Roles />} />

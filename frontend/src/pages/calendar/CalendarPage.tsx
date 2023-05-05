@@ -24,6 +24,30 @@ const CalendarPage = (): ReactElement => {
       .map(meeting => <WeeklyInstance key={meeting.id} meeting={meeting} />)
   }
 
+  const [leftButtonColor, setLeftButtonColor] = useState('bg-slate-300');
+  const [righButtonColor, setRightButtonColor] = useState('bg-slate-300');
+
+
+  const handleClick = (btnDirection) => {
+    setWeekCount(weeks - 1)
+
+    if (btnDirection === 'leftButton') {
+      setLeftButtonColor('bg-blue-300');
+
+      setTimeout(() => {
+        setLeftButtonColor('bg-slate-300')
+      }, 1000); // Change the color back to slate after 1000ms
+    } else {
+      setRightButtonColor('bg-blue-300');
+
+      setTimeout(() => {
+        setRightButtonColor('bg-slate-300')
+      }, 1000); // Change the color back to slate after 1000ms
+    }
+
+  };
+
+
   return (
     <>
 
@@ -31,17 +55,35 @@ const CalendarPage = (): ReactElement => {
         {/* CALENDAR/EVENT COLLECTION DIV */}
         <div className='flex flex-col h-full w-full md:w-1/2'>
           <div className='flex-row text-center mt-8 mb-8 text-[#262B6C]'>
-            <Button className=' bg-slate-100 px-4 py-4 rounded-sm w-1/8' onClick={() => { setWeekCount(weeks - 1) }} >
+
+            {/* Default Left Button */}
+            {/* <Button className=' bg-slate-300 px-4 py-4 rounded-sm w-1/8' onClick={() => { setWeekCount(weeks - 1) }} >
+              <IonIcon name="chevron-back-outline" size='large' />
+            </Button> */}
+
+            {/* Translate Left + Dim */}
+            <Button className={`${leftButtonColor} px-4 py-4 rounded-sm w-1/8 relative overflow-hidden transition duration-300 hover:-translate-x-2`} onClick={() => handleClick('leftButton')}>
+              <span className='absolute inset-0 bg-white opacity-20 transition-opacity duration-300 hover:opacity-30'></span>
               <IonIcon name="chevron-back-outline" size='large' />
             </Button>
+
             <p className='inline-block w-1/2 text-xl font-bold text-[#262B6C]'>{previousMonth} {firstWeekDay} - {months[week.getMonth()]} {week.getDate()}</p>
-            <Button className=' bg-slate-100 px-4 py-4 rounded-sm w-1/8' onClick={() => setWeekCount(weeks + 1)}>
+
+            {/* Default Right Button */}
+            {/* <Button className=' bg-slate-300 px-4 py-4 rounded-sm w-1/8' onClick={() => setWeekCount(weeks + 1)}>
+              <IonIcon name="chevron-forward-outline" size='large' />
+            </Button> */}
+
+            {/* Translate Right */}
+            <Button className={`${righButtonColor} px-4 py-4 rounded-sm w-1/8 relative overflow-hidden transition duration-300 hover:translate-x-2`} onClick={() => handleClick('rightButton')}>
+              <span className='absolute inset-0 bg-white opacity-20 transition-opacity duration-300 hover:opacity-30'></span>
               <IonIcon name="chevron-forward-outline" size='large' />
             </Button>
+
           </div>
           {renderWeeklyMeetings()}
         </div>
-      </div>
+      </div >
 
     </ >
   )
