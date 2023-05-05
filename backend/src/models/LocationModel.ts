@@ -14,6 +14,6 @@ export const LocationSchema = new Schema<LocationDTO>({
 
 applyToJsonOptions(LocationSchema);
 
-const Location = mongoose.model('Role', LocationSchema);
+const Location = mongoose.model('Location', LocationSchema);
 
 export default Location;
