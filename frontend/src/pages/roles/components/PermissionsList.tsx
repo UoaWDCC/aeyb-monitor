@@ -2,10 +2,11 @@ import Switch from '@mui/material/Switch';
 import { Permission } from '@shared/utils/Permission';
 
 //groups each permission by type
-const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Permission[] } = {
+const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Permission[], locations: Permission[] } = {
     roles: ["VIEW_ROLES", "MANAGE_ROLES"],
     users: ["VIEW_USERS", "MANAGE_USERS"],
-    meetings: ["VIEW_MEETINGS", "MANAGE_MEETINGS"]
+    meetings: ["VIEW_MEETINGS", "MANAGE_MEETINGS"],
+    locations: ["VIEW_LOCATIONS", "MANAGE_LOCATIONS"],
 }
 
 const allPermissions = Object.values(PermissionsLists).flat()

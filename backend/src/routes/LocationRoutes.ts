@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import protect from '../middleware/AuthMiddleware';
 
 import {
     getAllLocations,
@@ -11,6 +12,9 @@ import {
 const LocationRouter = Router();
 
 LocationRouter.route('/').get(getAllLocations).post(addLocation);
-LocationRouter.route('/:meetingId').get(getLocation).delete(deleteLocation).patch(updateLocation);
+LocationRouter.route('/:meetingId')
+    .get(protect('VIEW_LOCATIONS'), getLocation)
+    .delete(protect('MANAGE_LOCATIONS'), deleteLocation)
+    .patch(protect('MANAGE_LOCATIONS'), updateLocation);
 
 export default LocationRouter;
