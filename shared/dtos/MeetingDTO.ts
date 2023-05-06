@@ -11,12 +11,12 @@ export default interface MeetingDTO {
     creator: UnpopulatedUserDTO;
     name: string;
 
-    /** The time value in ms when this meeting is scheduled for. */
+    /** The time values in ms when this meeting is scheduled for. */
     startTime: number;
     finishTime: number;
 
     location: LocationDTO;
-    attendance: AttendanceDTO;
+    attendance: AttendanceDTO[];
 
     /** The optional description for this meeting. */
     description?: string;

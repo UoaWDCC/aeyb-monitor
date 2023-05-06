@@ -63,6 +63,25 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
 });
 
 /**
+ * @desc    Get the attendance for a specific meeting
+ * @route   GET /api/meetings/:meetingId/attendances
+ */
+
+const getMeetingAttendance = asyncHandler(
+    async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetMeetingData>) => {
+        const meeting = await Meeting.findById(req.params.meetingId);
+
+        const attendance = meeting.attendance;
+
+        if (attendance.length == 0) {
+            return res.notFound(`There is no attendance in the meeting with the id ${req.params.meetingId}`);
+        }
+
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+
+/**
  * @desc 	Add a new meetings
  * @route 	POST /api/meetings
  */
@@ -106,4 +125,4 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     res.sendStatus(204);
 });
 
-export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };
+export { getAllMeetings, getMeeting, getMeetingAttendance, addMeeting, deleteMeeting, updateMeeting };

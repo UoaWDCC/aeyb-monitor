@@ -1,3 +1,4 @@
+import AttendanceDTO from '@shared/dtos/AttendanceDTO';
 import MeetingDTO from '../dtos/MeetingDTO';
 import { PaginatedResponse } from './utils';
 

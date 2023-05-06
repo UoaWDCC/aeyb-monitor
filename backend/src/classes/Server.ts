@@ -3,11 +3,11 @@ import UserRouter from '../routes/UserRoutes';
 import RoleRouter from '../routes/RoleRoutes';
 import PermissionRouter from '../routes/PermissionRoutes';
 import MeetingRouter from '../routes/MeetingRoutes';
+import LocationRouter from 'src/routes/LocationRoutes';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
 import { createDefaultRoles } from '../services/RoleServices';
-import LocationRouter from 'src/routes/LocationRoutes';
 export default class Server {
     private _app: Express;
 
