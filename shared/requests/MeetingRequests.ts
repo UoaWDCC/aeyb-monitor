@@ -1,7 +1,8 @@
 import MeetingDTO from '../dtos/MeetingDTO';
 import AttendanceDTO from '../dtos/AttendanceDTO';
+import LocationDTO from '@shared/dtos/LocationDTO';
 
-export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator'>;
+export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator' | 'location'> & { location: Omit<LocationDTO, 'id'> };
 
 export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>>;
 

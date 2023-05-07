@@ -5,15 +5,17 @@ import "react-datepicker/dist/react-datepicker.css"
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
+import { AddLocationRequest } from '@shared/requests/LocationRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
 
-const defaultValues = {
-    title: '',
-    location: '',
+const defaultValues: AddMeetingRequest = {
+    name: '',
+    location: { location: '', type: 'inPerson' },
     description: '',
-    startTime: roundToHour(new Date()),
-    finishTime: addOneHour(roundToHour(new Date())),
+    startTime: roundToHour(new Date()).getTime(),
+    finishTime: addOneHour(roundToHour(new Date())).getTime(),
+    attendance: []
 }
 
 export default function NewMeeting(props) {
@@ -22,7 +24,7 @@ export default function NewMeeting(props) {
     const meetingContext = useMeetingContext();
 
     const { isNewMeetingOpen, setIsNewMeetingOpen } = props
-    const [formValues, setFormValues] = useState(defaultValues);
+    const [formValues, setFormValues] = useState<AddMeetingRequest>(defaultValues);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -65,21 +67,29 @@ export default function NewMeeting(props) {
             return;
         }
 
+        const locationRequest: AddLocationRequest = {
+            location: formValues.location, type: "inPerson"
+        } satisfies AddLocationRequest
+
         const meetingRequest: AddMeetingRequest = {
             startTime: formValues.startTime.getTime(),
             finishTime: formValues.finishTime.getTime(),
             location: formValues.location,
+            //location: {
+            //    location: formValues.location, type: 'inPerson'
+            //},
             description: formValues.description,
             type: "meeting",
             name: formValues.title,
-            attendance: {
+            /* attendance: {
                 attendedUsers: [],
                 absentUsers: new Map(),
                 invited: {
                     userIds: [],
                     roleIds: []
                 }
-            }
+            } */
+            attendance: []
         } satisfies AddMeetingRequest;
 
         console.log(formValues);

@@ -2,7 +2,7 @@ import { LocationIdParam, MeetingIdParam, RoleIdParam, UserIdParam } from './par
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
 import { AddMeetingRequest, UpdateMeetingRequest } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
-import { AddLocationRequest, UpdateLocationRequest } from './requests/LocationRequests';
+import { AddLocationRequest } from './requests/LocationRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
 import { AddMeetingData, GetAllMeetingsData, UpdateMeetingData } from './responses/MeetingResponses';
 import { GetAllPermissionsData } from './responses/PermissionResponsesData';
