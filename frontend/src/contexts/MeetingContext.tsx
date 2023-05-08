@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import MeetingDTO from "@shared/dtos/MeetingDTO";
 import { useUserContext } from "./UserContext";
 import { UnimplementedFunction } from "../utils";
-import LoadingSpinner from '../pages/roles/components/LoadingSpinner';
+import LoadingSpinner from '../utility_components/LoadingSpinner';
 
 export interface MeetingContextProps {
     meetings: Record<string, MeetingDTO>;
