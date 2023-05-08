@@ -51,7 +51,11 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
 
     return (
         <MeetingContext.Provider value={contextValue}>
-            {isLoading ? <LoadingSpinner /> : children}
+            {isLoading ?
+                <div className="flex items-center justify-center h-screen">
+                    <LoadingSpinner className='w-16 h-16' />
+                </div>
+                : children}
         </MeetingContext.Provider>
     )
 }
