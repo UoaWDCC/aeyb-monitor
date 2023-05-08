@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../contexts/UserContext';
 import RoleDTO from '@shared/dtos/RoleDTO';
 import UserDTO from '@shared/dtos/UserDTO';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from '../../utility_components/LoadingSpinner';
 import { Permission } from '@shared/utils/Permission';
 import PermissionsList from './components/PermissionsList';
 
