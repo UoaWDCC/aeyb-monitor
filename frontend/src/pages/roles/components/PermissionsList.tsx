@@ -2,14 +2,15 @@ import Switch from '@mui/material/Switch';
 import { Permission } from '@shared/utils/Permission';
 
 //groups each permission by type
-const PermissionsLists: { roles: Permission[], users: Permission[], meetings: Permission[], locations: Permission[] } = {
-    roles: ["VIEW_ROLES", "MANAGE_ROLES"],
-    users: ["VIEW_USERS", "MANAGE_USERS"],
-    meetings: ["VIEW_MEETINGS", "MANAGE_MEETINGS"],
-    locations: ["VIEW_LOCATIONS", "MANAGE_LOCATIONS"],
-}
+const PermissionsLists: { roles: Permission[]; users: Permission[]; meetings: Permission[]; locations: Permission[] } =
+    {
+        roles: ['VIEW_ROLES', 'MANAGE_ROLES'],
+        users: ['VIEW_USERS', 'MANAGE_USERS'],
+        meetings: ['VIEW_MEETINGS', 'MANAGE_MEETINGS'],
+        locations: ['VIEW_LOCATIONS', 'MANAGE_LOCATIONS'],
+    };
 
-const allPermissions = Object.values(PermissionsLists).flat()
+const allPermissions = Object.values(PermissionsLists).flat();
 
 interface Props {
     activeRole: string;
@@ -19,14 +20,14 @@ interface Props {
 
 export default function PermissionsList(props: Props) {
     //toggle all / section states
-    const allChecked = allPermissions.every(permission => props.permissions.includes(permission));
+    const allChecked = allPermissions.every((permission) => props.permissions.includes(permission));
 
     //Toggles all permissions in a section
     function toggleSection(sectionPermissions: Permission[], isChecked: boolean) {
         if (isChecked) {
             props.setPermissions([...new Set([...sectionPermissions, ...props.permissions])]);
         } else {
-            props.setPermissions(props.permissions.filter(permission => !sectionPermissions.includes(permission)));
+            props.setPermissions(props.permissions.filter((permission) => !sectionPermissions.includes(permission)));
         }
     }
     return (
@@ -46,56 +47,53 @@ export default function PermissionsList(props: Props) {
 
             <div className="flex flex-col overflow-scroll mt-2 ">
                 {/* Map through each section permission section */}
-                {Object.entries(PermissionsLists).map(
-                    ([key, value]) => {
-                        return (
-                            <div className="md:grid grid-cols-2 gap-2 mb-3" key={key}>
-                                {/* Section header */}
-                                <div className="col-span-2 flex text-[#262b6c]">
-                                    {/* Section nam */}
-                                    <h1 className="text-3xl">
-                                        {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
-                                    </h1>
-                                    {/* Toggle section switch */}
-                                    <Switch
-                                        onChange={(e) => toggleSection(value, e.target.checked)}
-                                        checked={value.every((permission) => props.permissions.includes(permission))}
-                                    />
-                                </div>
-                                {/* Map through each permission in the section */}
-                                {value.map((permission) => {
-                                    return (
-                                        <div
-                                            className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom"
-                                            key={permission}
-                                        >
-                                            {/* Permission name */}
-                                            <p>
-                                                {(
-                                                    permission.charAt(0).toUpperCase() +
-                                                    permission.slice(1).toLowerCase()
-                                                ).replace('_', ' ')}
-                                            </p>
-
-                                            {/* Toggle individual permission switch */}
-                                            <Switch
-                                                color="secondary"
-                                                checked={props.permissions.includes(permission)}
-                                                onChange={(e) => {
-                                                    props.setPermissions(e.target.checked
-                                                        ? [...props.permissions, permission]
-                                                        : props.permissions.filter(perm => perm !== permission))
-                                                }}
-                                            />
-                                        </div>
-                                    );
-                                })}
+                {Object.entries(PermissionsLists).map(([key, value]) => {
+                    return (
+                        <div className="md:grid grid-cols-2 gap-2 mb-3" key={key}>
+                            {/* Section header */}
+                            <div className="col-span-2 flex text-[#262b6c]">
+                                {/* Section name */}
+                                <h1 className="text-3xl">{key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}</h1>
+                                {/* Toggle section switch */}
+                                <Switch
+                                    onChange={(e) => toggleSection(value, e.target.checked)}
+                                    checked={value.every((permission) => props.permissions.includes(permission))}
+                                />
                             </div>
-                        );
-                    },
-                )}
+                            {/* Map through each permission in the section */}
+                            {value.map((permission) => {
+                                return (
+                                    <div
+                                        className="p-2 text-[#262b6c] text-2xl bg-[#bdc3e3] mt-1 flex justify-between align-bottom"
+                                        key={permission}
+                                    >
+                                        {/* Permission name */}
+                                        <p>
+                                            {(
+                                                permission.charAt(0).toUpperCase() + permission.slice(1).toLowerCase()
+                                            ).replace('_', ' ')}
+                                        </p>
+
+                                        {/* Toggle individual permission switch */}
+                                        <Switch
+                                            color="secondary"
+                                            checked={props.permissions.includes(permission)}
+                                            onChange={(e) => {
+                                                props.setPermissions(
+                                                    e.target.checked
+                                                        ? [...props.permissions, permission]
+                                                        : props.permissions.filter((perm) => perm !== permission),
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
             </div>
         </>
     );
 }
- //
+//
