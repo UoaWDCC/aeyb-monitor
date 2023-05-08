@@ -16,6 +16,7 @@ const CalendarPage = (): ReactElement => {
   const renderMonthlyMeetings = () => {
     return Object.values(meetingContext.meetings)
       .filter(meeting => (meeting.startTime >= startOfMonth.getTime() && meeting.startTime <= endOfMonth.getTime()))
+      .sort((a, b) => a.startTime - b.startTime)
       .map(meeting => <WeeklyInstance key={meeting.id} meeting={meeting} />)
   }
 
