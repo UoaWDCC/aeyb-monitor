@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import WeeklyInstance from './components/WeeklyInstance'
 import { useMeetingContext } from '../../contexts/MeetingContext'
+import { useUserContext } from '../../contexts/UserContext';
 import IonIcon from '@reacticons/ionicons';
 
 const CalendarPage = (): ReactElement => {
@@ -8,6 +9,7 @@ const CalendarPage = (): ReactElement => {
   // get the current date and the date in one week 
   const [weeks, setWeekCount] = useState(0); // counts which week the user has naviigated to 
   const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUNE", "JULY", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const userContext = useUserContext();
 
   const week = new Date();
   week.setDate(week.getDate() - week.getDay() + weeks * 7);
@@ -38,8 +40,7 @@ const CalendarPage = (): ReactElement => {
               <IonIcon name="chevron-forward-outline" size='large' />
             </button>
           </div>
-
-          {renderWeeklyMeetings()}
+          {userContext.hasPermission('VIEW_MEETINGS') && renderWeeklyMeetings()}
         </div>
       </div>
 
