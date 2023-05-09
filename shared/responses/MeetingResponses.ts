@@ -8,6 +8,16 @@ export interface GetMeetingData {
     meeting: MeetingDTO;
 }
 
+export interface GetAttendanceData {
+    attendance: Omit<AttendanceDTO, 'user' | 'didAttend'>;
+}
+
+export interface GetFeedbackData {
+    notes?: string;
+    feedbackRating?: 1 | 2 | 3 | 4 | 5;
+    feedbackDescription?: string;
+}
+
 export interface AddMeetingData {
     /** The newly added meeting. */
     meeting: MeetingDTO;

@@ -2,11 +2,12 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { MeetingIdParam } from '@shared/params';
+import { AttendanceIdParam, MeetingIdParam } from '@shared/params';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,
     GetAllMeetingsData,
+    GetAttendanceData,
     GetMeetingData,
     UpdateMeetingData,
 } from '@shared/responses/MeetingResponses';
@@ -28,6 +29,7 @@ const getAllMeetings = asyncHandler(
             after: (value) => (query = query.where('time').gt(Number.parseInt(value))),
             creator: (value) => (query = query.where('creator').equals(value)),
             name: (value) => (query = query.where('name', new RegExp(value, 'i'))),
+            location: (value) => (query = query.where('location', new RegExp(value, 'i'))),
             type: (value) => (query = query.where('type', new RegExp(value, 'i'))),
         };
 
@@ -82,6 +84,92 @@ const getMeetingAttendance = asyncHandler(
 );
 
 /**
+ * @desc    Modify attendance for a specific meeting
+ * @route   POST /api/meetings/:meetingId/users/:userId/attendances
+ */
+
+const modifyMeetingAttendance = asyncHandler(
+    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+/**
+ * @desc    Add feedback for a specific meeting
+ * @route   POST /api/meetings/:meetingId/feedback
+ */
+
+const addMeetingFeedback = asyncHandler(
+    async (req: TypedRequest<UpdateMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+
+/**
+ * @desc    Update feedback for a specific meeting
+ * @route   PATCH /api/meetings/:meetingId/feedback
+ */
+
+const updateMeetingFeedback = asyncHandler(
+    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+
+/**
+ * @desc 	Get a user's feedback for a specific meeting
+ * @route 	GET /api/meetings/:meetingId/attendances/:userId
+ */
+
+const getMeetingFeedbackForUser = asyncHandler(
+    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<GetAttendanceData>) => {
+        const meeting = await Meeting.findById(req.params.meetingId);
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+
+        const filteredAttendances = meeting.attendance.filter((dto) => dto.user.id === req.params.userId);
+
+        const filteredFeedback = filteredAttendances.map((dto) => {
+            const { user, didAttend, ...rest } = dto;
+            return rest;
+        })[0];
+
+        res.ok({ attendance: filteredFeedback });
+    },
+);
+
+/**
  * @desc 	Add a new meetings
  * @route 	POST /api/meetings
  */
@@ -125,4 +213,14 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     res.sendStatus(204);
 });
 
-export { getAllMeetings, getMeeting, getMeetingAttendance, addMeeting, deleteMeeting, updateMeeting };
+export {
+    getAllMeetings,
+    getMeeting,
+    getMeetingAttendance,
+    addMeeting,
+    deleteMeeting,
+    updateMeeting,
+    getMeetingFeedbackForUser,
+    addMeetingFeedback,
+    updateMeetingFeedback,
+};

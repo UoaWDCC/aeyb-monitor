@@ -13,3 +13,8 @@ export interface MeetingIdParam {
 export interface LocationIdParam {
     locationId: string;
 }
+
+export interface AttendanceIdParam {
+    meetingId: string;
+    userId: string;
+}
