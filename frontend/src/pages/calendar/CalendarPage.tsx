@@ -24,8 +24,6 @@ export default function CalendarPage() {
   }
 
   return (
-    <>
-
       <div className='pageComponent'>
         {/* CALENDAR/EVENT COLLECTION DIV */}
         <div className='flex flex-col h-full w-full md:w-1/2'>
@@ -41,8 +39,6 @@ export default function CalendarPage() {
           {userContext.hasPermission('VIEW_MEETINGS') && renderMonthlyMeetings()}
         </div>
       </div>
-
-    </ >
   )
 }
 
