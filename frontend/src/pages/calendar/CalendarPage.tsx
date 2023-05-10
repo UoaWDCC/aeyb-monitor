@@ -1,10 +1,10 @@
 import React, { ReactElement, useState } from 'react'
-import WeeklyInstance from './components/WeeklyInstance'
+import MonthlyInstance from './components/MonthlyInstance'
 import { useMeetingContext } from '../../contexts/MeetingContext'
 import { useUserContext } from '../../contexts/UserContext';
 import IonIcon from '@reacticons/ionicons';
 
-const CalendarPage = (): ReactElement => {
+export default function CalendarPage() {
   const userContext = useUserContext();
   const meetingContext = useMeetingContext();
   const [month, setMonth] = useState(new Date());
@@ -19,7 +19,7 @@ const CalendarPage = (): ReactElement => {
       .filter(meeting => (meeting.startTime >= startOfMonth.getTime() && meeting.startTime <= endOfMonth.getTime()))
       .sort((a, b) => a.startTime - b.startTime)
       .map(meeting => {
-        return <WeeklyInstance key={meeting.id} meeting={meeting} />;
+        return <MonthlyInstance key={meeting.id} meeting={meeting} />;
       })
   }
 
@@ -45,6 +45,4 @@ const CalendarPage = (): ReactElement => {
     </ >
   )
 }
-
-export default CalendarPage;
 

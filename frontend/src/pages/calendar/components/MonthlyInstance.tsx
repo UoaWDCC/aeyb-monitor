@@ -1,26 +1,27 @@
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import IonIcon from '@reacticons/ionicons';
 
-interface WeeklyInstanceProps {
+interface MonthlyInstanceProps {
     meeting: MeetingDTO;
 }
 
-export default function WeeklyInstance({ meeting }: WeeklyInstanceProps) {
+export default function MonthlyInstance({ meeting }: MonthlyInstanceProps) {
     // day and date components
-    function nth(n: number) { return ["st", "nd", "rd"][((n + 90) % 100 - 10) % 10 - 1] || "th" }
+    const { name, description, location } = meeting;
     const days = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
     const date = new Date(meeting.startTime);
+
+    function nth(n: number) { return ["st", "nd", "rd"][((n + 90) % 100 - 10) % 10 - 1] || "th" }
+
 
     return (
         <div>
             <div className='flex justify-center overflow-scroll'>
                 <div className={`flex-col mb-4 w-full lg:w-3/4 py-4 px-4  rounded-lg text-[#262B6C] bg-slate-100`}>
-                    <p className='font-bold text-3xl'>{meeting.name}</p>
-                    <div className='text-xl text-[#464a83]'>{
-                        meeting.description === undefined ?
-                            <p>no description.</p>
-                            : <p>{meeting.description}</p>
-                    }</div>
+                    <p className='font-bold text-3xl'>{name}</p>
+                    <div className='text-xl text-[#464a83]'>
+                        {description ? <p>{description}</p> : <p>no description</p>}
+                    </div>
 
                     <div className='flex items-center'>
                         <IonIcon name="time-outline" className='text-2xl pr-1' />
@@ -29,7 +30,7 @@ export default function WeeklyInstance({ meeting }: WeeklyInstanceProps) {
 
                     <div className='flex items-center'>
                         <IonIcon name="location-outline" className='text-2xl pr-1' />
-                        <p className='text-xl'>{meeting.location}</p>
+                        <p className='text-xl'>{location}</p>
                     </div>
                 </div>
             </div>
