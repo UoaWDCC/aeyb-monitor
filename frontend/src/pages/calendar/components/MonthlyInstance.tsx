@@ -7,9 +7,9 @@ interface MonthlyInstanceProps {
 
 export default function MonthlyInstance({ meeting }: MonthlyInstanceProps) {
     // day and date components
-    const { name, description, location } = meeting;
+    const { name, startTime, description, location } = meeting;
     const days = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
-    const date = new Date(meeting.startTime);
+    const date = new Date(startTime);
 
     function nth(n: number) { return ["st", "nd", "rd"][((n + 90) % 100 - 10) % 10 - 1] || "th" }
 
