@@ -10,7 +10,7 @@ import {
     GetMeetingData,
     UpdateMeetingData,
 } from '@shared/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
+import { AddMeetingRequest, UpdateMeetingRequest, EndMeetingRequest } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 
 const paginationOptions = PaginationHandler.createOptions();
@@ -85,6 +85,26 @@ const updateMeeting = asyncHandler(
             new: true,
             runValidators: true,
         });
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+
+const endMeeting = asyncHandler(
+    async (req: TypedRequest<EndMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const { finishTime } = req.body;
+        const meeting = await Meeting.findByIdAndUpdate(
+            req.params.meetingId,
+            { finishTime },
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
