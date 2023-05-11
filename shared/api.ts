@@ -1,6 +1,6 @@
 import { MeetingIdParam, RoleIdParam, UserIdParam } from './params';
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
-import { AddMeetingRequest, UpdateMeetingRequest } from './requests/MeetingRequests';
+import { AddMeetingRequest, UpdateMeetingRequest, EndMeetingRequest } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
 import { AddMeetingData, GetAllMeetingsData, UpdateMeetingData } from './responses/MeetingResponses';
@@ -48,5 +48,6 @@ export default interface API {
     'GET /api/meetings/:meetingId': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
     'POST /api/meetings': Endpoint<AddMeetingRequest, AddMeetingData>;
     'PATCH /api/meetings/:meetingId': Endpoint<UpdateMeetingRequest, UpdateMeetingData, MeetingIdParam>;
+    'PATCH /api/meetings/:meetingId/end': Endpoint<EndMeetingRequest, undefined, MeetingIdParam>;
     'DELETE /api/meetings/:meetingId': Endpoint<undefined, undefined, MeetingIdParam>;
 }
