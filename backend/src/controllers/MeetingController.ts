@@ -105,7 +105,6 @@ const endMeeting = asyncHandler(
                 runValidators: true,
             },
         );
-
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
@@ -126,4 +125,4 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     res.sendStatus(204);
 });
 
-export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };
+export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting, endMeeting };
