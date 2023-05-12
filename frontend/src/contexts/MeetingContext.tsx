@@ -33,11 +33,11 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
                         meetings[meeting.id] = meeting;
                     });
                     setMeetings(meetings);
-                    setIsLoading(false);
                 }
             });
-
         }
+        setIsLoading(false);
+
     }, [userContext]);
 
     function addMeeting(meeting: MeetingDTO) {
