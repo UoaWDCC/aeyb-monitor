@@ -1,8 +1,9 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import MeetingDTO from "@shared/dtos/MeetingDTO";
-import { useUserContext } from "./UserContext";
-import { UnimplementedFunction } from "../utils";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 import LoadingSpinner from '../utility_components/LoadingSpinner';
+import { UnimplementedFunction } from "../utils";
+import { useUserContext } from "./UserContext";
 
 export interface MeetingContextProps {
     meetings: Record<string, MeetingDTO>;
@@ -57,5 +58,13 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
                 </div>
                 : children}
         </MeetingContext.Provider>
+    )
+}
+
+export function MeetingContextLayout() {
+    return (
+        <MeetingContextProvider>
+            <Outlet />
+        </MeetingContextProvider>
     )
 }

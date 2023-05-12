@@ -1,23 +1,16 @@
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { MeetingContextLayout } from './contexts/MeetingContext';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
-import { MeetingContextProvider } from './contexts/MeetingContext';
-import Login from './pages/login/Login';
-import NotFound from './pages/not_found/NotFound';
-import Roles from './pages/roles/Roles';
-import Homepage from './pages/home/Homepage';
-import UserProfile from './pages/profiles/ProfileInfo';
-import CalendarPage from './pages/calendar/CalendarPage';
-import Sidebar from './utility_components/sidebar/Sidebar';
 import ActiveMeeting from './pages/active_meeting/ActiveMeeting';
 import AfterMeeting from './pages/active_meeting/AfterMeeting';
+import CalendarPage from './pages/calendar/CalendarPage';
+import Homepage from './pages/home/Homepage';
+import Login from './pages/login/Login';
+import NotFound from './pages/not_found/NotFound';
+import UserProfile from './pages/profiles/ProfileInfo';
+import Roles from './pages/roles/Roles';
+import Sidebar from './utility_components/sidebar/Sidebar';
 
-function MeetingContextLayout() {
-    return (
-        <MeetingContextProvider>
-            <Outlet />
-        </MeetingContextProvider>
-    )
-}
 
 function App() {
 
