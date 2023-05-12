@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
 import { MeetingContextProvider } from './contexts/MeetingContext';
 import Login from './pages/login/Login';
@@ -11,6 +11,14 @@ import Sidebar from './utility_components/sidebar/Sidebar';
 import ActiveMeeting from './pages/active_meeting/ActiveMeeting';
 import AfterMeeting from './pages/active_meeting/AfterMeeting';
 
+function MeetingContextLayout() {
+    return (
+        <MeetingContextProvider>
+            <Outlet />
+        </MeetingContextProvider>
+    )
+}
+
 function App() {
 
     const AppRoutes = () => {
@@ -21,12 +29,14 @@ function App() {
                 {userContext.user ? (
                     <>
                         <Route path="/" element={<Sidebar />}>
-                            <Route path="/" element={<Homepage />} />
+                            <Route element={<MeetingContextLayout />} >
+                                <Route path="/" element={<Homepage />} />
+                                <Route path="calendarpage" element={<CalendarPage />} />
+                                <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                                <Route path="aftermeetingpage" element={<AfterMeeting />} />
+                            </Route>
                             <Route path="profilepage/roles" element={<Roles />} />
-                            <Route path="calendarpage" element={<CalendarPage />} />
                             <Route path="profilepage/*" element={<UserProfile />} />
-                            <Route path="activemeetingpage" element={<ActiveMeeting />} />
-                            <Route path="aftermeetingpage" element={<AfterMeeting />} />
                         </Route>
                         <Route path="*" element={<NotFound />} />
                         <Route path="/login" element={<Login />} />
@@ -40,9 +50,7 @@ function App() {
     return (
         <Router>
             <UserContextProvider>
-                <MeetingContextProvider>
-                    <AppRoutes />
-                </MeetingContextProvider>
+                <AppRoutes />
             </UserContextProvider>
         </Router>
     );
