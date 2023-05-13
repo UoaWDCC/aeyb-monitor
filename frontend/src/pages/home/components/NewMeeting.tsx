@@ -58,15 +58,15 @@ export default function NewMeeting(props) {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        // if (formValues.startTime.getTime() < Date.now()) {
-        //     alert('Start time cannot be in the past');
-        //     return;
-        // }
+        if (formValues.startTime.getTime() < Date.now()) {
+            alert('Start time cannot be in the past');
+            return;
+        }
 
-        // if (formValues.startTime.getTime() > formValues.finishTime.getTime()) {
-        //     alert('Start time cannot be later than finish time');
-        //     return;
-        // }
+        if (formValues.startTime.getTime() > formValues.finishTime.getTime()) {
+            alert('Start time cannot be later than finish time');
+            return;
+        }
 
         const meetingRequest: AddMeetingRequest = {
             startTime: formValues.startTime.getTime(),
