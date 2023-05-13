@@ -8,10 +8,12 @@ import {
     AddMeetingData,
     GetAllMeetingsData,
     GetAttendanceData,
+    GetAttendanceDataForUser,
+    GetFeedbackData,
     GetMeetingData,
     UpdateMeetingData,
 } from '@shared/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
+import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 
 const paginationOptions = PaginationHandler.createOptions();
@@ -70,7 +72,7 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
  */
 
 const getMeetingAttendance = asyncHandler(
-    async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetMeetingData>) => {
+    async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetAttendanceData>) => {
         const meeting = await Meeting.findById(req.params.meetingId);
 
         const attendance = meeting.attendance;
@@ -79,7 +81,30 @@ const getMeetingAttendance = asyncHandler(
             return res.notFound(`There is no attendance in the meeting with the id ${req.params.meetingId}`);
         }
 
-        res.ok({ meeting: await meeting.asPopulated() });
+        res.ok({ attendance: attendance });
+    },
+);
+
+/**
+ * @desc    Get the attendance for a specific user in a specific meeting
+ * @route   GET /api/meetings/:meetingId/attendances/:userId
+ */
+
+const getMeetingAttendanceForUser = asyncHandler(
+    async (
+        req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>,
+        res: TypedResponse<GetAttendanceDataForUser>,
+    ) => {
+        const meeting = await Meeting.findById(req.params.meetingId);
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+
+        const filteredAttendances = meeting.attendance.filter((dto) => dto.user.id === req.params.userId);
+
+        res.ok({ attendance: filteredAttendances[0] });
     },
 );
 
@@ -89,7 +114,7 @@ const getMeetingAttendance = asyncHandler(
  */
 
 const modifyMeetingAttendance = asyncHandler(
-    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+    async (req: TypedRequest<UpdateAttendanceRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
         const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
             new: true,
             runValidators: true,
@@ -109,7 +134,7 @@ const modifyMeetingAttendance = asyncHandler(
  */
 
 const addMeetingFeedback = asyncHandler(
-    async (req: TypedRequest<UpdateMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
         const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
             new: true,
             runValidators: true,
@@ -150,7 +175,7 @@ const updateMeetingFeedback = asyncHandler(
  */
 
 const getMeetingFeedbackForUser = asyncHandler(
-    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<GetAttendanceData>) => {
+    async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<GetFeedbackData>) => {
         const meeting = await Meeting.findById(req.params.meetingId);
 
         if (!meeting) {
@@ -170,7 +195,7 @@ const getMeetingFeedbackForUser = asyncHandler(
 );
 
 /**
- * @desc 	Add a new meetings
+ * @desc 	Add a new meeting
  * @route 	POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
@@ -216,10 +241,11 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
 export {
     getAllMeetings,
     getMeeting,
-    getMeetingAttendance,
     addMeeting,
     deleteMeeting,
     updateMeeting,
+    getMeetingAttendance,
+    getMeetingAttendanceForUser,
     getMeetingFeedbackForUser,
     addMeetingFeedback,
     updateMeetingFeedback,

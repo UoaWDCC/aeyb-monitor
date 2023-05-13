@@ -54,11 +54,19 @@ export default interface API {
     // Meeting endpoints
     'GET /api/meetings': Endpoint<undefined, GetAllMeetingsData, undefined, GetAllMeetingsQuery>;
     'GET /api/meetings/:meetingId': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
-    'GET /api/meetings/:meetingId/attendances': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
-    'GET /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
     'POST /api/meetings': Endpoint<AddMeetingRequest, AddMeetingData>;
     'PATCH /api/meetings/:meetingId': Endpoint<UpdateMeetingRequest, UpdateMeetingData, MeetingIdParam>;
     'DELETE /api/meetings/:meetingId': Endpoint<undefined, undefined, MeetingIdParam>;
+
+    // Attendance endpoints
+    'GET /api/meetings/:meetingId/attendances': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
+    'GET /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+
+    // Feedback endpoints
+    'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'POST /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'PATCH /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'POST /api/meetings/:meetingId/users/:userId/feedback': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
 
     // Location endpoints
     'GET /api/locations': Endpoint<undefined, GetAllLocationData>;

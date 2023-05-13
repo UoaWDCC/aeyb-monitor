@@ -9,13 +9,15 @@ export interface GetMeetingData {
 }
 
 export interface GetAttendanceData {
-    attendance: Omit<AttendanceDTO, 'user' | 'didAttend'>;
+    attendance: AttendanceDTO[];
+}
+
+export interface GetAttendanceDataForUser {
+    attendance: AttendanceDTO;
 }
 
 export interface GetFeedbackData {
-    notes?: string;
-    feedbackRating?: 1 | 2 | 3 | 4 | 5;
-    feedbackDescription?: string;
+    attendance: Omit<AttendanceDTO, 'user' | 'didAttend'>;
 }
 
 export interface AddMeetingData {
