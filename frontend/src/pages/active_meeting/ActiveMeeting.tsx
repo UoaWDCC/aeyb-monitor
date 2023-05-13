@@ -64,9 +64,12 @@ export default function ActiveMeeting() {
     }
 
     async function endMeeting() {
-        const data = await userContext.fetcher('GET /api/meetings/:meetingId', undefined, {
+        await userContext.fetcher('PATCH /api/meetings/:meetingId/end', {
+            finishTime: Date.now(),
+        }, {
             meetingId,
         });
+        navigate(`../`, { replace: true })
     }
 
     return (
@@ -167,7 +170,7 @@ export default function ActiveMeeting() {
                                     </button>
                                     <button
                                         className=" bg-red-300 p-2 rounded-xl text-3xl px-5"
-                                        onClick={() => navigate(`../`, { replace: true })}
+                                        onClick={() => endMeeting()}
                                     >
                                         End Meeting
                                     </button>

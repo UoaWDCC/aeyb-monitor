@@ -4,12 +4,6 @@
     "[typescriptreact]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
-<<<<<<< Updated upstream
-    "githubPullRequests.ignoredPullRequestBranches": [
-        "main"
-    ]
-=======
     "githubPullRequests.ignoredPullRequestBranches": ["main"],
     "typescript.preferences.importModuleSpecifier": "relative"
->>>>>>> Stashed changes
 }
