@@ -66,7 +66,7 @@ export default interface API {
     'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
     'POST /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
     'PATCH /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
-    'POST /api/meetings/:meetingId/users/:userId/feedback': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
+    'GET /api/meetings/:meetingId/feedback/users/:userId': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
 
     // Location endpoints
     'GET /api/locations': Endpoint<undefined, GetAllLocationData>;

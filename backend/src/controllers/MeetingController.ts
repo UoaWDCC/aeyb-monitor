@@ -87,7 +87,7 @@ const getMeetingAttendance = asyncHandler(
 
 /**
  * @desc    Get the attendance for a specific user in a specific meeting
- * @route   GET /api/meetings/:meetingId/attendances/:userId
+ * @route   GET /api/meetings/:meetingId/attendances/users/:userId
  */
 
 const getMeetingAttendanceForUser = asyncHandler(
@@ -110,7 +110,7 @@ const getMeetingAttendanceForUser = asyncHandler(
 
 /**
  * @desc    Modify attendance for a specific meeting
- * @route   POST /api/meetings/:meetingId/users/:userId/attendances
+ * @route   POST /api/meetings/:meetingId/attendances/users/:userId
  */
 
 const modifyMeetingAttendance = asyncHandler(
@@ -128,6 +128,32 @@ const modifyMeetingAttendance = asyncHandler(
         res.ok({ meeting: await meeting.asPopulated() });
     },
 );
+
+/**
+ * @desc 	Get a user's feedback for a specific meeting
+ * @route 	GET /api/meetings/:meetingId/feedback/
+ */
+
+const getMeetingFeedback = asyncHandler(
+    async (req: TypedRequest<UpdateMeetingRequest, MeetingIdParam>, res: TypedResponse<GetFeedbackData>) => {
+        const meeting = await Meeting.findById(req.params.meetingId);
+
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+
+        // Find the attendance of the user
+
+        const filteredFeedback = meeting.attendance.map((dto) => {
+            const { user, didAttend, ...rest } = dto;
+            return rest;
+        })[0];
+
+        res.ok({ attendance: filteredFeedback });
+    },
+);
+
 /**
  * @desc    Add feedback for a specific meeting
  * @route   POST /api/meetings/:meetingId/feedback
@@ -171,7 +197,7 @@ const updateMeetingFeedback = asyncHandler(
 
 /**
  * @desc 	Get a user's feedback for a specific meeting
- * @route 	GET /api/meetings/:meetingId/attendances/:userId
+ * @route 	GET /api/meetings/:meetingId/feedback/users/:userId
  */
 
 const getMeetingFeedbackForUser = asyncHandler(
@@ -183,9 +209,10 @@ const getMeetingFeedbackForUser = asyncHandler(
             return;
         }
 
-        const filteredAttendances = meeting.attendance.filter((dto) => dto.user.id === req.params.userId);
+        // Find the attendance of the user
+        const filteredAttendance = meeting.attendance.filter((dto) => dto.user.id === req.params.userId);
 
-        const filteredFeedback = filteredAttendances.map((dto) => {
+        const filteredFeedback = filteredAttendance.map((dto) => {
             const { user, didAttend, ...rest } = dto;
             return rest;
         })[0];
@@ -246,6 +273,8 @@ export {
     updateMeeting,
     getMeetingAttendance,
     getMeetingAttendanceForUser,
+    modifyMeetingAttendance,
+    getMeetingFeedback,
     getMeetingFeedbackForUser,
     addMeetingFeedback,
     updateMeetingFeedback,
