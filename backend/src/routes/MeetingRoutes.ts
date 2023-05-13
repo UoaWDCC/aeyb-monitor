@@ -15,7 +15,6 @@ import {
     updateMeetingFeedback,
     getMeetingFeedback,
 } from '../controllers/MeetingController';
-import Meeting from 'src/models/MeetingModel';
 
 const MeetingRouter = Router();
 
@@ -31,7 +30,7 @@ MeetingRouter.route('/:meetingId/attendances/users/:userId')
     .get(protect('VIEW_MEETINGS'), getMeetingAttendanceForUser)
     .patch(protect('MANAGE_MEETINGS'), modifyMeetingAttendance);
 
-MeetingRouter.route('/meetings/:meetingId/feedback')
+MeetingRouter.route('/:meetingId/feedback')
     .get(protect('VIEW_MEETINGS'), getMeetingFeedback)
     .post(protect('MANAGE_MEETINGS'), addMeetingFeedback)
     .patch(protect('MANAGE_MEETINGS'), updateMeetingFeedback);
