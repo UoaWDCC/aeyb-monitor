@@ -12,12 +12,11 @@ import ActiveMeeting from './pages/active_meeting/ActiveMeeting';
 import AfterMeeting from './pages/active_meeting/AfterMeeting';
 
 function App() {
-
     const AppRoutes = () => {
         const userContext = useUserContext();
 
         return (
-            <Routes >
+            <Routes>
                 {userContext.user ? (
                     <>
                         <Route path="/" element={<Sidebar />}>
@@ -25,17 +24,18 @@ function App() {
                             <Route path="profilepage/roles" element={<Roles />} />
                             <Route path="calendarpage" element={<CalendarPage />} />
                             <Route path="profilepage/*" element={<UserProfile />} />
-                            <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                            <Route path="activemeeting/:meetingId" element={<ActiveMeeting />} />
                             <Route path="aftermeetingpage" element={<AfterMeeting />} />
                         </Route>
                         <Route path="*" element={<NotFound />} />
                         <Route path="/login" element={<Login />} />
                     </>
-                ) : <Route path="*" element={<Login />} />}
-
+                ) : (
+                    <Route path="*" element={<Login />} />
+                )}
             </Routes>
         );
-    }
+    };
 
     return (
         <Router>
