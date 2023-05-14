@@ -136,7 +136,7 @@ const modifyMeetingAttendance = asyncHandler(
         if (filteredAttendances.length == 0) {
             // Add an attendance with said user
 
-            const user = User.findById(req.params.userId);
+            const user = await User.findById(req.params.userId);
             meeting.attendance.push({ ...req.body, user: user });
 
             await meeting.update();
