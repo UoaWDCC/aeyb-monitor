@@ -54,7 +54,6 @@ export default function ActiveMeeting() {
     const navigate = useNavigate();
 
     const [message, setMessage] = useState('');
-    const DELAY = 1000;
 
     function handleSubmit() {
         console.log(`User: ${activeUser},
