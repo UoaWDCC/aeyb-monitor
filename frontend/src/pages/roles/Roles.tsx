@@ -82,11 +82,8 @@ function Roles() {
             <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
                 <div className="">
-                    <Button className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]"
-                        onClick={returntoProfile}>
-                        <IonIcon name="chevron-back-outline" />
-                        back
-                    </Button>
+                    <Button size='medium' color='#262a6c' onClick={returntoProfile}>
+                        <IonIcon name="chevron-back-outline" /> Back </Button>
                 </div>
             </div>
             <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
@@ -113,7 +110,7 @@ function Roles() {
                                 permissions={roles[activeRole].permissions}
                                 setPermissions={handleSetPermissions}
                             />
-                            <Button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5" text="Save" />
+                            <Button size="medium" color="#262a6c" extraStyles="ml-[100%] translate-x-[-100%] mt-5" onClick={handleSaveRole}>Save</Button>
                         </>
                     ) : (
                         <div className="flex flex-col gap-4">

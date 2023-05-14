@@ -72,7 +72,7 @@ export default function Sidebar() {
                             <div className="text-sm">Welcome,</div>
                             <div className='font-bold leading-4 text-lg'>{userContext.user.name}</div>
                         </div>
-                        <Button className="text-1.5xl text-[#ffffff] bg-[#262b6c] hover:bg-blue-900 px-3 py-0.5 rounded-md" onClick={logout} text="Log Out" />
+                        <Button size='small' color="#262a6c" onClick={logout}>Log Out</Button>
                     </div>
                 </div>
                 {renderMenuItems()}

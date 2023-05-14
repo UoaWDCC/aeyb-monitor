@@ -5,13 +5,14 @@ import tinycolor from 'tinycolor2';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	size?: 'small' | 'medium' | 'large';
 	color?: string | undefined;
+	extraStyles?: string;
 }
 
-const Button: FC<ButtonProps> = ({ size = 'medium', color = 'blue', ...rest }) => {
+const Button: FC<ButtonProps> = ({ size = 'medium', color = 'blue', extraStyles = '', ...rest }) => {
 	const isNamedColor = ['blue', 'green', 'red'].includes(color || '');
 
 	const buttonClasses = classNames(
-		'rounded-md font-medium filter brightness-100 hover:brightness-110 focus:outline-none transition duration-100 transform focus:translate-x-0.5 focus:translate-y-0.5',
+		`${extraStyles} rounded-md font-medium filter brightness-100 hover:brightness-110 focus:outline-none transition duration-100 transform focus:translate-x-0.5 focus:translate-y-0.5`,
 		{
 			'text-sm px-3 h-9': size === 'small',
 			'text-base px-3 h-10': size === 'medium',

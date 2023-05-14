@@ -136,8 +136,7 @@ export default function NewMeeting(props) {
                                     value={formValues.description}
                                     onChange={handleInputChange}
                                 />
-                                <Button className='bg-[#7d6ca3] text-white p-2 rounded-md text-3xl  px-5 my-2' type="submit" text="Submit" />
-
+                                <Button extraStyles='mt-6 px-4' size='large' color="#262a6c" type="submit">Submit</Button>
                             </form>
                         </div>
                     </div >

@@ -44,15 +44,12 @@ export default function Homepage() {
             <div id="upcomingContainer" className='mContainer'>
               <div className='flex justify-between'>
                 <p className='containerTtl'>Upcoming meetings:</p>
-                <Button size="small" color="blue" onClick={() => setIsNewMeetingOpen(true)}>Default Blue</Button>
-                <Button size="medium" color="red" onClick={() => setIsNewMeetingOpen(true)}>Medium Button</Button>
-                <Button size="large" color="green" onClick={() => setIsNewMeetingOpen(true)}>Large Button</Button>
+                <Button size="medium" color="#262a6c" onClick={() => setIsNewMeetingOpen(true)}>Create Meeting</Button>
               </div>
               {renderUpcomingMeetings()}
             </div>
             <div id="postmeetingContainer" className='mContainer'>
               <p className='containerTtl'>Post-meetings stats:</p>
-              <Button size="large" color="#9384D1" onClick={() => setIsNewMeetingOpen(true)}>New Large Purple Button</Button>
               {renderPostMeetings()}
             </div>
           </div>
