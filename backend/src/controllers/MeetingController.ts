@@ -1,6 +1,8 @@
 import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
+import Attendance from 'src/models/AttendanceModel';
+import User from 'src/models/UserModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
 import { AttendanceIdParam, MeetingIdParam } from '@shared/params';
 import PaginationHandler from '../classes/PaginationHandler';
@@ -75,10 +77,16 @@ const getMeetingAttendance = asyncHandler(
     async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetAttendanceData>) => {
         const meeting = await Meeting.findById(req.params.meetingId);
 
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+
         const attendance = meeting.attendance;
 
         if (attendance.length == 0) {
-            return res.notFound(`There is no attendance in the meeting with the id ${req.params.meetingId}`);
+            res.notFound(`There is no attendance in the meeting with the id ${req.params.meetingId}`);
+            return;
         }
 
         res.ok({ attendance: attendance });
@@ -110,19 +118,32 @@ const getMeetingAttendanceForUser = asyncHandler(
 
 /**
  * @desc    Modify attendance for a specific meeting
- * @route   POST /api/meetings/:meetingId/attendances/users/:userId
+ * @route   PATCH /api/meetings/:meetingId/attendances/users/:userId
  */
 
 const modifyMeetingAttendance = asyncHandler(
     async (req: TypedRequest<UpdateAttendanceRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
-        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const meeting = await Meeting.findById(req.params.meetingId);
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
+        }
+
+        // First check if attendances have requested user
+        const filteredAttendances = meeting.attendance.filter((dto) => dto.user.id === req.params.userId);
+
+        if (filteredAttendances.length == 0) {
+            // Add an attendance with said user
+            meeting.attendance.push(req.body);
+
+            await meeting.update();
+        } else {
+            // Find and update the attendance with said user
+            const userIndex = meeting.attendance.findIndex((dto) => dto.user.id === req.params.userId);
+            meeting.attendance[userIndex] = req.body;
+
+            await meeting.save();
         }
 
         res.ok({ meeting: await meeting.asPopulated() });

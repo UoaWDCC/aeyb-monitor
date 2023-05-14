@@ -1,6 +1,6 @@
 import { AttendanceIdParam, LocationIdParam, MeetingIdParam, RoleIdParam, UserIdParam } from './params';
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
-import { AddMeetingRequest, UpdateMeetingRequest } from './requests/MeetingRequests';
+import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
 import { AddLocationRequest } from './requests/LocationRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
@@ -61,6 +61,11 @@ export default interface API {
     // Attendance endpoints
     'GET /api/meetings/:meetingId/attendances': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
     'GET /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'PATCH /api/meetings/:meetingId/attendances/users/:userId': Endpoint<
+        UpdateAttendanceRequest,
+        UpdateMeetingData,
+        AttendanceIdParam
+    >;
 
     // Feedback endpoints
     'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;

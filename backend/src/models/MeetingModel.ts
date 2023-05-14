@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { DocumentModel } from '../types/UtilTypes';
-import { AttendanceSchema } from './AttendanceModel';
+import { attendanceSchema } from './AttendanceModel';
 import { LocationSchema } from './LocationModel';
 import { UserDocument } from './UserModel';
 import { applyToJsonOptions } from './Utils';
@@ -36,7 +36,7 @@ const meetingSchema = new Schema<MeetingDocument>({
         type: LocationSchema,
         required: [true, 'You must specify the where the meeting will be held'],
     },
-    attendance: [AttendanceSchema],
+    attendance: [attendanceSchema],
     description: {
         type: String,
     },

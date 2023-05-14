@@ -1,7 +1,7 @@
-import { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import AttendanceDTO from '@shared/dtos/AttendanceDTO';
 
-export const AttendanceSchema = new Schema<AttendanceDTO>(
+export const attendanceSchema = new Schema<AttendanceDTO>(
     {
         // attendedUsers: {
         //     type: [{ type: String, ref: 'User' }],
@@ -26,7 +26,10 @@ export const AttendanceSchema = new Schema<AttendanceDTO>(
             type: Boolean,
             default: false,
         },
-        notes: String,
+        notes: {
+            type: String,
+            default: '',
+        },
         feedbackRating: {
             type: Number,
             min: 1,
@@ -36,3 +39,7 @@ export const AttendanceSchema = new Schema<AttendanceDTO>(
     },
     { _id: false },
 );
+
+const Attendance = model('Attendance', attendanceSchema);
+
+export default Attendance;
