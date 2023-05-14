@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MeetingDTO from '@shared/dtos/MeetingDTO';
 import './livemeeting.css';
 import { getRelativeTime } from '../../../../utils/timeUtil';
 

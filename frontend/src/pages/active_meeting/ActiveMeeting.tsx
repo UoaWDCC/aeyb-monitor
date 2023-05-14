@@ -1,12 +1,11 @@
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { useEffect, useState } from 'react';
-import UserList from './components/UserList';
-import AttendanceSelect from './components/AttendanceSelect';
-import Rating from './components/RadioGroupRating';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from 'src/contexts/UserContext';
-import MeetingDTO from '@shared/dtos/MeetingDTO';
-import { GetMeetingData } from '@shared/responses/MeetingResponses';
 import LoadingSpinner from '../../utility_components/LoadingSpinner';
+import AttendanceSelect from './components/AttendanceSelect';
+import Rating from './components/RadioGroupRating';
+import UserList from './components/UserList';
 
 export enum AttendanceType {
     NotAttended,

@@ -18,6 +18,7 @@ export default function Homepage() {
             userContext.hasPermission('VIEW_MEETINGS') &&
             Object.values(meetingContext.meetings)
                 .filter((meeting) => meeting.startTime <= now && meeting.finishTime >= now)
+                .sort((a, b) => a.startTime - b.startTime)
                 .map(({ id, name, startTime, finishTime }) => (
                     <LiveMeeting key={id} id={id} name={name} startTime={startTime} finishTime={finishTime} />
                 ))
@@ -29,6 +30,7 @@ export default function Homepage() {
             userContext.hasPermission('VIEW_MEETINGS') &&
             Object.values(meetingContext.meetings)
                 .filter((meeting) => meeting.startTime >= now)
+                .sort((a, b) => a.startTime - b.startTime)
                 .map((meeting) => <UpcomingMeeting key={meeting.id} meeting={meeting} />)
         );
     };
@@ -37,8 +39,8 @@ export default function Homepage() {
         return (
             userContext.hasPermission('VIEW_MEETINGS') &&
             Object.values(meetingContext.meetings)
-                .sort((a, b) => b.startTime - a.startTime)
                 .filter((meeting) => meeting.finishTime <= now)
+                .sort((a, b) => a.startTime - b.startTime)
                 .map((meeting) => <PostMeeting key={meeting.id} meeting={meeting} />)
         );
     };
