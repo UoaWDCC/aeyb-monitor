@@ -17,6 +17,7 @@ import {
 } from '@shared/responses/MeetingResponses';
 import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
+import UserDTO from '@shared/dtos/UserDTO';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -136,14 +137,14 @@ const modifyMeetingAttendance = asyncHandler(
         if (filteredAttendances.length == 0) {
             // Add an attendance with said user
 
-            const user = await User.findById(req.params.userId);
+            const user = (await User.findById(req.params.userId)) as UserDTO;
             meeting.attendance.push({ ...req.body, user: user });
 
-            await meeting.update();
+            await meeting.save();
         } else {
             // Find and update the attendance with said user
             const userIndex = meeting.attendance.findIndex((dto) => dto.user.id === req.params.userId);
-            meeting.attendance[userIndex] = req.body;
+            meeting.attendance[userIndex] = { ...meeting.attendance[userIndex], ...req.body };
 
             await meeting.save();
         }
