@@ -6,7 +6,7 @@ export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator' | 'location'> 
 
 export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>>;
 
-export type UpdateAttendanceRequest = Omit<AttendanceDTO, 'id'>;
+export type UpdateAttendanceRequest = Omit<AttendanceDTO, 'user'>;
 
 export type UpdateAbsenceRequest = Partial<Omit<AttendanceDTO, 'feedback' | 'rating' | 'didAttend'>>;
 
