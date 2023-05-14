@@ -13,32 +13,33 @@ import Sidebar from './utility_components/sidebar/Sidebar';
 
 
 function App() {
-
     const AppRoutes = () => {
         const userContext = useUserContext();
 
         return (
-            <Routes >
+            <Routes>
                 {userContext.user ? (
                     <>
                         <Route path="/" element={<Sidebar />}>
                             <Route element={<MeetingContextLayout />} >
                                 <Route path="/" element={<Homepage />} />
                                 <Route path="calendarpage" element={<CalendarPage />} />
-                                <Route path="activemeetingpage" element={<ActiveMeeting />} />
+                                <Route path="activemeeting/:meetingId" element={<ActiveMeeting />} />
                                 <Route path="aftermeetingpage" element={<AfterMeeting />} />
                             </Route>
                             <Route path="profilepage/roles" element={<Roles />} />
                             <Route path="profilepage/*" element={<UserProfile />} />
-                        </Route>
+                        </Route >
                         <Route path="*" element={<NotFound />} />
                         <Route path="/login" element={<Login />} />
                     </>
-                ) : <Route path="*" element={<Login />} />}
-
-            </Routes>
+                ) : (
+                    <Route path="*" element={<Login />} />
+                )
+                }
+            </Routes >
         );
-    }
+    };
 
     return (
         <Router>
