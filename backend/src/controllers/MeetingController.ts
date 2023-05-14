@@ -132,10 +132,13 @@ const modifyMeetingAttendance = asyncHandler(
         }
 
         // First check if attendances have requested user
-        const filteredAttendances = meeting.attendance.filter((dto) => dto.user.id === req.params.userId);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const filteredAttendances = meeting.attendance.find((dto) => dto.user === req.params.userId);
 
-        if (filteredAttendances.length == 0) {
+        if (!filteredAttendances) {
             // Add an attendance with said user
+            console.log('if');
 
             const user = (await User.findById(req.params.userId)) as UserDTO;
             meeting.attendance.push({ ...req.body, user: user });
@@ -145,6 +148,7 @@ const modifyMeetingAttendance = asyncHandler(
             // Find and update the attendance with said user
             const userIndex = meeting.attendance.findIndex((dto) => dto.user.id === req.params.userId);
             meeting.attendance[userIndex] = { ...meeting.attendance[userIndex], ...req.body };
+            console.log('else');
 
             await meeting.save();
         }
