@@ -1,17 +1,22 @@
 import React from 'react';
-import './NotFound.css';
+import { useNavigate } from 'react-router-dom';
 
-function NotFound() {
+export default function NotFound() {
+    const navigate = useNavigate();
+    // Navigation back to Home Page
+    const returntoHomePage = () => {
+        navigate('/');
+    };
+
     return (
-        <html>
+        <>
             <body className="m-1">
                 <div className="flex-container bg-white flex flex-col md:flex-row justify-center items-center h-screen">
                     <div className="imagebox w-3/4 md:w-1/2 flex items-center">
                         <img
                             className="image404 mx-auto"
-                            // src="https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif"
                             src="/src/images/edited/AEYB_A0_CircleBlackWardlineSmaller.png"
-                            alt="NotFound.png"
+                            alt="AEYB Logo with WARD line"
                         />
                     </div>
 
@@ -26,15 +31,13 @@ function NotFound() {
                         {/* Temp HTML button - Not using Generalised Component because not pushed yet */}
                         <button
                             className="home-page-button bg-[#272C6C] text-white mt-6 px-6 py-3 rounded-md"
-                            onClick={() => console.log('Button Clicked')}
+                            onClick={returntoHomePage}
                         >
                             Go To Homepage
                         </button>
                     </div>
                 </div>
             </body>
-        </html>
+        </>
     );
 }
-
-export default NotFound;
