@@ -8,6 +8,8 @@ export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>>;
 
 export type UpdateAttendanceRequest = Omit<AttendanceDTO, 'user'>;
 
+export type UpdateFeedbackRequest = Omit<AttendanceDTO, 'user' | 'didAttend'>;
+
 export type UpdateAbsenceRequest = Partial<Omit<AttendanceDTO, 'feedback' | 'rating' | 'didAttend'>>;
 
 export type AddFeedBackRequest = Partial<Omit<AttendanceDTO, 'canAttend' | 'reason' | 'didAttend'>>;

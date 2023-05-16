@@ -32,11 +32,9 @@ MeetingRouter.route('/:meetingId/attendances/users/:userId')
 
 MeetingRouter.route('/:meetingId/feedback')
     .get(protect('VIEW_MEETINGS'), getMeetingFeedback)
-    .post(protect('MANAGE_MEETINGS'), addMeetingFeedback)
     .patch(protect('MANAGE_MEETINGS'), updateMeetingFeedback);
-MeetingRouter.route('/meetings/:meetingId/feedback/users/:userId').get(
-    protect('VIEW_MEETINGS'),
-    getMeetingFeedbackForUser,
-);
+MeetingRouter.route('/meetings/:meetingId/feedback/users/:userId')
+    .post(protect('MANAGE_MEETINGS'), addMeetingFeedback)
+    .get(protect('VIEW_MEETINGS'), getMeetingFeedbackForUser);
 
 export default MeetingRouter;

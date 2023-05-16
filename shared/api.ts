@@ -69,7 +69,7 @@ export default interface API {
 
     // Feedback endpoints
     'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
-    'POST /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'POST /api/meetings/:meetingId/feedback/users/:userId': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
     'PATCH /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
     'GET /api/meetings/:meetingId/feedback/users/:userId': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
 

@@ -138,7 +138,7 @@ const modifyMeetingAttendance = asyncHandler(
 
         if (!filteredAttendances) {
             // Add an attendance with said user
-            console.log('if');
+            console.log('adding attendance');
 
             const user = (await User.findById(req.params.userId)) as UserDTO;
             meeting.attendance.push({ ...req.body, user: user });
@@ -148,7 +148,7 @@ const modifyMeetingAttendance = asyncHandler(
             // Find and update the attendance with said user
             const userIndex = meeting.attendance.findIndex((dto) => dto.user.id === req.params.userId);
             meeting.attendance[userIndex] = { ...meeting.attendance[userIndex], ...req.body };
-            console.log('else');
+            console.log('updating attendance');
 
             await meeting.save();
         }
@@ -184,20 +184,41 @@ const getMeetingFeedback = asyncHandler(
 
 /**
  * @desc    Add feedback for a specific meeting
- * @route   POST /api/meetings/:meetingId/feedback
+ * @route   POST /api/meetings/:meetingId/feedback/users/:userId
  */
 
 const addMeetingFeedback = asyncHandler(
     async (req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
-        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const meeting = await Meeting.findById(req.params.meetingId);
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
         }
+
+        const filteredAttendances = meeting.attendance.find((dto) => dto.user.id === req.params.userId);
+
+        // Check if there is no attendance
+        if (!filteredAttendances) {
+            res.notFound(`There is no attendance stored in this meeting for a user with the id ${req.params.userId}`);
+            return;
+
+            // Check if user did not attend meeting
+        } else if (filteredAttendances.didAttend == false) {
+            res.notFound(
+                `The user with the id ${req.params.userId} did not attend the meeting with the id ${req.params.meetingId}`,
+            );
+            return;
+        } else {
+            // Find and update the feedback with said user
+            const userIndex = meeting.attendance.findIndex((dto) => dto.user.id === req.params.userId);
+            meeting.attendance[userIndex] = { ...meeting.attendance[userIndex], ...req.body };
+            console.log('updating feedback');
+
+            await meeting.save();
+        }
+
+        res.ok({ meeting: await meeting.asPopulated() });
 
         res.ok({ meeting: await meeting.asPopulated() });
     },
