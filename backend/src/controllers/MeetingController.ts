@@ -171,8 +171,6 @@ const getMeetingFeedback = asyncHandler(
             return;
         }
 
-        // Find the attendance of the user
-
         const filteredFeedback = meeting.attendance.map((dto) => {
             const { user, didAttend, ...rest } = dto;
             return rest;
@@ -217,8 +215,6 @@ const addMeetingFeedback = asyncHandler(
 
             await meeting.save();
         }
-
-        res.ok({ meeting: await meeting.asPopulated() });
 
         res.ok({ meeting: await meeting.asPopulated() });
     },
