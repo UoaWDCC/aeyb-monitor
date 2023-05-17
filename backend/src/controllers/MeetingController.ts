@@ -18,6 +18,7 @@ import {
 import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 import UserDTO from '@shared/dtos/UserDTO';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -124,36 +125,51 @@ const getMeetingAttendanceForUser = asyncHandler(
 
 const modifyMeetingAttendance = asyncHandler(
     async (req: TypedRequest<UpdateAttendanceRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
-        const meeting = await Meeting.findById(req.params.meetingId);
+        const { userId, meetingId } = req.params;
+        const meeting = await Meeting.findById(meetingId);
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
         }
 
-        // First check if attendances have requested user
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        const filteredAttendances = meeting.attendance.find((dto) => dto.user === req.params.userId);
+        const doesUserExist = await User.exists({ _id: userId });
 
-        if (!filteredAttendances) {
-            // Add an attendance with said user
-            console.log('adding attendance');
-
-            const user = (await User.findById(req.params.userId)) as UserDTO;
-            meeting.attendance.push({ ...req.body, user: user });
-
-            await meeting.save();
-        } else {
-            // Find and update the attendance with said user
-            const userIndex = meeting.attendance.findIndex((dto) => dto.user.id === req.params.userId);
-            meeting.attendance[userIndex] = { ...meeting.attendance[userIndex], ...req.body };
-            console.log('updating attendance');
-
-            await meeting.save();
+        if (!doesUserExist) {
+            res.notFound(`There is no users with the id ${req.params.meetingId}`);
+            return;
         }
 
-        res.ok({ meeting: await meeting.asPopulated() });
+        const keys = Object.keys(req.body).filter((key) => key != 'requester') as (keyof typeof req.body)[];
+        const newAttendance = {};
+        for (let i = 0; i < keys.length; i++) {
+            newAttendance[`attendance.$.${keys[i]}`] = req.body[keys[i]];
+        }
+        const { requester: _, ...withoutRequester } = req.body;
+
+        const existingUserInMeeting = await Meeting.findOneAndUpdate(
+            { _id: meetingId, 'attendance.user': userId },
+            { $set: newAttendance },
+            { new: true, returnOriginal: false },
+        );
+
+        if (existingUserInMeeting) {
+            res.ok({ meeting: await existingUserInMeeting.asPopulated() });
+            return;
+        }
+
+        const newUserInMeeting = (await Meeting.findOneAndUpdate(
+            { _id: meetingId, 'attendance.user': { $ne: userId } },
+            { $push: { attendance: withoutRequester } },
+            { upsert: true, new: true },
+        )) as MeetingDTO;
+
+        if (newUserInMeeting) {
+            res.ok({ meeting: newUserInMeeting });
+            return;
+        }
+
+        res.error(500, 'Something went wrong.');
     },
 );
 
