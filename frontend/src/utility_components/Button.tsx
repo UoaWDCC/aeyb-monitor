@@ -5,11 +5,13 @@ import tinycolor from 'tinycolor2';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	size?: 'small' | 'medium' | 'large';
 	color?: string | undefined;
+	textColor?: string | undefined;
 	extraStyles?: string;
 }
 
-const Button: FC<ButtonProps> = ({ size = 'medium', color = 'blue', extraStyles = '', ...rest }) => {
+const Button: FC<ButtonProps> = ({ size = 'medium', color = 'blue', extraStyles = '', textColor, ...rest }) => {
 	const isNamedColor = ['blue', 'green', 'red'].includes(color || '');
+	const hasCustomTextColor = typeof textColor !== 'undefined';
 
 	const buttonClasses = classNames(
 		`${extraStyles} rounded-md font-medium filter brightness-100 hover:brightness-110 focus:outline-none transition duration-100 transform focus:translate-x-0.5 focus:translate-y-0.5`,
@@ -25,13 +27,15 @@ const Button: FC<ButtonProps> = ({ size = 'medium', color = 'blue', extraStyles 
 
 	const buttonStyle: React.CSSProperties = {
 		backgroundColor: isNamedColor ? undefined : color,
-		color: isNamedColor
-			? tinycolor(`bg-${color}-500`).isDark()
-				? 'white'
-				: 'black'
-			: tinycolor(color).isDark()
-				? 'white'
-				: 'black',
+		color: hasCustomTextColor
+			? textColor
+			: isNamedColor
+				? tinycolor(`bg-${color}-500`).isDark()
+					? 'white'
+					: 'black'
+				: tinycolor(color).isDark()
+					? 'white'
+					: 'black',
 	};
 
 	return <button className={buttonClasses} style={buttonStyle} {...rest} />;
