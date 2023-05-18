@@ -32,30 +32,13 @@ const CalendarPage = (): ReactElement => {
         <div className='flex flex-col h-full w-full md:w-1/2'>
           <div className='flex-row text-center mt-8 mb-8 text-[#262B6C]'>
 
-            {/* Default Left Button */}
-            {/* <Button className=' bg-slate-300 px-4 py-4 rounded-sm w-1/8' onClick={() => { setWeekCount(weeks - 1) }} >
-              <IonIcon name="chevron-back-outline" size='large' />
-            </Button> */}
-
-            {/* Translate Left + Dim */}
             <Button size='custom' color='#262a6c' extraStyles='px-4 py-4 rounded-sm w-20 relative overflow-hidden transition duration-300 active:-translate-x-1' onClick={() => { setWeekCount(weeks - 1) }}>
               <span className='absolute inset-0 bg-white opacity-20 transition-opacity duration-300 hover:opacity-30'></span>
               <IonIcon name="chevron-back-outline" size='large' />
             </Button>
 
-            {/* <Button className={`${leftButtonColor} px-4 py-4 rounded-sm w-1/8 relative overflow-hidden transition duration-300 hover:-translate-x-2`} onClick={() => handleClick('leftButton')}>
-              <span className='absolute inset-0 bg-white opacity-20 transition-opacity duration-300 hover:opacity-30'></span>
-              <IonIcon name="chevron-back-outline" size='large' />
-            </Button> */}
-
             <p className='inline-block w-1/2 text-xl font-bold text-[#262B6C]'>{previousMonth} {firstWeekDay} - {months[week.getMonth()]} {week.getDate()}</p>
 
-            {/* Default Right Button */}
-            {/* <Button className=' bg-slate-300 px-4 py-4 rounded-sm w-1/8' onClick={() => setWeekCount(weeks + 1)}>
-              <IonIcon name="chevron-forward-outline" size='large' />
-            </Button> */}
-
-            {/* Translate Right */}
             <Button size='custom' color='#262a6c' extraStyles='px-4 py-4 rounded-sm w-20 relative overflow-hidden transition duration-300' onClick={() => { setWeekCount(weeks + 1) }}>
               <span className='absolute inset-0 bg-white opacity-20 transition-opacity duration-300 hover:opacity-30'></span>
               <IonIcon name="chevron-forward-outline" size='large' />
