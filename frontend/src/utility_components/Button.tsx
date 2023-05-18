@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import tinycolor from 'tinycolor2';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-	size?: 'small' | 'medium' | 'large';
+	size?: 'small' | 'medium' | 'large' | 'custom';
 	color?: string | undefined;
 	textColor?: string | undefined;
 	extraStyles?: string;
@@ -14,11 +14,12 @@ const Button: FC<ButtonProps> = ({ size = 'medium', color = 'blue', extraStyles 
 	const hasCustomTextColor = typeof textColor !== 'undefined';
 
 	const buttonClasses = classNames(
-		`${extraStyles} rounded-md font-medium filter brightness-100 hover:brightness-110 focus:outline-none transition duration-100 transform focus:translate-x-0.5 focus:translate-y-0.5`,
+		`${extraStyles} rounded-md font-medium filter brightness-100 hover:brightness-110 focus:outline-none transition duration-100 transform active:translate-x-0.5 active:translate-y-0.5`,
 		{
 			'text-sm px-3 h-9': size === 'small',
 			'text-base px-3 h-10': size === 'medium',
 			'text-lg px-3.5 h-12': size === 'large',
+			'': size === 'custom',
 			'bg-blue-500': isNamedColor && color === 'blue',
 			'bg-green-500': isNamedColor && color === 'green',
 			'bg-red-500': isNamedColor && color === 'red',

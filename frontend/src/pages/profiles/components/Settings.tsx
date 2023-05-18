@@ -14,17 +14,26 @@ const SettingsBar = () => {
     return (
         <div className='flex flex-col w-3/4 md:w-3/5 mt-[5%] text-3xl text-[#262B6C]'>
 
-            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 transition-transform transform hover:translate-x-2'>
+            <Button size='custom' extraStyles='my-2 px-7 py-10 text-left flex-row inline-flex' color='#262b6c'>
                 <p className='w-3/4 h-full'>Personal Stats</p>
-                <div className='w-1/4 h-full text-right '><IonIcon name="chevron-forward-outline" /></div>
+                <div className='w-1/4 text-right relative'>
+                    <span className='absolute inset-y-0 right-0 w-24 bg-white opacity-10 -mr-7 -my-10'></span>
+                    <IonIcon name="chevron-forward-outline" />
+                </div>
             </Button>
-            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 transition-transform transform hover:translate-x-2'>
+            <Button size='custom' extraStyles='my-2 px-7 py-10 text-left flex-row inline-flex' color='#262b6c'>
                 <p className='w-3/4 h-full'>Meeting Stats</p>
-                <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
+                <div className='w-1/4 text-right relative'>
+                    <span className='absolute inset-y-0 right-0 w-24 bg-white opacity-10 -mr-7 -my-10'></span>
+                    <IonIcon name="chevron-forward-outline" />
+                </div>
             </Button>
-            <Button className='border-solid border-t border-[#262B6C] text-left flex-row inline-flex px-4 py-10 transition-transform transform hover:translate-x-2' onClick={navToRoles}>
+            <Button size='custom' extraStyles='my-2 px-7 py-10 text-left flex-row inline-flex' color='#262b6c' onClick={navToRoles}>
                 <p className='w-3/4 h-full'>Roles</p>
-                <div className='w-1/4 h-full text-right'><IonIcon name="chevron-forward-outline" /></div>
+                <div className='w-1/4 text-right relative'>
+                    <span className='absolute inset-y-0 right-0 w-24 bg-white opacity-10 -mr-7 -my-10'></span>
+                    <IonIcon name="chevron-forward-outline" />
+                </div>
             </Button>
 
             <Routes>

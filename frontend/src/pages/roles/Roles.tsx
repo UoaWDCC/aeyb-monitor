@@ -81,7 +81,7 @@ function Roles() {
             {/* Page heading */}
             <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
-                <div className="">
+                <div>
                     <Button size='medium' color='#262a6c' onClick={returntoProfile}>
                         <IonIcon name="chevron-back-outline" /> Back </Button>
                 </div>
