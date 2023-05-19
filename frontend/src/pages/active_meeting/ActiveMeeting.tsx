@@ -109,12 +109,9 @@ export default function ActiveMeeting() {
                                             rows={10}
                                         ></textarea>
 
-                                        <button
-                                            className="bg-[#262b6c] text-white p-2 rounded-md"
-                                            onClick={handleSubmit}
-                                        >
+                                        <Button color="#262b6c" size="medium" onClick={handleSubmit}>
                                             Submit for {activeUser}
-                                        </button>
+                                        </Button>
 
                                         <div className="w-full mt-2">
                                             {message && (
