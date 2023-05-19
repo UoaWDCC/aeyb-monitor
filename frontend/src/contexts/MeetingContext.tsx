@@ -1,7 +1,9 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import MeetingDTO from "@shared/dtos/MeetingDTO";
-import { useUserContext } from "./UserContext";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
+import LoadingSpinner from '../utility_components/LoadingSpinner';
 import { UnimplementedFunction } from "../utils";
+import { useUserContext } from "./UserContext";
 
 export interface MeetingContextProps {
     meetings: Record<string, MeetingDTO>;
@@ -18,6 +20,7 @@ const MeetingContext = createContext<MeetingContextProps>({
 export function MeetingContextProvider({ children }: { children?: ReactNode }) {
     const userContext = useUserContext();
     const [meetings, setMeetings] = useState<Record<string, MeetingDTO>>({});
+    const [isLoading, setIsLoading] = useState(true); //State to track loading state
 
     useEffect(() => {
         if (userContext.user && userContext.hasPermission("VIEW_MEETINGS")) {
@@ -33,8 +36,9 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
                     setMeetings(meetings);
                 }
             });
-
         }
+        setIsLoading(false);
+
     }, [userContext]);
 
     function addMeeting(meeting: MeetingDTO) {
@@ -48,7 +52,19 @@ export function MeetingContextProvider({ children }: { children?: ReactNode }) {
 
     return (
         <MeetingContext.Provider value={contextValue}>
-            {children}
+            {isLoading ?
+                <div className="flex items-center justify-center h-screen">
+                    <LoadingSpinner className='w-16 h-16' />
+                </div>
+                : children}
         </MeetingContext.Provider>
+    )
+}
+
+export function MeetingContextLayout() {
+    return (
+        <MeetingContextProvider>
+            <Outlet />
+        </MeetingContextProvider>
     )
 }

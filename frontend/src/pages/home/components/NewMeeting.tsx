@@ -8,6 +8,8 @@ import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
 import Button from 'src/utility_components/Button';
+import LoadingSpinner from '../../../utility_components/LoadingSpinner';
+
 
 const defaultValues = {
     title: '',
@@ -24,6 +26,7 @@ export default function NewMeeting(props) {
 
     const { isNewMeetingOpen, setIsNewMeetingOpen } = props
     const [formValues, setFormValues] = useState(defaultValues);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -84,7 +87,11 @@ export default function NewMeeting(props) {
         } satisfies AddMeetingRequest;
 
         console.log(formValues);
+
+        setIsLoading(true);
         const data = await userContext.fetcher('POST /api/meetings', meetingRequest);
+        setIsLoading(false);
+
         if (data) {
             meetingContext.addMeeting(data.meeting);
             setFormValues(defaultValues);
@@ -94,8 +101,21 @@ export default function NewMeeting(props) {
 
     return (
         <>
-            {
-                isNewMeetingOpen ?
+            {isLoading ? (
+                <div className="fixed z-50 top-0 left-0 w-full h-full overflow-hidden bg-gray-800 opacity-50 flex items-center justify-center">
+                    <div className="bg-white border py-2 px-5 rounded-lg flex flex-col items-center">
+                        <div className="loader-dots grid grid-cols-3 gap-2">
+                            <div className="bg-[#7d6ca3] rounded-full w-2 h-2"></div>
+                            <div className="bg-[#7d6ca3] rounded-full w-2 h-2"></div>
+                            <div className="bg-[#7d6ca3] rounded-full w-2 h-2"></div>
+                        </div>
+                        <div className="text-gray-500 text-xs font-light mt-2 text-center">
+                            Please wait...
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                isNewMeetingOpen && (
                     <div className='flex items-center justify-center fixed h-screen w-full top-0 left-0 '>
                         <div className='opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20' ></div >
                         <div className='text-5xl bg-white p-10 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative'>
@@ -149,9 +169,10 @@ export default function NewMeeting(props) {
                             </form>
                         </div>
                     </div >
-                    : <div></div>
-            }
+                )
+            )}
         </>
-    )
+    );
+
 
 }

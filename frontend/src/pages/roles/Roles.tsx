@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../contexts/UserContext';
 import RoleDTO from '@shared/dtos/RoleDTO';
 import UserDTO from '@shared/dtos/UserDTO';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from '../../utility_components/LoadingSpinner';
 import { Permission } from '@shared/utils/Permission';
 import PermissionsList from './components/PermissionsList';
 import Button from 'src/utility_components/Button';
@@ -70,10 +70,14 @@ function Roles() {
     };
 
     const handleSaveRole = async () => {
-        await userContext.fetcher('PATCH /api/roles/:roleId', {
-            permissions: roles[activeRole].permissions
-        }, { roleId: roles[activeRole].id });
-    }
+        await userContext.fetcher(
+            'PATCH /api/roles/:roleId',
+            {
+                permissions: roles[activeRole].permissions,
+            },
+            { roleId: roles[activeRole].id },
+        );
+    };
 
     return (
         // Page container
@@ -82,8 +86,9 @@ function Roles() {
             <div className="px-4 pt-2 flex flex-row h-[5%]">
                 {/* Return button */}
                 <div>
-                    <Button size='medium' color='#262a6c' onClick={returntoProfile}>
-                        <IonIcon name="chevron-back-outline" /> Back </Button>
+                    <Button size="medium" color="#262a6c" onClick={returntoProfile}>
+                        <IonIcon name="chevron-back-outline" /> Back{' '}
+                    </Button>
                 </div>
             </div>
             <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
@@ -110,7 +115,16 @@ function Roles() {
                                 permissions={roles[activeRole].permissions}
                                 setPermissions={handleSetPermissions}
                             />
-                            <Button size="medium" color="#262a6c" extraStyles="ml-[100%] translate-x-[-100%] mt-5" onClick={handleSaveRole}>Save</Button>
+                            {userContext.hasPermission('MANAGE_ROLES') && (
+                                <Button
+                                    size="medium"
+                                    color="#262a6c"
+                                    extraStyles="ml-[100%] translate-x-[-100%] mt-5"
+                                    onClick={handleSaveRole}
+                                >
+                                    Save
+                                </Button>
+                            )}
                         </>
                     ) : (
                         <div className="flex flex-col gap-4">

@@ -10,7 +10,7 @@ import {
     GetMeetingData,
     UpdateMeetingData,
 } from '@shared/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
+import { AddMeetingRequest, UpdateMeetingRequest, EndMeetingRequest } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 
 const paginationOptions = PaginationHandler.createOptions();
@@ -94,6 +94,25 @@ const updateMeeting = asyncHandler(
     },
 );
 
+const endMeeting = asyncHandler(
+    async (req: TypedRequest<EndMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const { finishTime } = req.body;
+        const meeting = await Meeting.findByIdAndUpdate(
+            req.params.meetingId,
+            { finishTime },
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+
 /**
  * @desc 	Delete a specific meeting
  * @route 	DELETE /api/meetings/:meetingId
@@ -106,4 +125,4 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     res.sendStatus(204);
 });
 
-export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting };
+export { getAllMeetings, getMeeting, addMeeting, deleteMeeting, updateMeeting, endMeeting };

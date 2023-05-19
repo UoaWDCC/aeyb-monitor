@@ -4,6 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import RoleDTO from '@shared/dtos/RoleDTO';
+import { useUserContext } from '../../../contexts/UserContext';
 
 interface Props {
     roles: RoleDTO[],
@@ -14,6 +15,7 @@ interface Props {
 export default function RoleList(props: Props) {
     //Open new role input box
     const [openAddRole, setOpenAddRole] = useState(false);
+    const userContext = useUserContext();
 
     const handleAddRole = async () => {
         if ((document.getElementById('role-input') as HTMLInputElement).value !== '') {
@@ -31,12 +33,12 @@ export default function RoleList(props: Props) {
                 <h1 className="text-2xl">Roles</h1>
 
                 {/*Icon to open/close add role box  */}
-                <FontAwesomeIcon
+                {userContext.hasPermission('MANAGE_ROLES') && <FontAwesomeIcon
                     icon={openAddRole ? faXmark : faPlus}
                     size="lg"
                     color="[#262B6C]"
                     onClick={() => setOpenAddRole(!openAddRole)}
-                />
+                />}
             </div>
 
             {/*Add role box */}
