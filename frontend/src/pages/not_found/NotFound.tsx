@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from 'src/utility_components/Button';
 
 export default function NotFound() {
     const navigate = useNavigate();
@@ -26,13 +27,9 @@ export default function NotFound() {
                     unavailable.
                 </p>
 
-                {/* Temp HTML button - Not using Generalised Component because not pushed yet */}
-                <button
-                    className="home-page-button bg-[#272C6C] text-white mt-6 px-6 py-3 rounded-md"
-                    onClick={returntoHomePage}
-                >
+                <Button color="#272C6C" extraStyles="mt-6" onClick={returntoHomePage}>
                     Go To Homepage
-                </button>
+                </Button>
             </div>
         </div>
     );

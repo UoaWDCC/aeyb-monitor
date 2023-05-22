@@ -5,6 +5,7 @@ import PostMeeting from './components/PostMeeting';
 import { useMeetingContext } from '../../contexts/MeetingContext';
 import NewMeeting from './components/NewMeeting';
 import { useState } from 'react';
+import Button from 'src/utility_components/Button';
 import { useUserContext } from '../../contexts/UserContext';
 
 export default function Homepage() {
@@ -57,12 +58,9 @@ export default function Homepage() {
                                     <p className="containerTtl">Upcoming meetings:</p>
                                 )}
                                 {userContext.hasPermission('MANAGE_MEETINGS') && (
-                                    <button
-                                        className="bg-[#7d6ca3] text-white m-2 px-2 rounded-md"
-                                        onClick={() => setIsNewMeetingOpen(true)}
-                                    >
+                                    <Button size="medium" color="#262a6c" onClick={() => setIsNewMeetingOpen(true)}>
                                         + New Meeting
-                                    </button>
+                                    </Button>
                                 )}
                             </div>
                             {renderUpcomingMeetings()}

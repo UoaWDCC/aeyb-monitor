@@ -11,6 +11,7 @@ import UserDTO from '@shared/dtos/UserDTO';
 import LoadingSpinner from '../../utility_components/LoadingSpinner';
 import { Permission } from '@shared/utils/Permission';
 import PermissionsList from './components/PermissionsList';
+import Button from 'src/utility_components/Button';
 
 function Roles() {
     const userContext = useUserContext();
@@ -69,29 +70,23 @@ function Roles() {
     };
 
     const handleSaveRole = async () => {
-        await userContext.fetcher('PATCH /api/roles/:roleId', {
-            permissions: roles[activeRole].permissions
-        }, { roleId: roles[activeRole].id });
-    }
+        await userContext.fetcher(
+            'PATCH /api/roles/:roleId',
+            {
+                permissions: roles[activeRole].permissions,
+            },
+            { roleId: roles[activeRole].id },
+        );
+    };
 
     return (
-        // Page container
         <div className=" md:pl-[90px] bg-white overflow-scroll h-screen md:ml-4">
-            {/* Page heading */}
             <div className="px-4 pt-2 flex flex-row h-[5%]">
-                {/* Return button */}
-                <div className="">
-                    <button
-                        className="text-2xl text-[#262b6c] items-center flex flex-row hover:text-[#465188]"
-                        onClick={returntoProfile}
-                    >
-                        <IonIcon name="chevron-back-outline" />
-                        back
-                    </button>
-                </div>
+                <Button size="medium" color="#262a6c" onClick={returntoProfile}>
+                    <IonIcon name="chevron-back-outline" /> Back{' '}
+                </Button>
             </div>
             <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
-                {/* Left column of roles and users */}
                 <div className="flex flex-col">
                     <div className="h-[40%]">
                         <RoleList
@@ -105,7 +100,6 @@ function Roles() {
                     </div>
                 </div>
 
-                {/* Right column of permissions */}
                 <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
                     {activeRole ? (
                         <>
@@ -114,8 +108,16 @@ function Roles() {
                                 permissions={roles[activeRole].permissions}
                                 setPermissions={handleSetPermissions}
                             />
-                            {userContext.hasPermission('MANAGE_ROLES') && <button onClick={handleSaveRole} className="bg-[#bdc3e3] px-5 py-2 rounded-sm ml-[100%] translate-x-[-100%] mt-5">Save</button>}
-
+                            {userContext.hasPermission('MANAGE_ROLES') && (
+                                <Button
+                                    size="medium"
+                                    color="#262a6c"
+                                    extraStyles="ml-[100%] translate-x-[-100%] mt-5"
+                                    onClick={handleSaveRole}
+                                >
+                                    Save
+                                </Button>
+                            )}
                         </>
                     ) : (
                         <div className="flex flex-col gap-4">

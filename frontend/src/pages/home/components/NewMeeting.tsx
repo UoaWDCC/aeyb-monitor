@@ -7,6 +7,7 @@ import { useUserContext } from '../../../contexts/UserContext';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
+import Button from 'src/utility_components/Button';
 import LoadingSpinner from '../../../utility_components/LoadingSpinner';
 
 
@@ -118,9 +119,18 @@ export default function NewMeeting(props) {
                     <div className='flex items-center justify-center fixed h-screen w-full top-0 left-0 '>
                         <div className='opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20' ></div >
                         <div className='text-5xl bg-white p-10 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative'>
-                            <button className='bg-red-400 p-2 hover:bg-red-500 rounded-md text-2xl text-white px-5 absolute top-0 right-0 mt-2 mr-2' onClick={handleExit}>
+
+                            <Button
+                                size='small'
+                                color='#fc6a6a'
+                                textColor='#fff'
+                                extraStyles="text-white px-3.5 py-2 absolute top-0 right-0 mt-2.5 mr-2.5"
+                                onClick={handleExit}
+                            >
                                 <FontAwesomeIcon icon={faClose} />
-                            </button>
+                            </Button>
+
+
                             <h1 className='my-5'>Create new meeting</h1>
 
                             <form className='flex flex-col items-center text-lg w-3/4' onSubmit={handleSubmit}>
@@ -155,8 +165,7 @@ export default function NewMeeting(props) {
                                     value={formValues.description}
                                     onChange={handleInputChange}
                                 />
-                                <button className='bg-[#7d6ca3] text-white p-2 rounded-md text-3xl  px-5 my-2' type="submit">Submit</button>
-
+                                <Button extraStyles='mt-6 px-5' size='large' color="#262a6c" type="submit">Submit</Button>
                             </form>
                         </div>
                     </div >

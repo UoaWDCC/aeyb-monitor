@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from 'src/contexts/UserContext';
 import LoadingSpinner from '../../utility_components/LoadingSpinner';
 import AttendanceSelect from './components/AttendanceSelect';
+import Button from 'src/utility_components/Button';
 import Rating from './components/RadioGroupRating';
 import UserList from './components/UserList';
 
@@ -108,12 +109,9 @@ export default function ActiveMeeting() {
                                             rows={10}
                                         ></textarea>
 
-                                        <button
-                                            className="bg-[#262b6c] text-white p-2 rounded-md"
-                                            onClick={handleSubmit}
-                                        >
+                                        <Button color="#262b6c" size="medium" onClick={handleSubmit}>
                                             Submit for {activeUser}
-                                        </button>
+                                        </Button>
 
                                         <div className="w-full mt-2">
                                             {message && (
@@ -125,12 +123,15 @@ export default function ActiveMeeting() {
                                     </div>
                                 )}
 
-                                <button
-                                    className="mt-5 text-red-600 font-extrabold border-2 border-red-600 p-2 rounded-md w-1/3"
+                                <Button
+                                    color="#fff"
+                                    size="medium"
+                                    textColor="#dc264e"
+                                    extraStyles="mt-5 font-extrabold border-2 border-red-600 w-1/3"
                                     onClick={() => setLeaveMeetingOpen(true)}
                                 >
                                     END MEETING
-                                </button>
+                                </Button>
                                 {leaveMeetingOpen && (
                                     <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0 z-20">
                                         <div className="opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-30"></div>

@@ -1,0 +1,15 @@
+@keyframes swipe {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-swipe {
+    animation-name: swipe;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
