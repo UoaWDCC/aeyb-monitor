@@ -7,6 +7,7 @@ import NewMeeting from './components/NewMeeting';
 import { useState } from 'react';
 import Button from 'src/utility_components/Button';
 import { useUserContext } from '../../contexts/UserContext';
+import ScrollToTop from '../../utility_components/ScrollToTop';
 
 export default function Homepage() {
     const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
@@ -75,6 +76,7 @@ export default function Homepage() {
                 </div>
             </div>
             <NewMeeting isNewMeetingOpen={isNewMeetingOpen} setIsNewMeetingOpen={setIsNewMeetingOpen} />
+            <ScrollToTop />
         </>
     );
 }
