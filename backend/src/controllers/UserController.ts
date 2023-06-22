@@ -205,7 +205,7 @@ const giveRoles = asyncHandler(
         }
 
         // Check atleast one role specified
-        if (req.body.roleIds.length == 0) {
+        if (req.body.roleIds.length === 0) {
             return res.invalid('You must specify atleast one role');
         }
 
@@ -222,7 +222,7 @@ const giveRoles = asyncHandler(
         const user = await User.findByIdAndUpdateRoles(
             req.params.userId,
             { $addToSet: { roles: { $each: req.body.roleIds } } },
-            { new: true }, // returns the updated document
+            { new: true },
         );
 
         if (!user) {
@@ -248,51 +248,32 @@ const removeRoles = asyncHandler(
         }
 
         // Check atleast one role specified
-        if (req.body.roleIds.length == 0) {
+        if (req.body.roleIds.length === 0) {
             return res.invalid('You must specify atleast one role');
         }
 
-        // Get the user
-        const user = await User.findByIdWithRoles(req.params.userId);
+        const roles = await Role.find({
+            _id: { $in: req.body.roleIds },
+            name: { $nin: ['Admin', 'Default'] },
+        });
+
+        if (roles.length != req.body.roleIds.length) {
+            return res.invalid('One or more of the specified roles do not exist or cannot be removed');
+        }
+
+        const user = await User.findByIdAndUpdateRoles(
+            req.params.userId,
+            { $pullAll: { roles: req.body.roleIds } },
+            { new: true },
+        );
+
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const removedRoles: RoleDocument[] = [];
-
-        for (const roleId of req.body.roleIds) {
-            // Check if role exists
-            const role = await Role.findById(roleId);
-
-            if (!role) {
-                return res.notFound(`There is no role with the id ${roleId}`);
-            }
-
-            if (['Admin', 'Default'].indexOf(role.name) !== -1) {
-                continue;
-            }
-
-            // Don't include duplicates
-            if (!removedRoles.includes(role)) {
-                removedRoles.push(role);
-            }
-        }
-
-        // Remove the roles from the user or the removed list if the user doesn't have the role
-        for (const role of removedRoles) {
-            const index = user.roles.findIndex((r) => r.id === role.id);
-            if (index >= 0) {
-                user.roles.splice(index, 1);
-            } else {
-                removedRoles.splice(removedRoles.indexOf(role), 1);
-            }
-        }
-
-        await user.save();
-
         res.ok({
             user,
-            removedRoles,
+            removedRoles: roles,
         });
     },
 );
