@@ -26,6 +26,7 @@ import {
 import { Permission } from '@shared/utils/Permission';
 import { Request } from 'express';
 import { createNewUser } from '../services/UserService';
+import UserDTO from '../../../shared/dtos/UserDTO';
 
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
@@ -208,35 +209,29 @@ const giveRoles = asyncHandler(
             return res.invalid('You must specify atleast one role');
         }
 
-        // Get the user
-        const user = await User.findByIdWithRoles(req.params.userId);
+        // Check if all roles exist
+        const roles = await Role.find({
+            _id: { $in: req.body.roleIds },
+        });
+
+        if (roles.length != req.body.roleIds.length) {
+            return res.invalid('One or more of the specified roles do not exist');
+        }
+
+        // Update user roles ensuring no duplicates
+        const user = await User.findByIdAndUpdateRoles(
+            req.params.userId,
+            { $addToSet: { roles: { $each: req.body.roleIds } } },
+            { new: true }, // returns the updated document
+        );
+
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const addedRoles: RoleDocument[] = [];
-
-        for (const roleId of req.body.roleIds) {
-            // Check if role exists
-            const role = await Role.findById(roleId);
-            if (!role) {
-                return res.notFound(`There is no role with the id ${roleId}`);
-            }
-
-            // Ignore duplicates and roles the user already has
-            if (!(user.roles.includes(role) || addedRoles.includes(role))) {
-                addedRoles.push(role);
-            }
-        }
-
-        // Give the roles to the user
-        user.roles = user.roles.concat(addedRoles);
-
-        await user.save();
-
         res.ok({
             user,
-            addedRoles,
+            addedRoles: roles,
         });
     },
 );
