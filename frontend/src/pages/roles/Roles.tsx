@@ -172,7 +172,7 @@ function Roles() {
                         return <ViewRolesWindow roles={roles}  />
                     } else if (data.tabTitle === 'Users') {
                         data.tabData // readonly ['user1', 'user2']
-                        return <ViewUserWindow users={users} />
+                        return <ViewUserWindow users={users} setUsers={setUsers} />
                     }
 
                     return <></>;
@@ -226,30 +226,61 @@ function TabManager<const K, const T extends { tabTitle: string; tabData?: K }>(
     );
 }
 
-function ViewUserWindow({users}: {users: Record<string, UserDTO>}) {
+function ViewUserWindow({users, setUsers}: {users: Record<string, UserDTO>, setUsers: (users: Record<string, UserDTO>) => void}) {
     const content = Object.keys(users).map(username => {
         return {
             tabTitle: users[username].name,
             tabData: {...users[username]}
         }
     });
+
+    const userContext = useUserContext();
+    
+    async function removeRole(role: RoleDTO, userId: string) {
+        if (['Admin', 'Default'].indexOf(role.name) !== -1) {
+            return;
+        }
+
+        const data = await userContext.fetcher('DELETE /api/users/:userId/roles', {
+            roleIds: [role.id]
+        }, { userId });
+
+        if (data) {
+            const newUsers = {...users, [userId]: data.user};
+            setUsers(newUsers);
+        }
+    }
+    
+    const colors = ['bg-[#ae49b8]', 'bg-[#7d259d]', 'bg-[#748f9a]', 'bg-[#455a64]', 'bg-[#f44279]', 'bg-[#c91e5c]', 'bg-[#586bbb]', 'bg-[#0087cc]', 'bg-[#005898]', 'bg-[#0097a3]', 'bg-[#008779]', 'bg-[#004d41]', 'bg-[#629d44]', 'bg-[#2f6929]', 'bg-[#8d6e64]', 'bg-[#60423c]', 'bg-[#7e58bd]', 'bg-[#5232a2]', 'bg-[#f86c27]', 'bg-[#ff5231]', 'bg-[#c63921]'];
     
     return (
         <div className='p-4 flex flex-col gap-3 overflow-scroll w-full'>
             {content.map((data, index) => {
+                const color = colors[data.tabData.name.length % colors.length];
+                
                 return (
                     <div key={index} className='flex flex-row gap-2 items-center w-full'>
                         <div className='flex flex-row items-center gap-2 w-[300px]'>
-                            <img src={data.tabData.profileUrl} className='rounded-full w-9' />
+                            {/* <img src={data.tabData.profileUrl} className='rounded-full w-9 h-9' /> */}
+                            <span className={`w-9 h-9 rounded-full flex items-center justify-center font-medium text-xl text-white capitalize select-none ${color}`}>
+                                <span className='translate-x-[0.5px] translate-y-[-0.5px]'>
+                                    {data.tabData.name.slice(0)[0]}
+                                </span>
+                            </span>
                             <span className='h-min'>
                                 {data.tabData.name}
                             </span>
                         </div>
                         <div className='flex gap-1 flex-wrap w-full min-w-0'>
                             {data.tabData.roles.map(role => {
-                                return <span className='px-2 py-1 bg-slate-200 rounded-md hover:line-through hover:bg-slate-300 cursor-pointer'>{role.name}</span>
+                                return <span 
+                                    onClick={() => removeRole(role, data.tabData.id)} 
+                                    key={`${data.tabData.name} ${role.id}`} 
+                                    className={`px-2 py-1 bg-slate-200 rounded-md ${['Admin', 'Default'].indexOf(role.name) === -1 && 'hover:line-through'} hover:bg-slate-300 cursor-pointer select-none`}>
+                                        {role.name}
+                                    </span>
                             })}
-                            <span className='px-2 py-1 leading-tight bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer'>+</span>
+                            <span className='px-2 py-1 leading-tight bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none'>+</span>
                         </div>
                     </div>
                 );
