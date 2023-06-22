@@ -268,9 +268,15 @@ const removeRoles = asyncHandler(
         for (const roleId of req.body.roleIds) {
             // Check if role exists
             const role = await Role.findById(roleId);
+
             if (!role) {
                 return res.notFound(`There is no role with the id ${roleId}`);
             }
+
+            if (['Admin', 'Default'].indexOf(role.name) !== -1) {
+                continue;
+            }
+
             // Don't include duplicates
             if (!removedRoles.includes(role)) {
                 removedRoles.push(role);
