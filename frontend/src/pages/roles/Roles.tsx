@@ -219,7 +219,7 @@ function TabManager<const K, const T extends { tabTitle: string; tabData?: K }>(
                     );
                 })}
             </div>
-            <div className={`w-full h-full flex min-h-0 ${''}`}>
+            <div className={`w-full h-full flex min-h-0 overflow-scroll ${''}`}>
                 {activeTab !== null ? loader(content[activeTab]) : false}
             </div>
         </div>
