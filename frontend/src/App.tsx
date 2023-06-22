@@ -11,7 +11,6 @@ import UserProfile from './pages/profiles/ProfileInfo';
 import Roles from './pages/roles/Roles';
 import Sidebar from './utility_components/sidebar/Sidebar';
 
-
 function App() {
     const AppRoutes = () => {
         const userContext = useUserContext();
@@ -21,7 +20,7 @@ function App() {
                 {userContext.user ? (
                     <>
                         <Route path="/" element={<Sidebar />}>
-                            <Route element={<MeetingContextLayout />} >
+                            <Route element={<MeetingContextLayout />}>
                                 <Route path="/" element={<Homepage />} />
                                 <Route path="calendarpage" element={<CalendarPage />} />
                                 <Route path="activemeeting/:meetingId" element={<ActiveMeeting />} />
@@ -29,15 +28,14 @@ function App() {
                             </Route>
                             <Route path="profilepage/roles" element={<Roles />} />
                             <Route path="profilepage/*" element={<UserProfile />} />
-                        </Route >
+                        </Route>
                         <Route path="*" element={<NotFound />} />
                         <Route path="/login" element={<Login />} />
                     </>
                 ) : (
                     <Route path="*" element={<Login />} />
-                )
-                }
-            </Routes >
+                )}
+            </Routes>
         );
     };
 
