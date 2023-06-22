@@ -86,7 +86,7 @@ function Roles() {
     };
 
     return (
-        <div className=" md:pl-[90px] bg-white overflow-scroll md:ml-4 h-screen">
+        <div className=" md:pl-[90px] bg-white md:ml-4 h-screen flex flex-col max-h-screen min-h-0">
             <div className="my-2 flex flex-row">
                 <Button size="medium" color="#262a6c" onClick={returntoProfile}>
                     <IonIcon name="chevron-back-outline" /> Back{' '}
@@ -196,8 +196,8 @@ function TabManager<const K, const T extends { tabTitle: string; tabData?: K }>(
     const [activeTab, setActiveTab] = useState<number>(0);
 
     return (
-        <div className={`w-full h-full flex break-all ${orientation === 'row' ? 'flex-col' : 'flex-row'}`}>
-            <div className={`flex border-[rgba(0, 0, 0, 0.01)] ${orientation === 'row' ? 'flex-row border-b-2' : 'flex-col border-r-2 w-[300px]'}`}>
+        <div className={`w-full h-full min-h-0 min-w-0 flex break-all ${orientation === 'row' ? 'flex-col' : 'flex-row'}`}>
+            <div className={`flex border-[rgba(0, 0, 0, 0.01)] overflow-scroll ${orientation === 'row' ? 'flex-row border-b-2' : 'flex-col border-r-2 w-[300px] over'}`}>
                 {content.map((tab, index) => {
                     return (
                         <span
@@ -219,7 +219,7 @@ function TabManager<const K, const T extends { tabTitle: string; tabData?: K }>(
                     );
                 })}
             </div>
-            <div className={`w-full h-full flex ${''}`}>
+            <div className={`w-full h-full flex min-h-0 ${''}`}>
                 {activeTab !== null ? loader(content[activeTab]) : false}
             </div>
         </div>
@@ -235,11 +235,33 @@ function ViewUserWindow({users}: {users: Record<string, UserDTO>}) {
     });
     
     return (
-        <TabManager
-            content={content}
-            loader={(data) => <ViewPermissions user={data.tabData} />}
-        />
+        <div className='p-4 flex flex-col gap-3 overflow-scroll w-full'>
+            {content.map((data, index) => {
+                return (
+                    <div key={index} className='flex flex-row gap-2 items-center w-full'>
+                        <div className='flex flex-row items-center gap-2 w-[300px]'>
+                            <img src={data.tabData.profileUrl} className='rounded-full w-9' />
+                            <span className='h-min'>
+                                {data.tabData.name}
+                            </span>
+                        </div>
+                        <div className='flex gap-1 flex-wrap w-full min-w-0'>
+                            {data.tabData.roles.map(role => {
+                                return <span className='px-2 py-1 bg-slate-200 rounded-md hover:line-through hover:bg-slate-300 cursor-pointer'>{role.name}</span>
+                            })}
+                            <span className='px-2 py-1 leading-tight bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer'>+</span>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
     );
+    // return (
+    //     <TabManager
+    //         content={content}
+    //         loader={(data) => <ViewPermissions user={data.tabData} />}
+    //     />
+    // );
 }
 
 function ViewRolesWindow({roles}: {roles: Record<string, RoleDTO>}) {
