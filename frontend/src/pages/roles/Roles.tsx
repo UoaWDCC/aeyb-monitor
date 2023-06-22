@@ -13,6 +13,7 @@ import LoadingSpinner from '../../utility_components/LoadingSpinner';
 import { Permission } from '@shared/utils/Permission';
 import PermissionsList from './components/PermissionsList';
 import Button from 'src/utility_components/Button';
+import Switch from '@mui/material/Switch';
 
 const PermissionsLists: { roles: Permission[]; users: Permission[]; meetings: Permission[] } = {
     roles: ['VIEW_ROLES', 'MANAGE_ROLES'],
@@ -97,52 +98,6 @@ function Roles() {
                     <IonIcon name="chevron-back-outline" /> Back{' '}
                 </Button> */}
             </div>
-            {/* <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
-                <div className="flex flex-col">
-                    <div className="h-[40%]">
-                        <RoleList
-                            roles={Object.values(roles)}
-                            handleChangeActiveRole={setActiveRole}
-                            handleAddRole={handleAddRole}
-                        />
-                    </div>
-                    <div className="h-[40%]">
-                        <UserList users={users} />
-                    </div>
-                </div>
-
-                <div className="col-span-2 p-2 rounded-md mt-10 md:mt-0 h-fit">
-                    {activeRole ? (
-                        <>
-                            <PermissionsList
-                                activeRole={roles[activeRole].name}
-                                permissions={roles[activeRole].permissions}
-                                setPermissions={handleSetPermissions}
-                            />
-                            {userContext.hasPermission('MANAGE_ROLES') && (
-                                <Button
-                                    size="medium"
-                                    color="#262a6c"
-                                    extraStyles="ml-[100%] translate-x-[-100%] mt-5"
-                                    onClick={handleSaveRole}
-                                >
-                                    Save
-                                </Button>
-                            )}
-                        </>
-                    ) : (
-                        <div className="flex flex-col gap-4">
-                            <div className="text-center text-[#262b6c] text-3xl">Select a role to view permissions</div>
-                            {isLoading && (
-                                <div className="flex items-center gap-2 justify-center text-[#bdc3e3]">
-                                    <LoadingSpinner />
-                                    <p className="text-2xl font-semibold">Loading...</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div> */}
             <TabManager
                 orientation='row'
                 content={[
@@ -270,7 +225,7 @@ function Roles() {
                         );
                     } else if (data.tabTitle === 'Roles') {
                         data.tabData
-                        return <ViewRolesWindow roles={roles}  />
+                        return <ViewRolesWindow roles={roles} setRoles={setRoles} />
                     } else if (data.tabTitle === 'Users') {
                         data.tabData // readonly ['user1', 'user2']
                         return <ViewUserWindow users={users} setUsers={setUsers} roles={roles} />
@@ -375,12 +330,6 @@ function ViewUserWindow({users, setUsers, roles}: {users: Record<string, UserDTO
             })}
         </div>
     );
-    // return (
-    //     <TabManager
-    //         content={content}
-    //         loader={(data) => <ViewPermissions user={data.tabData} />}
-    //     />
-    // );
 }
 
 function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: RoleDTO[], removeRole: (role: RoleDTO, userId: string) => void, addRole: (role: RoleDTO, userId: string) => void}) {
@@ -392,7 +341,7 @@ function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: 
 
     return (
         <>
-            <div className='flex flex-row gap-2 items-center w-full'>
+            <div className='flex flex-row gap-2 items-center w-full border-b-[1px] border-slate-300 pb-3'>
                 <div className='flex flex-row items-center gap-2 w-[300px]'>
                     <span className={`w-9 h-9 rounded-full flex items-center justify-center font-medium text-xl text-white capitalize select-none ${color}`}>
                         <span className='translate-x-[0.5px] translate-y-[-0.5px]'>
@@ -416,9 +365,7 @@ function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: 
                         onClick={() => setShowRoles(true)}
                         className='px-2 py-1 leading-tight bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative'
                         ref={ref}
-                    >
-                        +
-                    </div>
+                    >+</div>
                     <Popover
                         open={showRoles}
                         onClose={() => setShowRoles(false)}
@@ -447,54 +394,121 @@ function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: 
                     </Popover>
                 </div>
             </div>
-            {/* {
-                showRoles &&
-                <div className='flex flex-col'>
-                    {roles.filter(role => ['Admin', 'Default', ...user.roles.map(role => role.name)].indexOf(role.name) === -1).map(role => {
-                        return (
-                            <div className='p-2 hover:bg-slate-200 cursor-pointer' onClick={() => addRole(role, user.id)}>
-                                {role.name}
-                            </div>
-                        );
-                    })}
-                </div>
-            } */}
         </>
     );
 }
 
-function ViewRolesWindow({roles}: {roles: Record<string, RoleDTO>}) {
+function ViewRolesWindow({roles, setRoles}: {roles: Record<string, RoleDTO>, setRoles: (roles: Record<string, RoleDTO>) => void}) {
     const content = Object.keys(roles).map(id => {
         return {
             tabTitle: roles[id].name,
             tabContent: {...roles[id]}
         };
     });
+
+    const userContext = useUserContext();
+    async function savePermissions(role: RoleDTO) {
+        const data = await userContext.fetcher('PATCH /api/roles/:roleId', role, {
+            roleId: role.id
+        });
+
+        // console.log(data)
+        if (data) {
+            const newRoles = {...roles, [role.id]: role};
+            setRoles(newRoles);
+        }
+    }
+    
     return <TabManager 
         content={content}
         loader={(data) => {
             return (
                 <div className='p-6 w-full'>
                     <h1 className='font-semibold text-2xl'>{`${data.tabContent.name} role's permissions`}</h1>
-                    {data.tabContent.permissions}
+                    <div>
+                        <ViewPermissions 
+                            role={data.tabContent}
+                            savePermissions={savePermissions}
+                        />
+                    </div>
+                    {/* {data.tabContent.permissions} */}
                 </div>
             );
         }}
     />
 }
 
-function ViewPermissions({user}: {user: UserDTO}) {
+function ViewPermissions({role, savePermissions}: {role: RoleDTO, savePermissions: (role: RoleDTO) => void}) {
+    function checkSwitch(perm: Permission) {
+        if (['Admin', 'Default'].indexOf(role.name) !== -1) {
+            return;
+        }
+
+        const perms = new Set(role.permissions);
+        if (perms.has(perm)) {
+            console.log('delete')
+            perms.delete(perm);
+        } else {
+            perms.add(perm);
+        }
+        savePermissions({
+            ...role,
+            ['permissions']: Array.from(perms) as Permission[]
+        })
+        // setRoles(newRoles)
+        // console.log('124yu1r9ifh')
+    }
+    
     return (
-        <div className='p-6 w-full'>
-            <h1 className='font-semibold text-2xl'>{user.name}'s roles</h1>
-            {user.roles.map(role => {
-                return (
-                    <div key={`${user.id}-${role.id}`}>
-                        {role.name}
-                    </div>
-                );
-            })}
-            {/* {user.roles} */}
+        <div className='py-6 gap-4 flex flex-col w-full'>
+            <div>
+                <h2>Users</h2>
+                <div className='grid grid-cols-2 gap-4 justify-between'>
+                    {PermissionsLists.users.map(perm => {
+                        return (
+                            <div key={perm} className='flex justify-between items-center'>
+                                {perm}
+                                <Switch
+                                    checked={role.permissions.indexOf(perm) !== -1}
+                                    onChange={() => checkSwitch(perm)}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+            <div>
+                <h2>Meetings</h2>
+                <div className='grid grid-cols-2 gap-4 justify-between'>
+                    {PermissionsLists.meetings.map(perm => {
+                        return (
+                            <div key={perm} className='flex justify-between items-center'>
+                                {perm}
+                                <Switch
+                                    checked={role.permissions.indexOf(perm) !== -1}
+                                    onChange={() => checkSwitch(perm)}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+            <div>
+                <h2>Roles</h2>
+                <div className='grid grid-cols-2 gap-4 justify-between'>
+                    {PermissionsLists.roles.map(perm => {
+                        return (
+                            <div key={perm} className='flex justify-between items-center'>
+                                {perm}
+                                <Switch
+                                    checked={role.permissions.indexOf(perm) !== -1}
+                                    onChange={() => checkSwitch(perm)}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     )
 }
