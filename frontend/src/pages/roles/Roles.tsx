@@ -1,5 +1,6 @@
 import IonIcon from '@reacticons/ionicons';
-import React, { useEffect, useState } from 'react';
+import Popover from '@mui/material/Popover';
+import React, { useEffect, useRef, useState } from 'react';
 import './Roles.css';
 
 import UserList from './components/UserList';
@@ -86,11 +87,15 @@ function Roles() {
     };
 
     return (
-        <div className=" md:pl-[90px] bg-white md:ml-4 h-screen flex flex-col max-h-screen min-h-0">
+        <div className=" md:pl-[90px] bg-white mx-2 h-screen flex flex-col max-h-screen min-h-0">
             <div className="my-2 flex flex-row">
-                <Button size="medium" color="#262a6c" onClick={returntoProfile}>
+                <span onClick={returntoProfile} className='flex flex-row items-center px-2 py-1 pr-3 cursor-pointer border-slate-300 border-solid border-[1px] rounded-md' >
+                    <IonIcon name="chevron-back-outline" />
+                    Back
+                </span>
+                {/* <Button size="medium" color="#262a6c" onClick={returntoProfile}>
                     <IonIcon name="chevron-back-outline" /> Back{' '}
-                </Button>
+                </Button> */}
             </div>
             {/* <div className=" w-full p-4 rounded-md md:grid md:grid-cols-3 md:gap-12 overflow-scroll h-full">
                 <div className="flex flex-col">
@@ -383,12 +388,12 @@ function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: 
     const color = colors[user.name.length % colors.length];
 
     const [showRoles, setShowRoles] = useState<boolean>(false);
+    const ref = useRef(null);
 
     return (
         <>
             <div className='flex flex-row gap-2 items-center w-full'>
                 <div className='flex flex-row items-center gap-2 w-[300px]'>
-                    {/* <img src={data.tabData.profileUrl} className='rounded-full w-9 h-9' /> */}
                     <span className={`w-9 h-9 rounded-full flex items-center justify-center font-medium text-xl text-white capitalize select-none ${color}`}>
                         <span className='translate-x-[0.5px] translate-y-[-0.5px]'>
                             {user.name.slice(0)[0]}
@@ -402,18 +407,47 @@ function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: 
                     {user.roles.map(role => {
                         return <span 
                             onClick={() => removeRole(role, user.id)} 
-                            key={`${user.name} ${role.id}`} 
-                            className={`px-2 py-1 bg-slate-200 rounded-md ${['Admin', 'Default'].indexOf(role.name) === -1 && 'hover:line-through'} hover:bg-slate-300 cursor-pointer select-none`}>
+                            key={`${user.name} ${role.id} ${Math.random()}`} 
+                            className={`px-2 py-1 bg-slate-200 rounded-md text-sm text-slate-700 ${['Admin', 'Default'].indexOf(role.name) === -1 && 'hover:line-through'} hover:bg-slate-300 cursor-pointer select-none`}>
                                 {role.name}
                             </span>
                     })}
                     <div 
                         onClick={() => setShowRoles(true)}
-                        className='px-2 py-1 leading-tight bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none'
-                    >+</div>
+                        className='px-2 py-1 leading-tight bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative'
+                        ref={ref}
+                    >
+                        +
+                    </div>
+                    <Popover
+                        open={showRoles}
+                        onClose={() => setShowRoles(false)}
+                        anchorEl={ref.current}
+                        anchorOrigin={{
+                            horizontal: 'right',
+                            vertical: 'top'
+                        }}
+                        transformOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left'
+                        }}
+                    >
+                        <>
+                            <div className='w-80 max-h-[200px] p-2'>
+                                <h2>Roles</h2>
+                            </div>
+                            {roles.filter(role => ['Admin', 'Default', ...user.roles.map(role => role.name)].indexOf(role.name) === -1).map(role => {
+                                return (
+                                    <div className='p-2 hover:bg-slate-200 cursor-pointer' onClick={() => addRole(role, user.id)}>
+                                        {role.name}
+                                    </div>
+                                );
+                            })}
+                        </>
+                    </Popover>
                 </div>
             </div>
-            {
+            {/* {
                 showRoles &&
                 <div className='flex flex-col'>
                     {roles.filter(role => ['Admin', 'Default', ...user.roles.map(role => role.name)].indexOf(role.name) === -1).map(role => {
@@ -424,7 +458,7 @@ function UserRoleRow({user, roles, removeRole, addRole}: {user: UserDTO, roles: 
                         );
                     })}
                 </div>
-            }
+            } */}
         </>
     );
 }
