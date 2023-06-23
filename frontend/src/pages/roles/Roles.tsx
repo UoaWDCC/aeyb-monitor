@@ -15,12 +15,8 @@ import PermissionsList from './components/PermissionsList';
 import Button from 'src/utility_components/Button';
 import Switch from '@mui/material/Switch';
 import TabManager from '../../utility_components/tabs';
-
-const PermissionsLists: { roles: Permission[]; users: Permission[]; meetings: Permission[] } = {
-    roles: ['VIEW_ROLES', 'MANAGE_ROLES'],
-    users: ['VIEW_USERS', 'MANAGE_USERS'],
-    meetings: ['VIEW_MEETINGS', 'MANAGE_MEETINGS'],
-};
+import { ViewPermissions } from './components/ViewPermissions';
+import { ViewRolesWindow } from './components/ViewRolesWindow';
 
 function Roles() {
     const userContext = useUserContext();
@@ -489,130 +485,5 @@ function UserRoleRow({
                 </div>
             </div>
         </>
-    );
-}
-
-function ViewRolesWindow({
-    roles,
-    setRoles,
-}: {
-    roles: Record<string, RoleDTO>;
-    setRoles: (roles: Record<string, RoleDTO>) => void;
-}) {
-    const content = Object.keys(roles).map((id) => {
-        return {
-            tabTitle: roles[id].name,
-            tabContent: { ...roles[id] },
-        };
-    });
-
-    const userContext = useUserContext();
-    async function savePermissions(role: RoleDTO) {
-        const data = await userContext.fetcher('PATCH /api/roles/:roleId', role, {
-            roleId: role.id,
-        });
-
-        // console.log(data)
-        if (data) {
-            const newRoles = { ...roles, [role.id]: role };
-            setRoles(newRoles);
-        }
-    }
-
-    return (
-        <TabManager
-            content={content}
-            loader={(data) => {
-                return (
-                    <div className="p-6 w-full">
-                        <h1 className="font-semibold text-2xl">{`${data.tabContent.name} role's permissions`}</h1>
-                        <div>
-                            <ViewPermissions role={data.tabContent} savePermissions={savePermissions} />
-                        </div>
-                        {/* {data.tabContent.permissions} */}
-                    </div>
-                );
-            }}
-        />
-    );
-}
-
-function ViewPermissions({ role, savePermissions }: { role: RoleDTO; savePermissions: (role: RoleDTO) => void }) {
-    const [beingUpdatedSwitch, setBeingUpdatedSwitch] = useState<Set<string>>(new Set());
-
-    function checkSwitch(perm: Permission) {
-        if (['Admin', 'Default'].indexOf(role.name) !== -1) {
-            return;
-        }
-
-        const perms = new Set(role.permissions);
-        if (perms.has(perm)) {
-            console.log('delete');
-            perms.delete(perm);
-        } else {
-            perms.add(perm);
-        }
-        savePermissions({
-            ...role,
-            ['permissions']: Array.from(perms) as Permission[],
-        });
-        // setRoles(newRoles)
-        // console.log('124yu1r9ifh')
-    }
-
-    return (
-        <div className="py-6 gap-4 flex flex-col w-full">
-            <div>
-                <h2>Users</h2>
-                <div className="grid grid-cols-2 gap-4 justify-between">
-                    {PermissionsLists.users.map((perm) => {
-                        return (
-                            <div key={perm} className="flex justify-between items-center p-2 bg-slate-200">
-                                {perm}
-                                <Switch
-                                    checked={role.permissions.indexOf(perm) !== -1}
-                                    onChange={() => checkSwitch(perm)}
-                                    disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
-                                />
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-            <div>
-                <h2>Meetings</h2>
-                <div className="grid grid-cols-2 gap-4 justify-between">
-                    {PermissionsLists.meetings.map((perm) => {
-                        return (
-                            <div key={perm} className="flex justify-between items-center p-2 bg-slate-200 rounded-sm">
-                                {perm}
-                                <Switch
-                                    checked={role.permissions.indexOf(perm) !== -1}
-                                    onChange={() => checkSwitch(perm)}
-                                    disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
-                                />
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-            <div>
-                <h2>Roles</h2>
-                <div className="grid grid-cols-2 gap-4 justify-between">
-                    {PermissionsLists.roles.map((perm) => {
-                        return (
-                            <div key={perm} className="flex justify-between items-center p-2 bg-slate-200 rounded-sm">
-                                {perm}
-                                <Switch
-                                    checked={role.permissions.indexOf(perm) !== -1}
-                                    onChange={() => checkSwitch(perm)}
-                                    disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
-                                />
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        </div>
     );
 }
