@@ -16,8 +16,6 @@ export function ViewPermissions({
     role: RoleDTO;
     savePermissions: (role: RoleDTO) => void;
 }) {
-    const [beingUpdatedSwitch, setBeingUpdatedSwitch] = useState<Set<string>>(new Set());
-
     function checkSwitch(perm: Permission) {
         if (['Admin', 'Default'].indexOf(role.name) !== -1) {
             return;
@@ -34,8 +32,6 @@ export function ViewPermissions({
             ...role,
             ['permissions']: Array.from(perms) as Permission[],
         });
-        // setRoles(newRoles)
-        // console.log('124yu1r9ifh')
     }
 
     return (
