@@ -1,10 +1,10 @@
-import tinycolor from 'tinycolor2';
-import { useEffect, useRef, useState } from 'react';
 import Switch from '@mui/material/Switch';
-import RoleDTO from '../../../../../shared/dtos/RoleDTO';
-import { Permission } from '../../../../../shared/utils/Permission';
-import Button from '../../../utility_components/Button';
+import { useEffect, useRef, useState } from 'react';
+import tinycolor from 'tinycolor2';
+import RoleDTO from '@shared/dtos/RoleDTO';
+import { Permission } from '@shared/utils/Permission';
 import { useUserContext } from '../../../contexts/UserContext';
+import Button from '../../../utility_components/Button';
 
 const PermissionsLists: { roles: Permission[]; users: Permission[]; meetings: Permission[] } = {
     roles: ['VIEW_ROLES', 'MANAGE_ROLES'],

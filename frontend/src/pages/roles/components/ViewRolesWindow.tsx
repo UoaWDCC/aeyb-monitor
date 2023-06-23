@@ -1,12 +1,8 @@
 import RoleDTO from '@shared/dtos/RoleDTO';
 import { useUserContext } from '../../../contexts/UserContext';
-import Switch from '@mui/material/Switch';
 import TabManager from '../../../utility_components/tabs/TabManager';
-import { ViewPermissions } from './ViewPermissions';
-import { Permission } from '@shared/utils/Permission';
-import { useEffect, useRef, useState } from 'react';
-import Button from '../../../utility_components/Button';
 import { CreateNewRole } from './CreateNewRole';
+import { ViewPermissions } from './ViewPermissions';
 
 export function ViewRolesWindow({
     roles,
