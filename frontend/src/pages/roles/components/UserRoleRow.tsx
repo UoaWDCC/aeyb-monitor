@@ -52,7 +52,7 @@ export function UserRoleRow({
                         <>
                             <div
                                 onClick={() => setShowRoles(true)}
-                                className="px-2 py-1 leading-none bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative select-none"
+                                className="px-2 py-1 leading-none bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative"
                                 ref={ref}
                             >
                                 +
