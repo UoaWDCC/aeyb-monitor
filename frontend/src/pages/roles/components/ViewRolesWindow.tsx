@@ -11,12 +11,10 @@ export function ViewRolesWindow({
     roles: Record<string, RoleDTO>;
     setRoles: (roles: Record<string, RoleDTO>) => void;
 }) {
-    const content = Object.keys(roles).map((id) => {
-        return {
-            tabTitle: roles[id].name,
-            tabContent: { ...roles[id] },
-        };
-    });
+    const content = Object.keys(roles).map((id) => ({
+        tabTitle: roles[id].name,
+        tabContent: { ...roles[id] },
+    }));
 
     const userContext = useUserContext();
     async function savePermissions(role: RoleDTO) {
@@ -41,7 +39,7 @@ export function ViewRolesWindow({
     return (
         <TabManager
             content={[{ tabTitle: 'Create New Role', tabContent: { isNotTab: true } }, ...content]}
-            loader={(data) => {
+            contentLoader={(data) => {
                 if ('isNotTab' in data.tabContent) {
                     return <CreateNewRole roles={roles} setRoles={setRoles} />;
                 } else {
@@ -56,6 +54,64 @@ export function ViewRolesWindow({
                         </div>
                     );
                 }
+            }}
+            tabLoader={(content, activeTab, orientation, setActiveTab) => {
+                return content.map((tab, index) => {
+                    if ('isNotTab' in tab.tabContent) {
+                        return (
+                            <div className="sticky top-0 bg-white">
+                                <div
+                                    key={Math.random()}
+                                    onClick={() => {
+                                        setActiveTab(index);
+                                    }}
+                                    className={`px-4 py-8 
+                                        min-w-fit 
+                                        cursor-pointer
+                                        flex justify-between
+                                        sticky
+                                        top-0
+                                        bg-white
+                                        border-b
+                                        border-slate-200
+                                        items-center
+                                        border-r-slate-200
+                                        ${
+                                            index === activeTab
+                                                ? 'bg-slate-300 border-r-slate-500'
+                                                : 'hover:bg-slate-200 border-transparent'
+                                        } 
+                                        ${orientation === 'row' ? 'border-b-2' : 'border-r-2'}`}
+                                >
+                                    <span>{tab.tabTitle}</span>
+                                    <span className="text-xl">+</span>
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        isNotCreate(tab);
+
+                        return (
+                            <span
+                                key={Math.random()}
+                                onClick={() => {
+                                    setActiveTab(index);
+                                }}
+                                className={`px-4 py-2 
+                                        min-w-fit 
+                                        cursor-pointer 
+                                        ${
+                                            index === activeTab
+                                                ? 'bg-slate-300 border-slate-500'
+                                                : 'hover:bg-slate-200 border-transparent'
+                                        } 
+                                        ${orientation === 'row' ? 'border-b-2' : 'border-r-2'}`}
+                            >
+                                {tab.tabTitle}
+                            </span>
+                        );
+                    }
+                });
             }}
         />
     );

@@ -19,15 +19,14 @@ export function UserRoleRow({
     const ref = useRef(null);
 
     function availableRolesToAdd() {
-        const rolesToAdd = roles.filter(
-            (role) => ['Admin', 'Default', ...user.roles.map((role) => role.name)].indexOf(role.name) === -1,
-        );
+        const invalidRoleNames = ['Admin', 'Default', ...user.roles.map((role) => role.name)];
+        const availableRoles = roles.filter((role) => !invalidRoleNames.includes(role.name));
 
-        if (rolesToAdd.length === 0 && showRoles) {
+        if (availableRoles.length === 0 && showRoles) {
             setShowRoles(false);
         }
 
-        return rolesToAdd;
+        return availableRoles;
     }
 
     return (
@@ -39,7 +38,7 @@ export function UserRoleRow({
                         return (
                             <span
                                 onClick={() => removeRole(role, user.id)}
-                                key={`${user.name} ${role.id} ${Math.random()}`}
+                                key={`${user.name} ${role.id}`}
                                 className={`px-2 py-1 bg-slate-200 rounded-md text-sm text-slate-700 select-none ${
                                     ['Admin', 'Default'].indexOf(role.name) === -1 && 'hover:line-through'
                                 } hover:bg-slate-300 cursor-pointer select-none`}

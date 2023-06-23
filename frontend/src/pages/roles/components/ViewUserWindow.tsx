@@ -21,7 +21,7 @@ export function ViewUserWindow({
 
     const userContext = useUserContext();
     async function removeRole(role: RoleDTO, userId: string) {
-        if (['Admin', 'Default'].indexOf(role.name) !== -1) {
+        if (['Admin', 'Default'].includes(role.name)) {
             return;
         }
 

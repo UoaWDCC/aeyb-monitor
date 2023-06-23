@@ -7,7 +7,6 @@ import { useUserContext } from '../../contexts/UserContext';
 import TabManager from '../../utility_components/tabs';
 import { ViewRolesWindow } from './components/ViewRolesWindow';
 import { ViewUserWindow } from './components/ViewUserWindow';
-import { Wowzer } from './components/Wowzer';
 
 import './Roles.css';
 
@@ -63,44 +62,9 @@ function Roles() {
             </div>
             <TabManager
                 orientation="row"
-                content={[
-                    { tabTitle: 'Wowzers', tabData: ['role1', 'role2'] },
-                    { tabTitle: 'Roles' },
-                    { tabTitle: 'Users', tabData: ['user1', 'user2'] },
-                ]}
-                loader={(data) => {
-                    if (data.tabTitle === 'Wowzers') {
-                        return (
-                            <TabManager
-                                orientation="column"
-                                content={[
-                                    { tabTitle: 'Thexboss', tabData: ['Awesome', '🥚'] },
-                                    { tabTitle: 'Timothy', tabData: ['HELLO 😁'] },
-                                    { tabTitle: 'Hello World!', tabData: ['HELLO 😁', '😀😀😀😀😀'] },
-                                    { tabTitle: 'Hello World!', tabData: ['HELLO2 😁', '😀😀😀😀😀'] },
-                                    { tabTitle: 'This is another tab', tabData: ['🐣', '>', '🍗', '=', '😀 + 😋'] },
-                                    { tabTitle: '🌟', tabData: ['🌌'] },
-                                    {
-                                        tabTitle: 'lorem',
-                                        tabData: [
-                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus nullam eget felis eget nunc lobortis mattis aliquam. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Consequat id porta nibh venenatis cras sed. Sapien faucibus et molestie ac feugiat. Eu nisl nunc mi ipsum. Diam vulputate ut pharetra sit amet aliquam id diam maecenas. Natoque penatibus et magnis dis parturient. Sit amet commodo nulla facilisi nullam vehicula. Egestas sed sed risus pretium quam. Porttitor massa id neque aliquam vestibulum morbi. Urna molestie at elementum eu facilisis sed odio. Mattis molestie a iaculis at erat pellentesque. Pellentesque elit ullamcorper dignissim cras. Convallis convallis tellus id interdum velit laoreet. Volutpat blandit aliquam etiam erat velit. Nunc aliquet bibendum enim facilisis gravida neque convallis a. Gravida in fermentum et sollicitudin ac orci. Ut porttitor leo a diam sollicitudin tempor id eu. Donec et odio pellentesque diam volutpat commodo sed egestas egestas. Dignissim suspendisse in est ante. Consectetur adipiscing elit ut aliquam purus. Nunc sed velit dignissim sodales ut eu sem integer. Tincidunt augue interdum velit euismod in pellentesque massa placerat duis. Ut tortor pretium viverra suspendisse potenti nullam ac tortor vitae. Vulputate odio ut enim blandit volutpat maecenas volutpat. Justo donec enim diam vulputate ut pharetra sit amet aliquam. Donec adipiscing tristique risus nec. Urna et pharetra pharetra massa massa ultricies. Nibh sit amet commodo nulla facilisi nullam vehicula ipsum a. Et malesuada fames ac turpis egestas integer eget aliquet. Risus in hendrerit gravida rutrum quisque non tellus orci ac. Dictum sit amet justo donec enim. Risus nullam eget felis eget. Tempor orci dapibus ultrices in iaculis nunc sed augue lacus. Justo laoreet sit amet cursus. Curabitur gravida arcu ac tortor dignissim convallis aenean. Facilisis magna etiam tempor orci eu lobortis elementum nibh tellus. Lacus vel facilisis volutpat est velit. Maecenas accumsan lacus vel facilisis volutpat est velit egestas dui.',
-                                        ],
-                                    },
-                                    { tabTitle: '🤪', tabData: ['🤪🤪🤪'] },
-                                    { tabTitle: 'nested :D', tabData: [] },
-                                ]}
-                                loader={(data) => {
-                                    if (data.tabTitle != 'nested :D') {
-                                        return data.tabData.map((val, index) => {
-                                            return <div key={index}>{val}</div>;
-                                        });
-                                    } else {
-                                        return <Wowzer />;
-                                    }
-                                }}
-                            />
-                        );
-                    } else if (data.tabTitle === 'Roles') {
+                content={[{ tabTitle: 'Roles' }, { tabTitle: 'Users' }]}
+                contentLoader={(data) => {
+                    if (data.tabTitle === 'Roles') {
                         return <ViewRolesWindow roles={roles} setRoles={setRoles} />;
                     } else if (data.tabTitle === 'Users') {
                         return <ViewUserWindow users={users} setUsers={setUsers} roles={roles} />;

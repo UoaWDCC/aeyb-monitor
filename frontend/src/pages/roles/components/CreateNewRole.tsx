@@ -58,10 +58,6 @@ export function CreateNewRole({
         }
     }
 
-    useEffect(() => {
-        console.log(permissions);
-    }, [permissions]);
-
     return (
         <div className="p-6 w-full">
             <h1 className="font-semibold text-2xl">Create new role</h1>
@@ -88,6 +84,7 @@ export function CreateNewRole({
                                                 >
                                                     {perm}
                                                     <Switch
+                                                        color="secondary"
                                                         checked={permissions.has(perm)}
                                                         onChange={() => checkSwitch(perm)}
                                                         disabled={submitDisabled}
@@ -103,7 +100,7 @@ export function CreateNewRole({
                 </div>
             </div>
             <div className="mt-4 flex flex-row-reverse">
-                <Button onClick={createNewRole} disabled={submitDisabled}>
+                <Button onClick={createNewRole} disabled={submitDisabled} color="#5563ae">
                     Create Role
                 </Button>
             </div>

@@ -17,13 +17,12 @@ export function ViewPermissions({
     savePermissions: (role: RoleDTO) => void;
 }) {
     function checkSwitch(perm: Permission) {
-        if (['Admin', 'Default'].indexOf(role.name) !== -1) {
+        if (['Admin', 'Default'].includes(role.name)) {
             return;
         }
 
         const perms = new Set(role.permissions);
         if (perms.has(perm)) {
-            console.log('delete');
             perms.delete(perm);
         } else {
             perms.add(perm);
@@ -44,9 +43,10 @@ export function ViewPermissions({
                             <div key={perm} className="flex justify-between items-center p-2 bg-slate-200">
                                 {perm}
                                 <Switch
+                                    color="secondary"
                                     checked={role.permissions.indexOf(perm) !== -1}
                                     onChange={() => checkSwitch(perm)}
-                                    disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
+                                    disabled={['Admin', 'Default'].includes(role.name)}
                                 />
                             </div>
                         );
@@ -61,6 +61,7 @@ export function ViewPermissions({
                             <div key={perm} className="flex justify-between items-center p-2 bg-slate-200 rounded-sm">
                                 {perm}
                                 <Switch
+                                    color="secondary"
                                     checked={role.permissions.indexOf(perm) !== -1}
                                     onChange={() => checkSwitch(perm)}
                                     disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
@@ -78,6 +79,7 @@ export function ViewPermissions({
                             <div key={perm} className="flex justify-between items-center p-2 bg-slate-200 rounded-sm">
                                 {perm}
                                 <Switch
+                                    color="secondary"
                                     checked={role.permissions.indexOf(perm) !== -1}
                                     onChange={() => checkSwitch(perm)}
                                     disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
