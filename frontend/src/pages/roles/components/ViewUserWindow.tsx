@@ -56,17 +56,15 @@ export function ViewUserWindow({
 
     return (
         <div className="p-4 flex flex-col gap-3 overflow-scroll w-full">
-            {content.map((data, index) => {
-                return (
-                    <UserRoleRow
-                        key={index}
-                        roles={Object.values(roles)}
-                        user={data.tabData}
-                        removeRole={removeRole}
-                        addRole={addRole}
-                    />
-                );
-            })}
+            {content.map((data, index) => (
+                <UserRoleRow
+                    key={index}
+                    roles={Object.values(roles)}
+                    user={data.tabData}
+                    removeRole={removeRole}
+                    addRole={addRole}
+                />
+            ))}
         </div>
     );
 }
