@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import Switch from '@mui/material/Switch';
 import RoleDTO from '@shared/dtos/RoleDTO';
 import { Permission } from '@shared/utils/Permission';
-import Switch from '@mui/material/Switch';
+import { useState } from 'react';
 
 const PermissionsLists: { roles: Permission[]; users: Permission[]; meetings: Permission[] } = {
     roles: ['VIEW_ROLES', 'MANAGE_ROLES'],

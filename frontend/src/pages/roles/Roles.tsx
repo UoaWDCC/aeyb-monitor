@@ -1,25 +1,15 @@
 import IonIcon from '@reacticons/ionicons';
-import Popover from '@mui/material/Popover';
-import React, { useEffect, useRef, useState } from 'react';
-import './Roles.css';
-
-import UserList from './components/UserList';
-import RoleList from './components/RoleList';
-import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../../contexts/UserContext';
 import RoleDTO from '@shared/dtos/RoleDTO';
 import UserDTO from '@shared/dtos/UserDTO';
-import LoadingSpinner from '../../utility_components/LoadingSpinner';
-import { Permission } from '@shared/utils/Permission';
-import PermissionsList from './components/PermissionsList';
-import Button from 'src/utility_components/Button';
-import Switch from '@mui/material/Switch';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../contexts/UserContext';
 import TabManager from '../../utility_components/tabs';
-import { ViewPermissions } from './components/ViewPermissions';
 import { ViewRolesWindow } from './components/ViewRolesWindow';
-import { UserRoleRow } from './components/UserRoleRow';
 import { ViewUserWindow } from './components/ViewUserWindow';
 import { Wowzer } from './components/Wowzer';
+
+import './Roles.css';
 
 function Roles() {
     const userContext = useUserContext();
@@ -28,7 +18,6 @@ function Roles() {
     const [isLoading, setIsLoading] = useState(false);
     const [roles, setRoles] = useState<Record<string, RoleDTO>>({});
     const [users, setUsers] = useState<Record<string, UserDTO>>({});
-    const [activeRole, setActiveRole] = useState<string | null>(null);
 
     useEffect(() => {
         if (isLoading) return;
@@ -61,32 +50,6 @@ function Roles() {
         navigate('/profilepage/');
     };
 
-    const handleAddRole = async (roleName: string) => {
-        const data = await userContext.fetcher('POST /api/roles', {
-            name: roleName,
-            color: '#262b6c',
-            permissions: [],
-        });
-        if (data) {
-            setRoles({ ...roles, [data.role.id]: data.role });
-        }
-    };
-
-    const handleSetPermissions = (newPermissions: Permission[]) => {
-        const updatedRole: RoleDTO = { ...roles[activeRole], permissions: newPermissions };
-        setRoles({ ...roles, [updatedRole.id]: updatedRole });
-    };
-
-    const handleSaveRole = async () => {
-        await userContext.fetcher(
-            'PATCH /api/roles/:roleId',
-            {
-                permissions: roles[activeRole].permissions,
-            },
-            { roleId: roles[activeRole].id },
-        );
-    };
-
     return (
         <div className=" md:pl-[90px] bg-white mx-2 h-screen flex flex-col max-h-screen min-h-0">
             <div className="my-2 flex flex-row">
@@ -97,9 +60,6 @@ function Roles() {
                     <IonIcon name="chevron-back-outline" />
                     Back
                 </span>
-                {/* <Button size="medium" color="#262a6c" onClick={returntoProfile}>
-                    <IonIcon name="chevron-back-outline" /> Back{' '}
-                </Button> */}
             </div>
             <TabManager
                 orientation="row"
@@ -110,11 +70,6 @@ function Roles() {
                 ]}
                 loader={(data) => {
                     if (data.tabTitle === 'Wowzers') {
-                        data.tabData; // readonly ['role1', 'role2']
-                        // return data.tabData.map((val, index) => {
-                        //     data.tabData // readonly ['user1', 'user2']
-                        //     return <div key={index}>{val}</div>;
-                        // });
                         return (
                             <TabManager
                                 orientation="column"
@@ -146,10 +101,8 @@ function Roles() {
                             />
                         );
                     } else if (data.tabTitle === 'Roles') {
-                        data.tabData;
                         return <ViewRolesWindow roles={roles} setRoles={setRoles} />;
                     } else if (data.tabTitle === 'Users') {
-                        data.tabData; // readonly ['user1', 'user2']
                         return <ViewUserWindow users={users} setUsers={setUsers} roles={roles} />;
                     }
 

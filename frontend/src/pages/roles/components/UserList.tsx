@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import UserDTO from '@shared/dtos/UserDTO';
+import { useEffect, useState } from 'react';
 
 interface Props {
     users: Record<string, UserDTO>;
@@ -17,9 +17,11 @@ export default function UserList(props: Props) {
         if (search === '') {
             setVisibleUsers(Object.keys(props.users));
         } else {
-            setVisibleUsers(Object.values(props.users)
-                .filter((user) => user.name.toLowerCase().includes(loweredSearch))
-                .map((user) => user.id));
+            setVisibleUsers(
+                Object.values(props.users)
+                    .filter((user) => user.name.toLowerCase().includes(loweredSearch))
+                    .map((user) => user.id),
+            );
         }
     }
 
@@ -46,7 +48,7 @@ export default function UserList(props: Props) {
                             className="text-lg p-2 text-[#262b6c] bg-[#bdc3e3] mt-1 hover:text-[#bdc3e3] hover:bg-[#262b6c]"
                             key={userId}
                             onClick={() => {
-                                console.log(`Clicked ${userId}`)
+                                console.log(`Clicked ${userId}`);
                             }}
                         >
                             <p>{user.name}</p>
