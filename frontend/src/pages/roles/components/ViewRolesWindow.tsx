@@ -73,9 +73,9 @@ export function ViewRolesWindow({
                                         top-0
                                         bg-white
                                         border-b
-                                        border-slate-200
+                                        border-b-slate-200
+                                        border-r-1
                                         items-center
-                                        border-r-slate-200
                                         ${
                                             index === activeTab
                                                 ? 'bg-slate-300 border-r-slate-500'
