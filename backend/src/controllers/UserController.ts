@@ -5,7 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '@shared/params';
 import { TypedRequest } from '../types/UtilTypes';
-import Role, { RoleDocument } from '../models/RoleModel';
+import Role from '../models/RoleModel';
 import GooglePayload from '../types/GooglePayload';
 import {
     DevLoginRequest,
@@ -26,7 +26,6 @@ import {
 import { Permission } from '@shared/utils/Permission';
 import { Request } from 'express';
 import { createNewUser } from '../services/UserService';
-import UserDTO from '../../../shared/dtos/UserDTO';
 
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
