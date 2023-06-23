@@ -40,7 +40,7 @@ export function UserRoleRow({
                             <span
                                 onClick={() => removeRole(role, user.id)}
                                 key={`${user.name} ${role.id} ${Math.random()}`}
-                                className={`px-2 py-1 bg-slate-200 rounded-md text-sm text-slate-700 ${
+                                className={`px-2 py-1 bg-slate-200 rounded-md text-sm text-slate-700 select-none ${
                                     ['Admin', 'Default'].indexOf(role.name) === -1 && 'hover:line-through'
                                 } hover:bg-slate-300 cursor-pointer select-none`}
                             >
@@ -52,7 +52,7 @@ export function UserRoleRow({
                         <>
                             <div
                                 onClick={() => setShowRoles(true)}
-                                className="px-2 py-1 leading-none bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative"
+                                className="px-2 py-1 leading-none bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative select-none"
                                 ref={ref}
                             >
                                 +
@@ -77,7 +77,7 @@ export function UserRoleRow({
                                     {availableRolesToAdd().map((role) => {
                                         return (
                                             <div
-                                                className="p-2 hover:bg-slate-200 cursor-pointer"
+                                                className="p-2 hover:bg-slate-200 cursor-pointer select-none"
                                                 key={`${role.id}`}
                                                 onClick={() => addRole(role, user.id)}
                                             >
