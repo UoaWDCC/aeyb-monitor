@@ -48,43 +48,47 @@ export function UserRoleRow({
                             </span>
                         );
                     })}
-                    <div
-                        onClick={() => setShowRoles(true)}
-                        className="px-2 py-1 leading-none bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative"
-                        ref={ref}
-                    >
-                        +
-                    </div>
-                    <Popover
-                        open={showRoles}
-                        onClose={() => setShowRoles(false)}
-                        anchorEl={ref.current}
-                        anchorOrigin={{
-                            horizontal: 'right',
-                            vertical: 'top',
-                        }}
-                        transformOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                    >
+                    {availableRolesToAdd().length !== 0 && (
                         <>
-                            <div className="w-80 max-h-[200px] p-2">
-                                <h2>Roles</h2>
+                            <div
+                                onClick={() => setShowRoles(true)}
+                                className="px-2 py-1 leading-none bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer select-none relative"
+                                ref={ref}
+                            >
+                                +
                             </div>
-                            {availableRolesToAdd().map((role) => {
-                                return (
-                                    <div
-                                        className="p-2 hover:bg-slate-200 cursor-pointer"
-                                        key={`${role.id}`}
-                                        onClick={() => addRole(role, user.id)}
-                                    >
-                                        {role.name}
+                            <Popover
+                                open={showRoles}
+                                onClose={() => setShowRoles(false)}
+                                anchorEl={ref.current}
+                                anchorOrigin={{
+                                    horizontal: 'right',
+                                    vertical: 'top',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                            >
+                                <>
+                                    <div className="w-80 max-h-[200px] p-2">
+                                        <h2>Roles</h2>
                                     </div>
-                                );
-                            })}
+                                    {availableRolesToAdd().map((role) => {
+                                        return (
+                                            <div
+                                                className="p-2 hover:bg-slate-200 cursor-pointer"
+                                                key={`${role.id}`}
+                                                onClick={() => addRole(role, user.id)}
+                                            >
+                                                {role.name}
+                                            </div>
+                                        );
+                                    })}
+                                </>
+                            </Popover>
                         </>
-                    </Popover>
+                    )}
                 </div>
             </div>
         </>
