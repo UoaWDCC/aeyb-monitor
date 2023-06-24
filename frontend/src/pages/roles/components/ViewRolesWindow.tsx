@@ -39,7 +39,7 @@ export function ViewRolesWindow({
     return (
         <TabManager
             content={[{ tabTitle: 'Create New Role', tabData: { isNotTab: true } }, ...content]}
-            ContentLoader={({ data }) => {
+            contentLoader={(data) => {
                 if ('isNotTab' in data.tabData) {
                     return <CreateNewRole roles={roles} setRoles={setRoles} />;
                 } else {
@@ -55,19 +55,17 @@ export function ViewRolesWindow({
                     );
                 }
             }}
-            TabLoader={({ content, activeTab, orientation, setActiveTab }) => {
-                return (
-                    <>
-                        {content.map((tab, index) => {
-                            if ('isNotTab' in tab.tabData) {
-                                return (
-                                    <div className="sticky top-0 bg-white" key={index}>
-                                        <div
-                                            key={Math.random()}
-                                            onClick={() => {
-                                                setActiveTab(index);
-                                            }}
-                                            className={`px-4 py-8 
+            tabLoader={(content, activeTab, orientation, setActiveTab) => {
+                return content.map((tab, index) => {
+                    if ('isNotTab' in tab.tabData) {
+                        return (
+                            <div key={index} className="sticky top-0 bg-white">
+                                <div
+                                    key={Math.random()}
+                                    onClick={() => {
+                                        setActiveTab(index);
+                                    }}
+                                    className={`px-4 py-8 
                                         min-w-fit 
                                         cursor-pointer
                                         flex justify-between
@@ -84,22 +82,21 @@ export function ViewRolesWindow({
                                                 : 'hover:bg-slate-200 border-transparent'
                                         } 
                                         ${orientation === 'row' ? 'border-b-2' : 'border-r-2'}`}
-                                        >
-                                            <span>{tab.tabTitle}</span>
-                                            <span className="text-xl">+</span>
-                                        </div>
-                                    </div>
-                                );
-                            } else {
-                                isNotCreate(tab);
-
-                                return (
-                                    <span
-                                        key={Math.random()}
-                                        onClick={() => {
-                                            setActiveTab(index);
-                                        }}
-                                        className={`px-4 py-2 
+                                >
+                                    <span>{tab.tabTitle}</span>
+                                    <span className="text-xl">+</span>
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        isNotCreate(tab);
+                        return (
+                            <span
+                                key={index}
+                                onClick={() => {
+                                    setActiveTab(index);
+                                }}
+                                className={`px-4 py-2 
                                         min-w-fit 
                                         cursor-pointer 
                                         ${
@@ -108,14 +105,12 @@ export function ViewRolesWindow({
                                                 : 'hover:bg-slate-200 border-transparent'
                                         } 
                                         ${orientation === 'row' ? 'border-b-2' : 'border-r-2'}`}
-                                    >
-                                        {tab.tabTitle}
-                                    </span>
-                                );
-                            }
-                        })}
-                    </>
-                );
+                            >
+                                {tab.tabTitle}
+                            </span>
+                        );
+                    }
+                });
             }}
         />
     );
