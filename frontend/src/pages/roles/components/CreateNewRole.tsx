@@ -1,8 +1,8 @@
 import Switch from '@mui/material/Switch';
-import { useEffect, useRef, useState } from 'react';
-import tinycolor from 'tinycolor2';
 import RoleDTO from '@shared/dtos/RoleDTO';
 import { Permission } from '@shared/utils/Permission';
+import { useRef, useState } from 'react';
+import tinycolor from 'tinycolor2';
 import { useUserContext } from '../../../contexts/UserContext';
 import Button from '../../../utility_components/Button';
 

@@ -63,7 +63,7 @@ function Roles() {
             <TabManager
                 orientation="row"
                 content={[{ tabTitle: 'Roles' }, { tabTitle: 'Users' }]}
-                contentLoader={(data) => {
+                ContentLoader={({ data }) => {
                     if (data.tabTitle === 'Roles') {
                         return <ViewRolesWindow roles={roles} setRoles={setRoles} />;
                     } else if (data.tabTitle === 'Users') {
