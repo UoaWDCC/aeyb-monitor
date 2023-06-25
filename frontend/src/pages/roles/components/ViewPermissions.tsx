@@ -43,7 +43,7 @@ export function ViewPermissions({
                                 {perm}
                                 <Switch
                                     color="secondary"
-                                    checked={role.permissions.indexOf(perm) !== -1}
+                                    checked={role.permissions.includes(perm)}
                                     onChange={() => checkSwitch(perm)}
                                     disabled={['Admin', 'Default'].includes(role.name)}
                                 />
@@ -61,9 +61,9 @@ export function ViewPermissions({
                                 {perm}
                                 <Switch
                                     color="secondary"
-                                    checked={role.permissions.indexOf(perm) !== -1}
+                                    checked={role.permissions.includes(perm)}
                                     onChange={() => checkSwitch(perm)}
-                                    disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
+                                    disabled={['Admin', 'Default'].includes(role.name)}
                                 />
                             </div>
                         );
@@ -79,9 +79,9 @@ export function ViewPermissions({
                                 {perm}
                                 <Switch
                                     color="secondary"
-                                    checked={role.permissions.indexOf(perm) !== -1}
+                                    checked={role.permissions.includes(perm)}
                                     onChange={() => checkSwitch(perm)}
-                                    disabled={['Admin', 'Default'].indexOf(role.name) !== -1}
+                                    disabled={['Admin', 'Default'].includes(role.name)}
                                 />
                             </div>
                         );
