@@ -5,7 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { TypedRequestParams, TypedResponse } from '../types/UtilTypes';
 import { UserIdParam } from '@shared/params';
 import { TypedRequest } from '../types/UtilTypes';
-import Role, { RoleDocument } from '../models/RoleModel';
+import Role from '../models/RoleModel';
 import GooglePayload from '../types/GooglePayload';
 import {
     DevLoginRequest,
@@ -204,39 +204,33 @@ const giveRoles = asyncHandler(
         }
 
         // Check atleast one role specified
-        if (req.body.roleIds.length == 0) {
+        if (req.body.roleIds.length === 0) {
             return res.invalid('You must specify atleast one role');
         }
 
-        // Get the user
-        const user = await User.findByIdWithRoles(req.params.userId);
+        // Check if all roles exist
+        const roles = await Role.find({
+            _id: { $in: req.body.roleIds },
+        });
+
+        if (roles.length != req.body.roleIds.length) {
+            return res.invalid('One or more of the specified roles do not exist');
+        }
+
+        // Update user roles ensuring no duplicates
+        const user = await User.findByIdAndUpdateRoles(
+            req.params.userId,
+            { $addToSet: { roles: { $each: req.body.roleIds } } },
+            { new: true },
+        );
+
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const addedRoles: RoleDocument[] = [];
-
-        for (const roleId of req.body.roleIds) {
-            // Check if role exists
-            const role = await Role.findById(roleId);
-            if (!role) {
-                return res.notFound(`There is no role with the id ${roleId}`);
-            }
-
-            // Ignore duplicates and roles the user already has
-            if (!(user.roles.includes(role) || addedRoles.includes(role))) {
-                addedRoles.push(role);
-            }
-        }
-
-        // Give the roles to the user
-        user.roles = user.roles.concat(addedRoles);
-
-        await user.save();
-
         res.ok({
             user,
-            addedRoles,
+            addedRoles: roles,
         });
     },
 );
@@ -253,45 +247,32 @@ const removeRoles = asyncHandler(
         }
 
         // Check atleast one role specified
-        if (req.body.roleIds.length == 0) {
+        if (req.body.roleIds.length === 0) {
             return res.invalid('You must specify atleast one role');
         }
 
-        // Get the user
-        const user = await User.findByIdWithRoles(req.params.userId);
+        const roles = await Role.find({
+            _id: { $in: req.body.roleIds },
+            name: { $nin: ['Admin', 'Default'] },
+        });
+
+        if (roles.length != req.body.roleIds.length) {
+            return res.invalid('One or more of the specified roles do not exist or cannot be removed');
+        }
+
+        const user = await User.findByIdAndUpdateRoles(
+            req.params.userId,
+            { $pullAll: { roles: req.body.roleIds } },
+            { new: true },
+        );
+
         if (!user) {
             return res.notFound(`There is no user with the id ${req.params.userId}`);
         }
 
-        const removedRoles: RoleDocument[] = [];
-
-        for (const roleId of req.body.roleIds) {
-            // Check if role exists
-            const role = await Role.findById(roleId);
-            if (!role) {
-                return res.notFound(`There is no role with the id ${roleId}`);
-            }
-            // Don't include duplicates
-            if (!removedRoles.includes(role)) {
-                removedRoles.push(role);
-            }
-        }
-
-        // Remove the roles from the user or the removed list if the user doesn't have the role
-        for (const role of removedRoles) {
-            const index = user.roles.findIndex((r) => r.id === role.id);
-            if (index >= 0) {
-                user.roles.splice(index, 1);
-            } else {
-                removedRoles.splice(removedRoles.indexOf(role), 1);
-            }
-        }
-
-        await user.save();
-
         res.ok({
             user,
-            removedRoles,
+            removedRoles: roles,
         });
     },
 );
