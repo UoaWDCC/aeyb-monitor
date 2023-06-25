@@ -11,38 +11,7 @@ import { ViewUserWindow } from './components/ViewUserWindow';
 import './Roles.css';
 
 function Roles() {
-    const userContext = useUserContext();
     const navigate = useNavigate();
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [roles, setRoles] = useState<Record<string, RoleDTO>>({});
-    const [users, setUsers] = useState<Record<string, UserDTO>>({});
-
-    useEffect(() => {
-        if (isLoading) return;
-
-        const fetchRoles = async () => {
-            const data = await userContext.fetcher('GET /api/roles');
-            if (data) {
-                const roles: Record<string, RoleDTO> = {};
-                data.roles.forEach((role) => (roles[role.id] = role));
-                setRoles(roles);
-            }
-        };
-
-        const fetchUsers = async () => {
-            const data = await userContext.fetcher('GET /api/users');
-            if (data) {
-                const users: Record<string, UserDTO> = {};
-                data.users.forEach((user) => (users[user.id] = user));
-                setUsers(users);
-            }
-        };
-
-        setIsLoading(true);
-        Promise.all([fetchRoles(), fetchUsers()]).finally(() => setIsLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     // Navigation back to profile page
     const returntoProfile = () => {
@@ -65,7 +34,7 @@ function Roles() {
                 content={[{ tabTitle: 'Roles' }, { tabTitle: 'Users' }]}
                 contentLoader={(data) => {
                     if (data.tabTitle === 'Roles') {
-                        return <ViewRolesWindow roles={roles} setRoles={setRoles} />;
+                        return <ViewRolesWindow />;
                     } else if (data.tabTitle === 'Users') {
                         return <ViewUserWindow />;
                     }

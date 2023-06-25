@@ -3,20 +3,37 @@ import { useUserContext } from '../../../contexts/UserContext';
 import TabManager from '../../../utility_components/tabs/TabManager';
 import { CreateNewRole } from './CreateNewRole';
 import { ViewPermissions } from './ViewPermissions';
+import UserDTO from '../../../../../shared/dtos/UserDTO';
+import { useEffect, useState } from 'react';
+import LoadingSpinner from '../../../utility_components/LoadingSpinner';
 
-export function ViewRolesWindow({
-    roles,
-    setRoles,
-}: {
-    roles: Record<string, RoleDTO>;
-    setRoles: (roles: Record<string, RoleDTO>) => void;
-}) {
+export function ViewRolesWindow() {
+    const userContext = useUserContext();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [roles, setRoles] = useState<Record<string, RoleDTO>>({});
+
+    useEffect(() => {
+        if (isLoading) return;
+
+        const fetchRoles = async () => {
+            const data = await userContext.fetcher('GET /api/roles');
+            if (data) {
+                const roles: Record<string, RoleDTO> = {};
+                data.roles.forEach((role) => (roles[role.id] = role));
+                setRoles(roles);
+            }
+        };
+
+        setIsLoading(true);
+        Promise.all([fetchRoles()]).finally(() => setIsLoading(false));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const content = Object.keys(roles).map((id) => ({
         tabTitle: roles[id].name,
         tabData: { ...roles[id] },
     }));
 
-    const userContext = useUserContext();
     async function savePermissions(role: RoleDTO) {
         const data = await userContext.fetcher('PATCH /api/roles/:roleId', role, {
             roleId: role.id,
@@ -46,6 +63,14 @@ export function ViewRolesWindow({
         if (data.tabTitle === 'Create New Role' && 'isNotTab' in data.tabData) {
             throw new Error();
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center w-full h-full">
+                <LoadingSpinner />
+            </div>
+        );
     }
 
     return (

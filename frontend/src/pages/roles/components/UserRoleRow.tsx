@@ -70,8 +70,8 @@ export function UserRoleRow({
                                 }}
                             >
                                 <>
-                                    <div className="w-80 max-h-[200px] p-2">
-                                        <h2>Roles</h2>
+                                    <div className="w-80 max-h-[200px] px-2 py-4 border-b border-slate-200 sticky top-0 bg-white">
+                                        <h2>Select Roles</h2>
                                     </div>
                                     {availableRolesToAdd().map((role) => {
                                         return (
