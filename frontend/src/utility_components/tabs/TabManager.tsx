@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function TabManager<const K, const T extends { tabTitle: string; tabData?: K }>({
     content,
@@ -41,7 +41,7 @@ export default function TabManager<const K, const T extends { tabTitle: string; 
                 }
             </div>
             <div className={`w-full h-full flex min-h-0 overflow-scroll ${''}`}>
-                {activeTab !== null ? contentLoader(content[activeTab]) : false}
+                {activeTab !== null && activeTab < content.length ? contentLoader(content[activeTab]) : false}
             </div>
         </div>
     );

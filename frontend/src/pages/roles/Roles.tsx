@@ -67,7 +67,7 @@ function Roles() {
                     if (data.tabTitle === 'Roles') {
                         return <ViewRolesWindow roles={roles} setRoles={setRoles} />;
                     } else if (data.tabTitle === 'Users') {
-                        return <ViewUserWindow users={users} setUsers={setUsers} roles={roles} />;
+                        return <ViewUserWindow />;
                     }
 
                     return <></>;

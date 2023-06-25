@@ -28,6 +28,18 @@ export function ViewRolesWindow({
         }
     }
 
+    async function deleteRole(role: RoleDTO) {
+        const data = await userContext.fetcher('DELETE /api/roles/:roleId', undefined, {
+            roleId: role.id,
+        });
+
+        if (data) {
+            const newRoles = { ...roles };
+            delete newRoles[role.id];
+            setRoles(newRoles);
+        }
+    }
+
     function isNotCreate(
         data: typeof content[number] | { tabTitle: 'Create New Role'; tabData: { isNotTab: true } },
     ): asserts data is typeof content[number] {
@@ -47,7 +59,17 @@ export function ViewRolesWindow({
 
                     return (
                         <div className="p-6 w-full">
-                            <h1 className="font-semibold text-2xl">{`${data.tabData.name} role's permissions`}</h1>
+                            <div className="flex justify-between items-baseline">
+                                <h1 className="font-semibold text-2xl">{`${data.tabData.name} role's permissions`}</h1>
+                                {!['Admin', 'Default'].includes(data.tabTitle) && (
+                                    <span
+                                        onClick={() => deleteRole(data.tabData)}
+                                        className="text-rose-600 text-sm cursor-pointer"
+                                    >
+                                        Delete
+                                    </span>
+                                )}
+                            </div>
                             <div>
                                 <ViewPermissions role={data.tabData} savePermissions={savePermissions} />
                             </div>
