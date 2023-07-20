@@ -4,5 +4,6 @@
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "githubPullRequests.ignoredPullRequestBranches": ["main"]
+    "githubPullRequests.ignoredPullRequestBranches": ["main"],
+    "typescript.preferences.importModuleSpecifier": "relative"
 }

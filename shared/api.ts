@@ -1,12 +1,12 @@
 import { AttendanceIdParam, LocationIdParam, MeetingIdParam, RoleIdParam, UserIdParam } from './params';
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
-import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from './requests/MeetingRequests';
+import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest, EndMeetingRequest } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
 import { AddLocationRequest } from './requests/LocationRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
-import { AddMeetingData, GetAllMeetingsData, UpdateMeetingData } from './responses/MeetingResponses';
+import { AddMeetingData, GetAllMeetingsData, GetMeetingData, UpdateMeetingData } from './responses/MeetingResponses';
 import { GetAllPermissionsData } from './responses/PermissionResponsesData';
-import { AddRoleData, DeleteRoleData, GetAllRolesData, GetRoleData } from './responses/RoleResponsesData';
+import { AddRoleData, DeleteRoleData, GetAllRolesData, GetRoleData, UpdateRoleData } from './responses/RoleResponsesData';
 import {
     LoginData,
     GetSelfData,
@@ -45,7 +45,7 @@ export default interface API {
     'GET /api/roles': Endpoint<undefined, GetAllRolesData>;
     'GET /api/roles/:roleId': Endpoint<undefined, GetRoleData, RoleIdParam>;
     'POST /api/roles': Endpoint<AddRoleRequest, AddRoleData>;
-    'PATCH /api/roles/:roleId': Endpoint<UpdateRoleRequest, UpdateUserData, RoleIdParam>;
+    'PATCH /api/roles/:roleId': Endpoint<UpdateRoleRequest, UpdateRoleData, RoleIdParam>;
     'DELETE /api/roles/:roleId': Endpoint<undefined, DeleteRoleData, RoleIdParam>;
 
     // Permission endpoints
@@ -53,9 +53,10 @@ export default interface API {
 
     // Meeting endpoints
     'GET /api/meetings': Endpoint<undefined, GetAllMeetingsData, undefined, GetAllMeetingsQuery>;
-    'GET /api/meetings/:meetingId': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
+    'GET /api/meetings/:meetingId': Endpoint<undefined, GetMeetingData, MeetingIdParam>;
     'POST /api/meetings': Endpoint<AddMeetingRequest, AddMeetingData>;
     'PATCH /api/meetings/:meetingId': Endpoint<UpdateMeetingRequest, UpdateMeetingData, MeetingIdParam>;
+    'PATCH /api/meetings/:meetingId/end': Endpoint<EndMeetingRequest, undefined, MeetingIdParam>;
     'DELETE /api/meetings/:meetingId': Endpoint<undefined, undefined, MeetingIdParam>;
 
     // Attendance endpoints

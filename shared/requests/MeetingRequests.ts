@@ -13,3 +13,7 @@ export type UpdateFeedbackRequest = Omit<AttendanceDTO, 'user' | 'didAttend'>;
 export type UpdateAbsenceRequest = Partial<Omit<AttendanceDTO, 'feedback' | 'rating' | 'didAttend'>>;
 
 export type AddFeedBackRequest = Partial<Omit<AttendanceDTO, 'canAttend' | 'reason' | 'didAttend'>>;
+
+export type EndMeetingRequest = {
+    finishTime: number;
+};

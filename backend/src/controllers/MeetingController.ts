@@ -15,7 +15,7 @@ import {
     GetMeetingData,
     UpdateMeetingData,
 } from '@shared/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
+import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest, EndMeetingRequest } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 import UserDTO from '@shared/dtos/UserDTO';
 import MeetingDTO from '@shared/dtos/MeetingDTO';
@@ -314,6 +314,25 @@ const updateMeeting = asyncHandler(
     },
 );
 
+const endMeeting = asyncHandler(
+    async (req: TypedRequest<EndMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const { finishTime } = req.body;
+        const meeting = await Meeting.findByIdAndUpdate(
+            req.params.meetingId,
+            { finishTime },
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
+        if (!meeting) {
+            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+            return;
+        }
+        res.ok({ meeting: await meeting.asPopulated() });
+    },
+);
+
 /**
  * @desc 	Delete a specific meeting
  * @route 	DELETE /api/meetings/:meetingId
@@ -339,4 +358,5 @@ export {
     getMeetingFeedbackForUser,
     addMeetingFeedback,
     updateMeetingFeedback,
+    endMeeting,
 };

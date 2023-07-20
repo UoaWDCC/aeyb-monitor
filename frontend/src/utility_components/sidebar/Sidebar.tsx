@@ -5,8 +5,8 @@ import Menuitem from './menuitem/Menuitem'
 import { Outlet, useLocation } from 'react-router-dom';
 import { FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { faCalendar, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
-import LogoutButton from '../LogoutButton';
 import { useUserContext } from '../../contexts/UserContext';
+import Button from '../Button';
 
 export interface MenuItemData {
     url: string;
@@ -40,6 +40,10 @@ export default function Sidebar() {
         setIsMenuOpen(!isMenuOpen)
     }
 
+    const logout = () => {
+        userContext.logout()
+    }
+
     const renderMenuItems = () => {
         return MenuItems.map(page => (
             <Menuitem
@@ -68,7 +72,7 @@ export default function Sidebar() {
                             <div className="text-sm">Welcome,</div>
                             <div className='font-bold leading-4 text-lg'>{userContext.user.name}</div>
                         </div>
-                        <LogoutButton />
+                        <Button size='small' color="#262a6c" onClick={logout}>Log Out</Button>
                     </div>
                 </div>
                 {renderMenuItems()}

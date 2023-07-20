@@ -1,4 +1,4 @@
-import { Schema, model, Types, Model } from 'mongoose';
+import { Schema, model, Types, Model, CallbackError, QueryOptions, UpdateQuery } from 'mongoose';
 import UserDTO, { UnpopulatedUserDTO } from '@shared/dtos/UserDTO';
 import { DocumentModel } from '../types/UtilTypes';
 import { applyToJsonOptions } from './Utils';
@@ -12,6 +12,14 @@ export type UserPopulatedDocument = DocumentModel<UserDTO, string>;
 
 export interface TypedUserModel extends Model<UserDocument> {
     findByIdWithRoles(id: string): Promise<UserPopulatedDocument>;
+    findByIdAndUpdateRoles(
+        id: string,
+        update?: UpdateQuery<UserDocument> | undefined,
+        options?: QueryOptions | null | undefined,
+        // Reason for the below is that the findByIdAndUpdate declaration file has the any type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        callback?: ((err: CallbackError, doc: UserDTO | null, res: any) => void) | undefined,
+    ): Promise<UserDTO | null>;
 }
 
 // The user id will be their google id, rather than a generated ObjectId
@@ -40,6 +48,18 @@ userSchema.methods.asPopulated = async function (this: UserDocument) {
 
 userSchema.statics.findByIdWithRoles = async function (this: Model<UserDocument>, id: string) {
     return await this.findById(id).populate('roles');
+};
+
+userSchema.statics.findByIdAndUpdateRoles = async function (
+    this: Model<UserDocument>,
+    id: string,
+    update?: UpdateQuery<UserDocument>,
+    options?: QueryOptions,
+    // Reason for the below is that the findByIdAndUpdate declaration file has the any type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback?: (err: CallbackError, doc: UserDTO | null, res: any) => void,
+): Promise<UserDTO | null> {
+    return await this.findByIdAndUpdate(id, update, options, callback).populate('roles');
 };
 
 const User = model<UserDocument, TypedUserModel>('User', userSchema);

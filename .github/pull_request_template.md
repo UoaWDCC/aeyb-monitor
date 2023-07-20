@@ -2,8 +2,7 @@
 
 **What was done:**
 
-**How to test:**
-
--   [ ]
+## **How to test:**
+-
 
 **Screenshots of UI changes (optional):**

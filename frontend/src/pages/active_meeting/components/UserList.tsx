@@ -9,8 +9,7 @@ export default function UserList(props) {
         if (search === '') {
             setUsers(allUsers);
             setShowUsers(false);
-            console.log("blank");
-
+            console.log('blank');
         } else {
             setShowUsers(true);
             setUsers(allUsers.filter((user) => user.toLowerCase().includes(search.toLowerCase())));
@@ -20,15 +19,12 @@ export default function UserList(props) {
     //Users to display in the list
     const [users, setUsers] = useState(allUsers);
 
-
     return (
         <div className="p-2 rounded-md h-full relative">
-            <h1 className="text-3xl text-white">Users</h1>
-
+            <h1 className="text-3xl">Users</h1>
 
             {/* Search box */}
             <input
-
                 className="text bg-gray-200 w-full rounded-md border-none outline-0 p-2 m-0 mt-2"
                 id="user-search"
                 type="text"
@@ -38,7 +34,7 @@ export default function UserList(props) {
                 }}
             />
 
-            <div className={"absolute top-5/6 overflow-scroll w-full pr-4 " + (showUsers ? 'visible' : 'invisible')}>
+            <div className={'absolute top-5/6 overflow-scroll w-full pr-4 ' + (showUsers ? 'visible' : 'invisible')}>
                 {/* Displays each user that has been searched for */}
                 {users.map((user) => {
                     return (
@@ -48,9 +44,9 @@ export default function UserList(props) {
                             onClick={() => {
                                 setActiveUser(user);
                                 setShowUsers(false);
-                                (document.getElementById("user-search") as HTMLInputElement).value = "";
-                                if ((document.getElementById("comment") as HTMLInputElement))
-                                    (document.getElementById("comment") as HTMLInputElement).value = "";
+                                (document.getElementById('user-search') as HTMLInputElement).value = '';
+                                if (document.getElementById('comment') as HTMLInputElement)
+                                    (document.getElementById('comment') as HTMLInputElement).value = '';
                             }}
                         >
                             <p>{user}</p>
@@ -58,6 +54,6 @@ export default function UserList(props) {
                     );
                 })}
             </div>
-        </div >
+        </div>
     );
 }
