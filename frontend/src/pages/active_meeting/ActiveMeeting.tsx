@@ -137,7 +137,6 @@ export default function ActiveMeeting() {
                                 </Button>
                                 {showModal &&
                                     <ConfirmModal header="Are you sure you want to end the meeting?" text="" leftButtonText="End Meeting" rightButtonText="Cancel" setOpenModal={setShowModal}  onAccept={endMeeting}/>}
-
                             </div>
                         </>
                     )}
