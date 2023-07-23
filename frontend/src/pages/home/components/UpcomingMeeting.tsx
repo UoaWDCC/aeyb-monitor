@@ -3,7 +3,8 @@ import './meeting.css';
 import { getRelativeTime } from '../../../utils/timeUtil';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faCog } from '@fortawesome/free-solid-svg-icons';
+import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -12,6 +13,8 @@ type UpcommingMeetingProps = {
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location } = meeting;
     const [isOpen, setIsOpen] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
+
     const openMeeting = () => {
         setIsOpen(!isOpen);
         console.log(`opening the "${meeting.name}" meeting`);
@@ -27,15 +30,24 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
     return (
         <div className="upcomingMeeting">
-            <div className="meetingTitle capitalize flex justify-between">
-                {meeting.name}
+            <div className="Header flex justify-between">
+                <div className="meetingTitle capitalize">
+                    {meeting.name}
+                    <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
+                        size="sm"
+                        onClick={openMeeting}
+                    />
+                </div>
                 <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'}`}
-                    size="l"
-                    onClick={openMeeting}
+                    icon={faCog}
+                    size="lg"
+                    className="cog cursor-pointer"
+                    onClick={() => setOpenProfile(!openProfile)}
                 />
             </div>
+            {openProfile && <DropdownMenu items={['Edit meeting', 'Delete meeting']} />}
             {isOpen ? (
                 <div className="meetingDetails">
                     <div>Description: {description}</div>

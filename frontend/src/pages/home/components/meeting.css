@@ -48,3 +48,8 @@
     transition: all 0.2s linear;
     transform: rotate(0);
 }
+
+.cog:hover {
+    transform: rotate(60deg);
+    transition: all 0.25s ease-in-out;
+}
