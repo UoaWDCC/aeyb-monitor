@@ -56,11 +56,7 @@ export default function NewMeeting(props) {
 
     const confirmSubmit = (event) => {
         event.preventDefault();
-        setShowModal(true);
-    }
-
-    async function handleSubmit() {
-
+        
         if (formValues.startTime.getTime() < Date.now()) {
             alert('Start time cannot be in the past');
             return;
@@ -70,6 +66,11 @@ export default function NewMeeting(props) {
             alert('Start time cannot be later than finish time');
             return;
         }
+
+        setShowModal(true);
+    }
+
+    async function createMeeting() {
 
         const meetingRequest: AddMeetingRequest = {
             startTime: formValues.startTime.getTime(),
@@ -177,7 +178,7 @@ export default function NewMeeting(props) {
                 leftButtonText="Yes" 
                 rightButtonText="No" 
                 setOpenModal={setShowModal} 
-                onAccept={handleSubmit} /> )}
+                onAccept={createMeeting} /> )}
         </>
     );
 
