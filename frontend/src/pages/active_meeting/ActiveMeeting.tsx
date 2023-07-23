@@ -24,6 +24,14 @@ export default function ActiveMeeting() {
     const [isLoading, setIsLoading] = useState(true);
     const [meeting, setMeeting] = useState<null | MeetingDTO>();
 
+    const allUsers = ['Joe', 'Bob', 'Raymond', 'User 2', 'Mary', 'Jane', 'Susan'];
+    const [activeUser, setActiveUser] = useState('');
+    const [attendance, setAttendance] = useState(AttendanceType.Attended);
+    const [rating, setRating] = useState(3);
+    const [message, setMessage] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchRoles = async () => {
             setIsLoading(true);
@@ -42,21 +50,6 @@ export default function ActiveMeeting() {
         };
         fetchRoles();
     }, [meetingId]);
-
-    const allUsers = ['Joe', 'Bob', 'Raymond', 'User 2', 'Mary', 'Jane', 'Susan'];
-    const [activeUser, setActiveUser] = useState('');
-
-    const [leaveMeetingOpen, setLeaveMeetingOpen] = useState(false);
-
-    const [attendance, setAttendance] = useState(AttendanceType.Attended);
-
-    const [rating, setRating] = useState(3);
-
-    const navigate = useNavigate();
-
-    const [message, setMessage] = useState('');
-
-    const [showModal, setShowModal] = useState(false);
 
     function handleSubmit() {
         console.log(`User: ${activeUser},
@@ -135,8 +128,16 @@ export default function ActiveMeeting() {
                                 >
                                     END MEETING
                                 </Button>
-                                {showModal &&
-                                    <ConfirmModal header="Are you sure you want to end the meeting?" text="" leftButtonText="End Meeting" rightButtonText="Cancel" setOpenModal={setShowModal}  onAccept={endMeeting}/>}
+                                {showModal && (
+                                    <ConfirmModal
+                                        header="End Meeting"
+                                        text="Are you sure you want to end the meeting?"
+                                        leftButtonText="End Meeting"
+                                        rightButtonText="Cancel"
+                                        setOpenModal={setShowModal}
+                                        onAccept={endMeeting}
+                                    />
+                                )}
                             </div>
                         </>
                     )}
