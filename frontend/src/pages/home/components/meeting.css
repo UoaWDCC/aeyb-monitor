@@ -5,15 +5,16 @@
     flex-direction: column;
     justify-content: center;
     border-radius: 10px;
-    transition: all 0.2s
+    transition: all 0.2s;
 }
 
 .upcomingMeeting {
-    background-color: #D9D2E9;
+    background-color: #d9d2e9;
+    transition: 1s ease-in-out;
 }
 
 .postMeeting {
-    background-color: #FFE599;
+    background-color: #ffe599;
 }
 
 .upcomingMeeting:hover {
@@ -32,8 +33,18 @@
     background-color: #f8de8e;
 }
 
-.upcomingMeeting>div,
-.postMeeting>div {
+.upcomingMeeting > div,
+.postMeeting > div {
     margin: 2.5%;
     margin-left: 5%;
+}
+
+.toggle-up {
+    transition: all 0.2s linear;
+    transform: rotate(180deg);
+}
+
+.toggle-down {
+    transition: all 0.2s linear;
+    transform: rotate(0);
 }

@@ -58,7 +58,7 @@ export default function Homepage() {
                     <div id="liveContainer">{renderLiveMeetings()}</div>
                     <div id="meetingContainer">
                         <div id="upcomingContainer" className="mContainer">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between items-center">
                                 {userContext.hasPermission('VIEW_MEETINGS') && (
                                     <p className="containerTtl">Upcoming meetings:</p>
                                 )}
@@ -66,16 +66,17 @@ export default function Homepage() {
                                     <Button size="medium" color="#262a6c" onClick={() => setShowModal(true)}>
                                         + New Meeting
                                     </Button>
-                            )}
-                                {showModal &&
+                                )}
+                                {showModal && (
                                     <ConfirmModal
                                         header="New Meeting"
                                         text="Are you sure you want to create a new meeting?"
                                         leftButtonText="Yes"
                                         rightButtonText="No"
                                         setOpenModal={setShowModal}
-                                        onAccept={() => setIsNewMeetingOpen(true)} /> }
-
+                                        onAccept={() => setIsNewMeetingOpen(true)}
+                                    />
+                                )}
                             </div>
                             {renderUpcomingMeetings()}
                         </div>
