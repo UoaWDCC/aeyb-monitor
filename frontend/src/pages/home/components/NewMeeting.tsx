@@ -8,8 +8,7 @@ import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
 import Button from 'src/utility_components/Button';
-import LoadingSpinner from '../../../utility_components/LoadingSpinner';
-
+import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
 
 const defaultValues = {
     title: '',
@@ -27,6 +26,7 @@ export default function NewMeeting(props) {
     const { isNewMeetingOpen, setIsNewMeetingOpen } = props
     const [formValues, setFormValues] = useState(defaultValues);
     const [isLoading, setIsLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -54,10 +54,12 @@ export default function NewMeeting(props) {
         setFormValues(defaultValues)
     }
 
-
-
-    async function handleSubmit(event) {
+    const confirmSubmit = (event) => {
         event.preventDefault();
+        setShowModal(true);
+    }
+
+    async function handleSubmit() {
 
         if (formValues.startTime.getTime() < Date.now()) {
             alert('Start time cannot be in the past');
@@ -130,11 +132,8 @@ export default function NewMeeting(props) {
                                 <FontAwesomeIcon icon={faClose} />
                             </Button>
 
-
                             <h1 className='my-5'>Create new meeting</h1>
-
-                            <form className='flex flex-col items-center text-lg w-3/4' onSubmit={handleSubmit}>
-
+                            <form className='flex flex-col items-center text-lg w-3/4' onSubmit={confirmSubmit}>
                                 <input
                                     className='border-[#7d6ca3] border-2 px-1 rounded-md w-full my-2'
                                     name="title"
@@ -171,6 +170,14 @@ export default function NewMeeting(props) {
                     </div >
                 )
             )}
+             {showModal && (
+                <ConfirmModal 
+                header="New Meeting" 
+                text="Are you sure you want to create a new meeting?" 
+                leftButtonText="Yes" 
+                rightButtonText="No" 
+                setOpenModal={setShowModal} 
+                onAccept={handleSubmit} /> )}
         </>
     );
 
