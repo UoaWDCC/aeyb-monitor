@@ -75,7 +75,7 @@ export default function ActiveMeeting() {
     return (
         <>
             <div className="h-screen overflow-scroll relative">
-                <div className="h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center relative z-10">
+                <div className="h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center relative z-1">
                     {isLoading ? (
                         <LoadingSpinner />
                     ) : (
