@@ -29,7 +29,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     }
 
     return (
-        <div className="upcomingMeeting">
+        <div className="upcomingMeeting relative">
             <div className="Header flex justify-between">
                 <div className="meetingTitle capitalize">
                     {meeting.name}

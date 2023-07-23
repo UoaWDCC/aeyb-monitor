@@ -2,9 +2,8 @@
     position: absolute;
     width: 200px;
     padding: 15px;
-    top: 2.5rem;
-    left: 42.5rem;
-    display: inline-block;
+    top: 2.25rem;
+    right: -1em;
     border-radius: 8px;
     background-color: white;
     border: 1px solid gray;
