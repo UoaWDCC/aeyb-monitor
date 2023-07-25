@@ -7,7 +7,7 @@ import LocationRouter from 'src/routes/LocationRoutes';
 import mongoose from 'mongoose';
 import ErrorHandler from '../middleware/ErrorMiddleware';
 import cors from 'cors';
-import { createDefaultRoles } from '../services/RoleServices';
+import { createDefaultRoles } from '../services/RoleService';
 export default class Server {
     private _app: Express;
 

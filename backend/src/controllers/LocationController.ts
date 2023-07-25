@@ -12,7 +12,6 @@ import {
     UpdateLocationData,
     DeleteLocationData,
 } from '@shared/responses/LocationResponses';
-import User from 'src/models/UserModel';
 
 /**
  * @desc 	Get all the location
@@ -36,8 +35,6 @@ const getLocation = asyncHandler(
         if (!location) {
             return res.notFound(`There is no location with the id ${req.params.locationId}`);
         }
-
-        // const userCount = await User.countDocuments({ Locations: req.params.locationId });
 
         res.ok({
             location,
@@ -80,7 +77,6 @@ const updateLocation = asyncHandler(
  */
 const deleteLocation = asyncHandler(
     async (req: TypedRequestParams<LocationIdParam>, res: TypedResponse<DeleteLocationData>) => {
-        // TODO: First check if no meetings have the locations before deleting
         const meeting = await Meeting.find({ location: req.params.locationId });
         if (meeting) {
             return res.error(500, 'There is a meeting with this location');

@@ -1,8 +1,6 @@
 import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
-import Attendance from 'src/models/AttendanceModel';
-import User from 'src/models/UserModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
 import { AttendanceIdParam, MeetingIdParam } from '@shared/params';
 import PaginationHandler from '../classes/PaginationHandler';
@@ -15,10 +13,14 @@ import {
     GetMeetingData,
     UpdateMeetingData,
 } from '@shared/responses/MeetingResponses';
-import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest, EndMeetingRequest } from '@shared/requests/MeetingRequests';
+import {
+    AddMeetingRequest,
+    UpdateAttendanceRequest,
+    UpdateMeetingRequest,
+    EndMeetingRequest,
+} from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
-import UserDTO from '@shared/dtos/UserDTO';
-import MeetingDTO from '@shared/dtos/MeetingDTO';
+import { findMeeting, findUser, updateUserAttendanceForMeeting } from '../services/MeetingService';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -77,21 +79,15 @@ const getMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, 
 
 const getMeetingAttendance = asyncHandler(
     async (req: TypedRequestParams<MeetingIdParam>, res: TypedResponse<GetAttendanceData>) => {
-        const meeting = await Meeting.findById(req.params.meetingId);
+        const meeting = await Meeting.findById(req.params.meetingId).select('attendance -_id').lean().exec();
 
-        if (!meeting) {
-            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
-            return;
+        if (!meeting || !meeting.attendance) {
+            return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
         }
 
-        const attendance = meeting.attendance;
+        const { attendance } = meeting;
 
-        if (attendance.length == 0) {
-            res.notFound(`There is no attendance in the meeting with the id ${req.params.meetingId}`);
-            return;
-        }
-
-        res.ok({ attendance: attendance });
+        res.ok({ attendance });
     },
 );
 
@@ -99,7 +95,6 @@ const getMeetingAttendance = asyncHandler(
  * @desc    Get the attendance for a specific user in a specific meeting
  * @route   GET /api/meetings/:meetingId/attendances/users/:userId
  */
-
 const getMeetingAttendanceForUser = asyncHandler(
     async (
         req: TypedRequest<UpdateMeetingRequest, AttendanceIdParam>,
@@ -122,50 +117,39 @@ const getMeetingAttendanceForUser = asyncHandler(
  * @desc    Modify attendance for a specific meeting
  * @route   PATCH /api/meetings/:meetingId/attendances/users/:userId
  */
-
 const modifyMeetingAttendance = asyncHandler(
     async (req: TypedRequest<UpdateAttendanceRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
         const { userId, meetingId } = req.params;
-        const meeting = await Meeting.findById(meetingId);
 
-        if (!meeting) {
-            res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+        if (!(await findMeeting(meetingId, res))) {
             return;
         }
 
-        const doesUserExist = await User.exists({ _id: userId });
-
-        if (!doesUserExist) {
-            res.notFound(`There is no users with the id ${req.params.meetingId}`);
+        if (!(await findUser(userId, res))) {
             return;
         }
 
-        const keys = Object.keys(req.body).filter((key) => key != 'requester') as (keyof typeof req.body)[];
-        const newAttendance = {};
-        for (let i = 0; i < keys.length; i++) {
-            newAttendance[`attendance.$.${keys[i]}`] = req.body[keys[i]];
-        }
-        const { requester: _, ...withoutRequester } = req.body;
-
-        const existingUserInMeeting = await Meeting.findOneAndUpdate(
-            { _id: meetingId, 'attendance.user': userId },
-            { $set: newAttendance },
-            { new: true, returnOriginal: false },
+        const updateFields = Object.keys(req.body).filter((key) => key !== 'requester');
+        const updateQuery = updateFields.reduce(
+            (query, field) => ({ ...query, [`attendance.$.${field}`]: req.body[field] }),
+            {},
         );
 
-        if (existingUserInMeeting) {
-            res.ok({ meeting: await existingUserInMeeting.asPopulated() });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { requester, ...updateData } = req.body;
+        const attendanceData = { user: userId, ...updateData };
+
+        const updatedMeeting = await updateUserAttendanceForMeeting(meetingId, userId, updateQuery);
+
+        if (updatedMeeting) {
+            res.ok({ meeting: await updatedMeeting.asPopulated() });
             return;
         }
 
-        const newUserInMeeting = (await Meeting.findOneAndUpdate(
-            { _id: meetingId, 'attendance.user': { $ne: userId } },
-            { $push: { attendance: withoutRequester } },
-            { upsert: true, new: true },
-        )) as MeetingDTO;
+        const updatedMeetingWithNewUser = await updateUserAttendanceForMeeting(meetingId, userId, attendanceData);
 
-        if (newUserInMeeting) {
-            res.ok({ meeting: newUserInMeeting });
+        if (updatedMeetingWithNewUser) {
+            res.ok({ meeting: await updatedMeetingWithNewUser.asPopulated() });
             return;
         }
 
