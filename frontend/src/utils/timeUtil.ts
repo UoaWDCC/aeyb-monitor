@@ -1,7 +1,7 @@
 export function roundToHour(date: Date) {
     const time = date.getTime();
     const msPerHour = 1000 * 60 * 60;
-    const roundedTime = Math.round(time / msPerHour) * msPerHour;
+    const roundedTime = Math.ceil(time / msPerHour) * msPerHour;
     return new Date(roundedTime);
 }
 

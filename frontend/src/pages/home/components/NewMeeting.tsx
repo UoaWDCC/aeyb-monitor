@@ -5,12 +5,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
-import { AddLocationRequest } from '@shared/requests/LocationRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
 import { MeetingType } from '@shared/dtos/MeetingDTO';
 import LocationDTO from '@shared/dtos/LocationDTO';
 import AttendanceDTO from '@shared/dtos/AttendanceDTO';
+import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
 
 const defaultValues: FormValuesType = {
     name: '',
@@ -42,6 +42,7 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
 
     const [formValues, setFormValues] = useState<FormValuesType>(defaultValues);
     const [isLoading, setIsLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -92,6 +93,10 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
             return;
         }
 
+        setShowModal(true);
+    }
+
+    async function createMeeting() {
         const meetingRequest: AddMeetingRequest = {
             ...formValues,
             startTime: formValues.startTime.getTime(),
@@ -184,6 +189,16 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
                 </div>
             ) : (
                 <div></div>
+            )}
+            {showModal && (
+                <ConfirmModal
+                    header="New Meeting"
+                    text="Are you sure you want to create a new meeting?"
+                    leftButtonText="Yes"
+                    rightButtonText="No"
+                    setOpenModal={setShowModal}
+                    onAccept={createMeeting}
+                />
             )}
         </>
     );

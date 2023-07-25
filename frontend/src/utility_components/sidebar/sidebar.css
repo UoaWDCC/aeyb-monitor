@@ -5,7 +5,7 @@ body {
 }
 
 .sidebar {
-    z-index: 100;
+    z-index: 10;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     position: fixed;
     left: 0;
@@ -19,6 +19,6 @@ body {
     transition: width 0.5s;
 }
 
-.sidebar>* {
+.sidebar > * {
     margin-bottom: 12vh;
 }
