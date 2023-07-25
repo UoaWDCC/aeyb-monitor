@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import Button from '../Button';
 
 type ConfirmModalProps = {
@@ -9,20 +9,33 @@ type ConfirmModalProps = {
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
     onAccept: () => void;
 };
-export default function ConfirmModal({header, text, leftButtonText, rightButtonText, setOpenModal, onAccept}: ConfirmModalProps) {
+export default function ConfirmModal({
+    header,
+    text,
+    leftButtonText,
+    rightButtonText,
+    setOpenModal,
+    onAccept,
+}: ConfirmModalProps) {
     return (
         <div className="fixed inset-0 bg-gray-400 bg-opacity-75 flex items-center justify-center z-50">
             <div className="bg-white rounded-xl shadow-lg p-12 w-">
                 <div className="flex justify-end">
-
                     <button
-                        onClick={() => {setOpenModal(false);}}
+                        onClick={() => {
+                            setOpenModal(false);
+                        }}
                         className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor"
-                             className="bi bi-x" viewBox="0 0 16 16">
-                            <path
-                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="42"
+                            height="42"
+                            fill="currentColor"
+                            className="bi bi-x"
+                            viewBox="0 0 16 16"
+                        >
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                         </svg>
                     </button>
                 </div>
@@ -48,7 +61,6 @@ export default function ConfirmModal({header, text, leftButtonText, rightButtonT
                     >
                         {rightButtonText}
                     </Button>
-
                 </div>
             </div>
         </div>
