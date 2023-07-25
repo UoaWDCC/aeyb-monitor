@@ -1,22 +1,31 @@
-import { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import AttendanceDTO from '@shared/dtos/AttendanceDTO';
 
-export const AttendanceSchema = new Schema<AttendanceDTO>(
+export const attendanceSchema = new Schema<AttendanceDTO>(
     {
-        attendedUsers: {
-            type: [{ type: String, ref: 'User' }],
+        user: {
+            type: String,
+            ref: 'User',
+            required: [true, 'You must state the user who attended'],
         },
-        absentUsers: {
-            type: Map,
-            of: String,
+        didAttend: {
+            type: Boolean,
+            default: false,
         },
-        invited: {
-            type: {
-                userIds: [String],
-                roleIds: [String],
-            },
-            required: [true, 'You must state who is invited'],
+        notes: {
+            type: String,
+            default: '',
         },
+        feedbackRating: {
+            type: Number,
+            min: 1,
+            max: 5,
+        },
+        feedbackDescription: String,
     },
     { _id: false },
 );
+
+const Attendance = model('Attendance', attendanceSchema);
+
+export default Attendance;
