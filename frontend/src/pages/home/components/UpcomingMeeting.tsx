@@ -7,6 +7,7 @@ import { faChevronDown, faCog } from '@fortawesome/free-solid-svg-icons';
 import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 import Button from '../../../utility_components/Button';
 import ClickAwayListener from '@mui/base/ClickAwayListener';
+import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -16,6 +17,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location } = meeting;
     const [isOpen, setIsOpen] = useState(false);
     const [openProfile, setOpenProfile] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const openMeeting = () => {
         setIsOpen(!isOpen);
@@ -33,9 +35,20 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     );
 
     const deleteMeeting = (
-        <Button size="small" color="white">
+        <Button size="small" color="white" onClick={() => setShowModal(true)}>
             Delete meeting
         </Button>
+    );
+
+    const deleteModal = (
+        <ConfirmModal
+            header="Delete meeting"
+            text="Are you sure you want to delete meeting?"
+            leftButtonText="Yes"
+            rightButtonText="No"
+            setOpenModal={setShowModal}
+            onAccept={() => console.log('hello')}
+        />
     );
 
     const handleClickAway = () => {
@@ -102,6 +115,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
             ) : (
                 <div className="dDay">Opens in {getRelativeTime(meeting.startTime)}</div>
             )}
+            {showModal && deleteModal}
         </div>
     );
 }
