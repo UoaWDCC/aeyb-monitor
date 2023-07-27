@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faCog } from '@fortawesome/free-solid-svg-icons';
 import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 import Button from '../../../utility_components/Button';
+import ClickAwayListener from '@mui/base/ClickAwayListener';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -37,6 +38,10 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
         </Button>
     );
 
+    const handleClickAway = () => {
+        setOpenProfile(false);
+    };
+
     function nth(n: number) {
         return ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
     }
@@ -53,14 +58,19 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                         onClick={openMeeting}
                     />
                 </div>
-                <FontAwesomeIcon
-                    icon={faCog}
-                    size="lg"
-                    className="cog cursor-pointer"
-                    onClick={() => setOpenProfile(!openProfile)}
-                />
+                <ClickAwayListener onClickAway={handleClickAway}>
+                    <div>
+                        <FontAwesomeIcon
+                            icon={faCog}
+                            size="lg"
+                            className="cog cursor-pointer"
+                            onClick={() => setOpenProfile(!openProfile)}
+                        />
+                        {openProfile && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
+                    </div>
+                </ClickAwayListener>
             </div>
-            {openProfile && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
+
             {isOpen ? (
                 <div className="meetingDetails break-words">
                     <div className="mb-5">
