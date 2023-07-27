@@ -62,7 +62,7 @@
     display: grid;
     grid-template-rows: 0fr;
     overflow: hidden;
-    transition: all 2500ms;
+    transition: all 500ms;
 }
 
 .wrapper.open {
