@@ -7,6 +7,7 @@
     border-radius: 8px;
     background-color: white;
     border: 1px solid gray;
+    z-index: 5;
 }
 
 .dropDownmenu::before {
@@ -20,4 +21,5 @@
     background-color: white;
     border-left: 1px solid gray;
     border-top: 1px solid gray;
+    z-index: 5;
 }

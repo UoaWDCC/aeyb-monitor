@@ -60,62 +60,65 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     }
 
     return (
-        <div className="upcomingMeeting relative">
-            <div className="Header flex justify-between">
-                <div className="meetingTitle capitalize">
-                    {meeting.name}
-                    <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
-                        size="sm"
-                        onClick={openMeeting}
-                    />
-                </div>
-                <ClickAwayListener onClickAway={handleClickAway}>
-                    <div>
+        <>
+            <div className="upcomingMeeting relative">
+                <div className="Header flex justify-between">
+                    <div className="meetingTitle capitalize">
+                        {meeting.name}
                         <FontAwesomeIcon
-                            icon={faCog}
-                            size="lg"
-                            className="cog cursor-pointer"
-                            onClick={() => setOpenProfile(!openProfile)}
+                            icon={faChevronDown}
+                            className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
+                            size="sm"
+                            onClick={openMeeting}
                         />
-                        {openProfile && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
                     </div>
-                </ClickAwayListener>
-            </div>
-
-            {isOpen ? (
-                <div className="meetingDetails break-words">
-                    <div className="mb-5">
-                        <strong>Description: </strong> {description}
-                    </div>
-
-                    <div className="mb-5">
-                        <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
-                        {nth(startDate.getDate())} at {startDate.getHours() % 12}:
-                        {startDate.getMinutes() < 10 ? '0' + startDate.getMinutes() : startDate.getMinutes()}{' '}
-                        {startDate.getHours() >= 12 ? 'PM' : 'AM'}
-                    </div>
-
-                    <div className="mb-5">
-                        <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
-                        {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
-                        {finishDate.getMinutes() < 10 ? '0' + finishDate.getMinutes() : finishDate.getMinutes()}{' '}
-                        {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
-                    </div>
-
-                    <div className="mb-5">
-                        <strong>Location: </strong> {location}
-                    </div>
-
-                    <div className="mb-5">
-                        <strong>Attendees: </strong> {meeting.attendance.invited.userIds}
-                    </div>
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <div>
+                            <FontAwesomeIcon
+                                icon={faCog}
+                                size="lg"
+                                className="cog cursor-pointer"
+                                onClick={() => setOpenProfile(!openProfile)}
+                            />
+                            {openProfile && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
+                        </div>
+                    </ClickAwayListener>
                 </div>
-            ) : (
-                <div className="dDay">Opens in {getRelativeTime(meeting.startTime)}</div>
-            )}
+                <div className="wrapper">
+                    {isOpen ? (
+                        <div className="meetingDetails break-words">
+                            <div className="mb-5">
+                                <strong>Description: </strong> {description}
+                            </div>
+
+                            <div className="mb-5">
+                                <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
+                                {nth(startDate.getDate())} at {startDate.getHours() % 12}:
+                                {startDate.getMinutes() < 10 ? '0' + startDate.getMinutes() : startDate.getMinutes()}{' '}
+                                {startDate.getHours() >= 12 ? 'PM' : 'AM'}
+                            </div>
+
+                            <div className="mb-5">
+                                <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
+                                {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
+                                {finishDate.getMinutes() < 10 ? '0' + finishDate.getMinutes() : finishDate.getMinutes()}{' '}
+                                {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
+                            </div>
+
+                            <div className="mb-5">
+                                <strong>Location: </strong> {location}
+                            </div>
+
+                            <div className="mb-5">
+                                <strong>Attendees: </strong> {meeting.attendance.invited.userIds}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="dDay">Opens in {getRelativeTime(meeting.startTime)}</div>
+                    )}
+                </div>
+            </div>
             {showModal && deleteModal}
-        </div>
+        </>
     );
 }
