@@ -53,3 +53,18 @@
     transform: rotate(60deg);
     transition: all 0.25s ease-in-out;
 }
+
+.meetingDetails {
+    min-height: 0;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: all 2500ms;
+}
+
+.wrapper.open {
+    grid-template-rows: 1fr;
+}

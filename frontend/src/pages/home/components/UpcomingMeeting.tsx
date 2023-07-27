@@ -84,7 +84,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                         </div>
                     </ClickAwayListener>
                 </div>
-                <div className="wrapper">
+                <div className={`wrapper ${isOpen ? 'open' : ''}`}>
                     {isOpen ? (
                         <div className="meetingDetails break-words">
                             <div className="mb-5">
@@ -114,7 +114,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                             </div>
                         </div>
                     ) : (
-                        <div className="dDay">Opens in {getRelativeTime(meeting.startTime)}</div>
+                        <div className="dDays">Opens in {getRelativeTime(meeting.startTime)}</div>
                     )}
                 </div>
             </div>
