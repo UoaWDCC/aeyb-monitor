@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import classNames from 'classnames';
 
 interface ToastProps {
     message?: string; // Make the message prop optional
@@ -9,8 +8,8 @@ interface ToastProps {
 const Toast: React.FC<ToastProps> = ({ message, onClose }) => {
     useEffect(() => {
         if (message) {
-            // Close the toast automatically after 3 seconds
-            const timer = setTimeout(onClose, 3000);
+            // Close the toast automatically after 5 seconds
+            const timer = setTimeout(onClose, 5000);
 
             return () => clearTimeout(timer);
         }
