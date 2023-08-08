@@ -1,7 +1,8 @@
-import { MeetingIdParam, RoleIdParam, UserIdParam } from './params';
+import { AttendanceIdParam, LocationIdParam, MeetingIdParam, RoleIdParam, UserIdParam } from './params';
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
-import { AddMeetingRequest, UpdateMeetingRequest, EndMeetingRequest } from './requests/MeetingRequests';
+import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest, EndMeetingRequest } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
+import { AddLocationRequest } from './requests/LocationRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
 import { AddMeetingData, GetAllMeetingsData, GetMeetingData, UpdateMeetingData } from './responses/MeetingResponses';
 import { GetAllPermissionsData } from './responses/PermissionResponsesData';
@@ -15,6 +16,13 @@ import {
     GiveRolesData,
     RemoveRolesData,
 } from './responses/UserResponsesData';
+import {
+    GetAllLocationData,
+    GetLocationData,
+    AddLocationData,
+    UpdateLocationData,
+    DeleteLocationData,
+} from './responses/LocationResponses';
 
 export interface Endpoint<Req, Res, Params = undefined, Query = undefined> {
     req: Req;
@@ -50,4 +58,26 @@ export default interface API {
     'PATCH /api/meetings/:meetingId': Endpoint<UpdateMeetingRequest, UpdateMeetingData, MeetingIdParam>;
     'PATCH /api/meetings/:meetingId/end': Endpoint<EndMeetingRequest, undefined, MeetingIdParam>;
     'DELETE /api/meetings/:meetingId': Endpoint<undefined, undefined, MeetingIdParam>;
+
+    // Attendance endpoints
+    'GET /api/meetings/:meetingId/attendances': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
+    'GET /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'PATCH /api/meetings/:meetingId/attendances/users/:userId': Endpoint<
+        UpdateAttendanceRequest,
+        UpdateMeetingData,
+        AttendanceIdParam
+    >;
+
+    // Feedback endpoints
+    'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'POST /api/meetings/:meetingId/feedback/users/:userId': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'PATCH /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
+    'GET /api/meetings/:meetingId/feedback/users/:userId': Endpoint<undefined, GetAllMeetingsData, MeetingIdParam>;
+
+    // Location endpoints
+    'GET /api/locations': Endpoint<undefined, GetAllLocationData>;
+    'GET /api/roles/:locationId': Endpoint<undefined, GetLocationData, LocationIdParam>;
+    'POST /api/location': Endpoint<AddLocationRequest, AddLocationData>;
+    //'PATCH /api/locations/:locationId': Endpoint<UpdateLocationRequest, UpdateUserData, RoleIdParam>;
+    'DELETE /api/roles/:locationId': Endpoint<undefined, DeleteLocationData, LocationIdParam>;
 }

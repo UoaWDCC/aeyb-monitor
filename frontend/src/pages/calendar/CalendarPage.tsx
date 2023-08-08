@@ -16,6 +16,14 @@ export default function CalendarPage() {
     endOfMonth.setHours(23, 59, 59, 999);
 
     const renderMonthlyMeetings = () => {
+        console.log(
+            Object.values(meetingContext.meetings)
+                .filter(
+                    (meeting) =>
+                        meeting.startTime >= startOfMonth.getTime() && meeting.startTime <= endOfMonth.getTime(),
+                )
+                .sort((a, b) => a.startTime - b.startTime),
+        );
         return Object.values(meetingContext.meetings)
             .filter(
                 (meeting) => meeting.startTime >= startOfMonth.getTime() && meeting.startTime <= endOfMonth.getTime(),

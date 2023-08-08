@@ -11,6 +11,7 @@ import ScrollToTop from '../../utility_components/ScrollToTop';
 
 export default function Homepage() {
     const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
+
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
     const now = Date.now();

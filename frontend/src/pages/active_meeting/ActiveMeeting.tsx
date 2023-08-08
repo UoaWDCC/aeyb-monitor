@@ -7,6 +7,7 @@ import AttendanceSelect from './components/AttendanceSelect';
 import Button from 'src/utility_components/Button';
 import Rating from './components/RadioGroupRating';
 import UserList from './components/UserList';
+import ConfirmModal from '../../utility_components/ConfirmModal/ConfirmModal';
 
 export enum AttendanceType {
     NotAttended,
@@ -22,6 +23,14 @@ export default function ActiveMeeting() {
     const userContext = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
     const [meeting, setMeeting] = useState<null | MeetingDTO>();
+
+    const allUsers = ['Joe', 'Bob', 'Raymond', 'User 2', 'Mary', 'Jane', 'Susan'];
+    const [activeUser, setActiveUser] = useState('');
+    const [attendance, setAttendance] = useState(AttendanceType.Attended);
+    const [rating, setRating] = useState(3);
+    const [message, setMessage] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRoles = async () => {
@@ -41,19 +50,6 @@ export default function ActiveMeeting() {
         };
         fetchRoles();
     }, [meetingId]);
-
-    const allUsers = ['Joe', 'Bob', 'Raymond', 'User 2', 'Mary', 'Jane', 'Susan'];
-    const [activeUser, setActiveUser] = useState('');
-
-    const [leaveMeetingOpen, setLeaveMeetingOpen] = useState(false);
-
-    const [attendance, setAttendance] = useState(AttendanceType.Attended);
-
-    const [rating, setRating] = useState(3);
-
-    const navigate = useNavigate();
-
-    const [message, setMessage] = useState('');
 
     function handleSubmit() {
         console.log(`User: ${activeUser},
@@ -79,7 +75,7 @@ export default function ActiveMeeting() {
     return (
         <>
             <div className="h-screen overflow-scroll relative">
-                <div className="h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center relative z-10">
+                <div className="h-screen mx-auto py-2 flex items-center flex-col text-[#262b6c] text-center relative z-1">
                     {isLoading ? (
                         <LoadingSpinner />
                     ) : (
@@ -128,31 +124,19 @@ export default function ActiveMeeting() {
                                     size="medium"
                                     textColor="#dc264e"
                                     extraStyles="mt-5 font-extrabold border-2 border-red-600 w-1/3"
-                                    onClick={() => setLeaveMeetingOpen(true)}
+                                    onClick={() => setShowModal(true)}
                                 >
                                     END MEETING
                                 </Button>
-                                {leaveMeetingOpen && (
-                                    <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0 z-20">
-                                        <div className="opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-30"></div>
-                                        <div className="text-5xl bg-white p-10 opacity-100 z-40 rounded-lg">
-                                            Are you sure you want to end the meeting?
-                                            <div className="flex justify-around p-5 mt-20">
-                                                <button
-                                                    className="bg-gray-400 p-2 rounded-md text-3xl  px-5"
-                                                    onClick={() => setLeaveMeetingOpen(false)}
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    className=" bg-red-300 p-2 rounded-xl text-3xl px-5"
-                                                    onClick={() => endMeeting()}
-                                                >
-                                                    End Meeting
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                {showModal && (
+                                    <ConfirmModal
+                                        header="End Meeting"
+                                        text="Are you sure you want to end the meeting?"
+                                        leftButtonText="End Meeting"
+                                        rightButtonText="Cancel"
+                                        setOpenModal={setShowModal}
+                                        onAccept={endMeeting}
+                                    />
                                 )}
                             </div>
                         </>
