@@ -25,7 +25,16 @@ const roleSchema = new mongoose.Schema<RoleDocument>({
     permissions: [
         {
             type: String,
-            enum: ['VIEW_ROLES', 'MANAGE_ROLES', 'VIEW_USERS', 'MANAGE_USERS', 'VIEW_MEETINGS', 'MANAGE_MEETINGS'],
+            enum: [
+                'VIEW_ROLES',
+                'MANAGE_ROLES',
+                'VIEW_USERS',
+                'MANAGE_USERS',
+                'VIEW_MEETINGS',
+                'MANAGE_MEETINGS',
+                'VIEW_LOCATIONS',
+                'MANAGE_LOCATIONS',
+            ],
         },
     ],
 });
