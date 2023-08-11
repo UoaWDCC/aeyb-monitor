@@ -5,23 +5,20 @@
     flex-direction: column;
     justify-content: center;
     border-radius: 10px;
-    transition: all 0.2s
-}
-
-.upcomingMeeting {
-    background-color: #D9D2E9;
+    transition: all 0.2s;
+    opacity: 1;
 }
 
 .postMeeting {
-    background-color: #FFE599;
+    background-color: #ffe599;
 }
 
 .upcomingMeeting:hover {
-    background-color: #d5ccea;
+    opacity: 0.8;
 }
 
 .postMeeting:hover {
-    background-color: #fee599;
+    opacity: 0.8;
 }
 
 .upcomingMeeting:active {
@@ -32,8 +29,8 @@
     background-color: #f8de8e;
 }
 
-.upcomingMeeting>div,
-.postMeeting>div {
+.upcomingMeeting > div,
+.postMeeting > div {
     margin: 2.5%;
     margin-left: 5%;
 }

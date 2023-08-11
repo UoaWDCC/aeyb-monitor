@@ -2,6 +2,7 @@ import './menuitem.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { MenuItemData } from '../Sidebar';
+import { useDarkMode } from '../../DarkModeContext';
 
 export default function Menuitem(props: { data: MenuItemData; isMenuOpen: boolean; isCurrentPage: boolean }) {
     const navigate = useNavigate();
@@ -10,9 +11,11 @@ export default function Menuitem(props: { data: MenuItemData; isMenuOpen: boolea
         navigate(props.data.url, { replace: true });
     };
 
+    const { darkMode } = useDarkMode(); // Get the dark mode state
+
     return (
         <div className={'menuItem ' + (props.isMenuOpen ? 'w-[250px]' : 'w-[90px]')} onClick={loadAPage}>
-            <div className="iconBox">
+            <div className={'iconBox ' + (darkMode ? 'darkSideBar' : 'bg-white')}>
                 <FontAwesomeIcon
                     icon={props.data.icon}
                     size="2x"
