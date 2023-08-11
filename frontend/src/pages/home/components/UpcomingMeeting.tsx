@@ -14,10 +14,12 @@ type UpcommingMeetingProps = {
 };
 
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
-    const { name, startTime, finishTime, description, location } = meeting;
+    const { name, startTime, finishTime, description, location, attendance } = meeting;
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [editedDescription, setEditedDescription] = useState(description);
 
     const openMeeting = () => {
         setIsOpen(!isOpen);
@@ -29,13 +31,28 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const finishDate = new Date(finishTime);
 
     const editMeeting = (
-        <Button size="small" color="white">
+        <Button
+            size="small"
+            color="white"
+            onClick={() => {
+                setIsEditing(true);
+                handleClickAway();
+                setIsOpen(true);
+            }}
+        >
             Edit meeting
         </Button>
     );
 
     const deleteMeeting = (
-        <Button size="small" color="white" onClick={() => setShowModal(true)}>
+        <Button
+            size="small"
+            color="white"
+            onClick={() => {
+                setShowModal(true);
+                handleClickAway();
+            }}
+        >
             Delete meeting
         </Button>
     );
@@ -86,35 +103,68 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 </div>
                 <div className={`wrapper ${isOpen ? 'open' : ''}`}>
                     {isOpen ? (
-                        <div className="meetingDetails break-words">
-                            <div className="mb-5">
-                                <strong>Description: </strong> {description}
-                            </div>
+                        isEditing ? (
+                            <div className="meetingDetails break-words">
+                                <div className="mb-5">
+                                    <strong>Description: </strong>
+                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
+                                </div>
 
-                            <div className="mb-5">
-                                <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
-                                {nth(startDate.getDate())} at {startDate.getHours() % 12}:
-                                {startDate.getMinutes() < 10 ? '0' + startDate.getMinutes() : startDate.getMinutes()}{' '}
-                                {startDate.getHours() >= 12 ? 'PM' : 'AM'}
-                            </div>
+                                <div className="mb-5">
+                                    <strong>Start Time: </strong>
+                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
+                                </div>
 
-                            <div className="mb-5">
-                                <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
-                                {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
-                                {finishDate.getMinutes() < 10 ? '0' + finishDate.getMinutes() : finishDate.getMinutes()}{' '}
-                                {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
-                            </div>
+                                <div className="mb-5">
+                                    <strong>End Time: </strong>
+                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
+                                </div>
 
-                            <div className="mb-5">
-                                <strong>Location: </strong> {location}
-                            </div>
+                                <div className="mb-5">
+                                    <strong>Location: </strong>
+                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
+                                </div>
 
-                            <div className="mb-5">
-                                <strong>Attendees: </strong> {meeting.attendance.invited.userIds}
+                                <div className="mb-5">
+                                    <strong>Attendees: </strong>
+                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className="meetingDetails break-words">
+                                <div className="mb-5">
+                                    <strong>Description: </strong> {description}
+                                </div>
+
+                                <div className="mb-5">
+                                    <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
+                                    {nth(startDate.getDate())} at {startDate.getHours() % 12}:
+                                    {startDate.getMinutes() < 10
+                                        ? '0' + startDate.getMinutes()
+                                        : startDate.getMinutes()}{' '}
+                                    {startDate.getHours() >= 12 ? 'PM' : 'AM'}
+                                </div>
+
+                                <div className="mb-5">
+                                    <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
+                                    {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
+                                    {finishDate.getMinutes() < 10
+                                        ? '0' + finishDate.getMinutes()
+                                        : finishDate.getMinutes()}{' '}
+                                    {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
+                                </div>
+
+                                <div className="mb-5">
+                                    <strong>Location: </strong> {location.location}
+                                </div>
+
+                                <div className="mb-5">
+                                    <strong>Attendees: </strong>
+                                </div>
+                            </div>
+                        )
                     ) : (
-                        <div className="dDays">Opens in {getRelativeTime(meeting.startTime)}</div>
+                        <div className="dDays">Opens in {getRelativeTime(startTime)}</div>
                     )}
                 </div>
             </div>

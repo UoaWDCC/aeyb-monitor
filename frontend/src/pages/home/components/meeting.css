@@ -68,3 +68,14 @@
 .wrapper.open {
     grid-template-rows: 1fr;
 }
+
+.input-label {
+    display: inline-block;
+    width: 120px; /* Adjust the width as needed to match the desired alignment */
+}
+
+.input-field {
+    display: inline-block;
+    width: calc(100% - 120px); /* Adjust the width to fill the remaining space */
+    margin-left: 10px; /* Add some margin to separate the input field from the label */
+}
