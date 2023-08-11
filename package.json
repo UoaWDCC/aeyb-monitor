@@ -7,6 +7,7 @@
         "installAll": "npm install && cd frontend && npm install && cd ../backend && npm install"
     },
     "dependencies": {
+        "react-toastify": "^9.1.3",
         "tinycolor2": "^1.6.0"
     },
     "devDependencies": {

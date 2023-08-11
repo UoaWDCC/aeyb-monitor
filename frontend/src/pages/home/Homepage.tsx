@@ -8,10 +8,10 @@ import { useState } from 'react';
 import Button from 'src/utility_components/Button';
 import { useUserContext } from '../../contexts/UserContext';
 import ScrollToTop from '../../utility_components/ScrollToTop';
-import ConfirmModal from '../../utility_components/ConfirmModal/ConfirmModal';
 
 export default function Homepage() {
     const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
+
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
     const now = Date.now();
@@ -48,9 +48,6 @@ export default function Homepage() {
         );
     };
 
-    //new state for a modal
-    const [showModal, setShowModal] = useState(false);
-    //() => setIsNewMeetingOpen(true)
     return (
         <>
             <div className="pageComponent">
@@ -63,19 +60,9 @@ export default function Homepage() {
                                     <p className="containerTtl">Upcoming meetings:</p>
                                 )}
                                 {userContext.hasPermission('MANAGE_MEETINGS') && (
-                                    <Button size="medium" color="#262a6c" onClick={() => setShowModal(true)}>
+                                    <Button size="medium" color="#262a6c" onClick={() => setIsNewMeetingOpen(true)}>
                                         + New Meeting
                                     </Button>
-                                )}
-                                {showModal && (
-                                    <ConfirmModal
-                                        header="New Meeting"
-                                        text="Are you sure you want to create a new meeting?"
-                                        leftButtonText="Yes"
-                                        rightButtonText="No"
-                                        setOpenModal={setShowModal}
-                                        onAccept={() => setIsNewMeetingOpen(true)}
-                                    />
                                 )}
                             </div>
                             {renderUpcomingMeetings()}
