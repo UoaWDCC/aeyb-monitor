@@ -1,0 +1,7 @@
+.darkAll {
+    @apply bg-[#333] text-zinc-50;
+}
+
+.darkSideBar {
+    @apply bg-[#202121] text-zinc-50;
+}

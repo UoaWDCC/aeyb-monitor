@@ -8,6 +8,8 @@ import { useState } from 'react';
 import Button from 'src/utility_components/Button';
 import { useUserContext } from '../../contexts/UserContext';
 import ScrollToTop from '../../utility_components/ScrollToTop';
+import '../../utility_components/darkmode.css';
+import { useDarkMode } from '../../utility_components/DarkModeContext';
 
 export default function Homepage() {
     const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
@@ -15,6 +17,7 @@ export default function Homepage() {
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
     const now = Date.now();
+    const { darkMode } = useDarkMode(); // Get the dark mode state
 
     const renderLiveMeetings = () => {
         return (
@@ -50,9 +53,9 @@ export default function Homepage() {
 
     return (
         <>
-            <div className="pageComponent">
+            <div className={`pageComponent ${darkMode ? 'darkAll' : ''}`}>
                 <div className="containerAll">
-                    <div className="w-full bg-[#f0f8ff] dark:bg-[#7c7b7b]">{renderLiveMeetings()}</div>
+                    <div id="liveContainer">{renderLiveMeetings()}</div>
                     <div id="meetingContainer">
                         <div id="upcomingContainer" className="mContainer">
                             <div className="flex justify-between">

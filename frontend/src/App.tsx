@@ -10,6 +10,7 @@ import NotFound from './pages/not_found/NotFound';
 import UserProfile from './pages/profiles/ProfileInfo';
 import Roles from './pages/roles/Roles';
 import Sidebar from './utility_components/sidebar/Sidebar';
+import { DarkModeProvider } from './utility_components/DarkModeContext';
 
 function App() {
     const AppRoutes = () => {
@@ -42,7 +43,9 @@ function App() {
     return (
         <Router>
             <UserContextProvider>
-                <AppRoutes />
+                <DarkModeProvider>
+                    <AppRoutes />
+                </DarkModeProvider>
             </UserContextProvider>
         </Router>
     );
