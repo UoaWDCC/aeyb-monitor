@@ -16,7 +16,7 @@ type UpcommingMeetingProps = {
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location } = meeting;
     const [isOpen, setIsOpen] = useState(false);
-    const [openProfile, setOpenProfile] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
     const openMeeting = () => {
@@ -52,7 +52,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     );
 
     const handleClickAway = () => {
-        setOpenProfile(false);
+        setOpenDropdown(false);
     };
 
     function nth(n: number) {
@@ -78,9 +78,9 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                 icon={faCog}
                                 size="lg"
                                 className="cog cursor-pointer"
-                                onClick={() => setOpenProfile(!openProfile)}
+                                onClick={() => setOpenDropdown(!openDropdown)}
                             />
-                            {openProfile && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
+                            {openDropdown && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
                         </div>
                     </ClickAwayListener>
                 </div>
