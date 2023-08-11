@@ -1,28 +1,26 @@
 import React, { useEffect } from 'react';
 
 interface ToastProps {
-    message?: string; // Make the message prop optional
+    message?: string;
     onClose: () => void;
 }
 
-const Toast: React.FC<ToastProps> = ({ message, onClose }) => {
+const Toast = ({ message, onClose }: ToastProps) => {
     useEffect(() => {
         if (message) {
-            // Close the toast automatically after 5 seconds
             const timer = setTimeout(onClose, 5000);
-
             return () => clearTimeout(timer);
         }
     }, [message, onClose]);
 
-    if (!message) {
-        return null; // If no message, don't render the toast at all
-    }
-
     return (
-        <div className="fixed top-0 left-0 w-full h-12 bg-blue-500 text-white text-center flex justify-center items-center">
-            <span>{message}</span>
-        </div>
+        <>
+            {message.length > 0 && (
+                <div className="fixed top-0 left-0 w-full h-12 bg-blue-500 text-white text-center flex justify-center items-center">
+                    {message}
+                </div>
+            )}
+        </>
     );
 };
 
