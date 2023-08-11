@@ -36,7 +36,7 @@ export default function MonthlyInstance({ meeting }: MonthlyInstanceProps) {
 
                     <div className="flex items-center">
                         <IonIcon name="location-outline" className="text-2xl pr-1" />
-                        <p className="text-xl">{location.location}</p>
+                        {location ? <p className='text-xl'>{location.location}</p> : <p className='text-xl'>no location</p>}
                     </div>
                 </div>
             </div>
