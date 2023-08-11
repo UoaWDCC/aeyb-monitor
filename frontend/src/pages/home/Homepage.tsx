@@ -52,7 +52,7 @@ export default function Homepage() {
         <>
             <div className="pageComponent">
                 <div className="containerAll">
-                    <div id="liveContainer">{renderLiveMeetings()}</div>
+                    <div className="w-full bg-[#f0f8ff] dark:bg-[#7c7b7b]">{renderLiveMeetings()}</div>
                     <div id="meetingContainer">
                         <div id="upcomingContainer" className="mContainer">
                             <div className="flex justify-between">
