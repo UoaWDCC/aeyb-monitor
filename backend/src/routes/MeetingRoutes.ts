@@ -15,6 +15,8 @@ import {
     updateMeetingFeedback,
     getMeetingFeedback,
     endMeeting,
+    createMeetingAttendanceList,
+    deleteMeetingAttendanceList,
 } from '../controllers/MeetingController';
 
 const MeetingRouter = Router();

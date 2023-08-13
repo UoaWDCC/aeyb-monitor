@@ -373,4 +373,5 @@ export {
     updateMeetingFeedback,
     endMeeting,
     deleteMeetingAttendanceList,
+    createMeetingAttendanceList,
 };
