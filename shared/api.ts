@@ -1,12 +1,24 @@
 import { AttendanceIdParam, LocationIdParam, MeetingIdParam, RoleIdParam, UserIdParam } from './params';
 import { GetAllMeetingsQuery } from './queries/MeetingQueries';
-import { AddMeetingRequest, UpdateAttendanceRequest, UpdateMeetingRequest, EndMeetingRequest } from './requests/MeetingRequests';
+import {
+    AddMeetingRequest,
+    UpdateAttendanceRequest,
+    UpdateMeetingRequest,
+    EndMeetingRequest,
+    createMeetingAttendanceListReq,
+} from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
 import { AddLocationRequest } from './requests/LocationRequests';
 import { GiveRolesRequest, LoginRequest, RemoveRolesRequest, UpdateUserRequest } from './requests/UserRequests';
 import { AddMeetingData, GetAllMeetingsData, GetMeetingData, UpdateMeetingData } from './responses/MeetingResponses';
 import { GetAllPermissionsData } from './responses/PermissionResponsesData';
-import { AddRoleData, DeleteRoleData, GetAllRolesData, GetRoleData, UpdateRoleData } from './responses/RoleResponsesData';
+import {
+    AddRoleData,
+    DeleteRoleData,
+    GetAllRolesData,
+    GetRoleData,
+    UpdateRoleData,
+} from './responses/RoleResponsesData';
 import {
     LoginData,
     GetSelfData,
@@ -67,6 +79,9 @@ export default interface API {
         UpdateMeetingData,
         AttendanceIdParam
     >;
+    'POST /api/meetings/:meetingId/attendances': Endpoint<undefined, createMeetingAttendanceList>;
+    'DELETE /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, deleteMeetingAttendanceList>;
+    'PUT /api/meetings/:meetingId/attendances/users/:userId': Endpoint<undefined, updateMeetingAttendanceList>;
 
     // Feedback endpoints
     'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;

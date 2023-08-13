@@ -17,3 +17,7 @@ export type AddFeedBackRequest = Partial<Omit<AttendanceDTO, 'canAttend' | 'reas
 export type EndMeetingRequest = {
     finishTime: number;
 };
+
+export type createMeetingAttendanceListReq = {
+    attendanceList: AttendanceDTO[];
+};

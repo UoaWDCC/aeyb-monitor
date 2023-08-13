@@ -41,10 +41,8 @@ MeetingRouter.route('/meetings/:meetingId/feedback/users/:userId')
 
 MeetingRouter.route('/attendance/:meetingId')
     .get(protect('VIEW_MEETINGS'), getMeetingAttendance)
-    .post(protect('MANAGE_MEETINGS'), createMeetingAttendance)
-    .put(protect('MANAGE_MEETINGS'), updateMeetingAttendance)
-    .delete(protect('MANAGE_MEETINGS'), deleteMeetingAttendance);
-
-MeetingRouter.route('/:meetingId/attendance/:userId').patch(protect('MANAGE_MEETINGS'), updateMeetingAttendanceForUser);
+    .post(protect('MANAGE_MEETINGS'), createMeetingAttendanceList)
+    .put(protect('MANAGE_MEETINGS'), updateMeetingAttendanceList)
+    .delete(protect('MANAGE_MEETINGS'), deleteMeetingAttendanceList);
 
 export default MeetingRouter;

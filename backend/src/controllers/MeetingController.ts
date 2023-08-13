@@ -18,6 +18,7 @@ import {
     UpdateAttendanceRequest,
     UpdateMeetingRequest,
     EndMeetingRequest,
+    createMeetingAttendanceListReq,
 } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 import { findMeeting, findUser, updateUserAttendanceForMeeting } from '../services/MeetingService';
@@ -88,6 +89,20 @@ const getMeetingAttendance = asyncHandler(
         const { attendance } = meeting;
 
         res.ok({ attendance });
+    },
+);
+
+/**
+ * @desc   Create the attendance list for a specific meeting
+ * @route  POST /api/meetings/:meetingId/attendance
+ */
+
+const createMeetingAttendanceList = asyncHandler(
+    async (
+        req: TypedRequestParams<createMeetingAttendanceListReq, AttendanceIdParam>,
+        res: TypedResponse<UpdateMeetingData>,
+    ) => {
+        const attendance = req.body;
     },
 );
 
