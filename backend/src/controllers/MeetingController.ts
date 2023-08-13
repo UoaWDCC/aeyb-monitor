@@ -21,6 +21,7 @@ import {
 } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 import { findMeeting, findUser, updateUserAttendanceForMeeting } from '../services/MeetingService';
+import User from '../models/UserModel';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -267,14 +268,28 @@ const getMeetingFeedbackForUser = asyncHandler(
 );
 
 /**
- * @desc 	Add a new meeting
- * @route 	POST /api/meetings
+ * @desc    Add a new meeting
+ * @route   POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
+    const roleIds = req.body.roles.map((role) => role.id);
+
+    const usersWithSpecifiedRoles = await User.find({
+        roles: { $in: roleIds },
+    }).populate('roles');
+
+    const transformedUsers = usersWithSpecifiedRoles.map((user) => ({
+        user: user._id,
+    }));
+
+    const { roles, ...rest } = req.body;
+
     const newMeeting = await Meeting.create({
-        ...req.body,
+        ...rest,
         creator: req.body.requester,
+        attendance: transformedUsers,
     });
+    console.log(newMeeting);
 
     res.ok({ meeting: await newMeeting.asPopulated() });
 });
