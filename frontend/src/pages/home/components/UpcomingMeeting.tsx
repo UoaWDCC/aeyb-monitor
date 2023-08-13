@@ -1,6 +1,6 @@
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import './meeting.css';
-import { getRelativeTime } from '../../../utils/timeUtil';
+import { getRelativeTime, nth } from '../../../utils/timeUtil';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faCog } from '@fortawesome/free-solid-svg-icons';
@@ -69,10 +69,6 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const handleClickAway = () => {
         setOpenDropdown(false);
     };
-
-    function nth(n: number) {
-        return ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
-    }
 
     return (
         <>
