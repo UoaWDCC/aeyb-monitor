@@ -51,23 +51,23 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 <div className="Header flex justify-between">
                     <div className="meetingTitle capitalize">
                         {name}
-                        {userContext.hasPermission('MANAGE_MEETINGS') && (
-                            <FontAwesomeIcon
-                                icon={faChevronDown}
-                                className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
-                                size="sm"
-                                onClick={openMeeting}
-                            />
-                        )}
+                        <FontAwesomeIcon
+                            icon={faChevronDown}
+                            className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
+                            size="sm"
+                            onClick={openMeeting}
+                        />
                     </div>
                     <ClickAwayListener onClickAway={handleClickAway}>
                         <div>
-                            <FontAwesomeIcon
-                                icon={faCog}
-                                size="lg"
-                                className="cog cursor-pointer"
-                                onClick={() => setOpenDropdown(!openDropdown)}
-                            />
+                            {userContext.hasPermission('MANAGE_MEETINGS') && (
+                                <FontAwesomeIcon
+                                    icon={faCog}
+                                    size="lg"
+                                    className="cog cursor-pointer"
+                                    onClick={() => setOpenDropdown(!openDropdown)}
+                                />
+                            )}
                             {openDropdown && (
                                 <DropdownMenu
                                     items={[
