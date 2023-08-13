@@ -29,42 +29,15 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const startDate = new Date(startTime);
     const finishDate = new Date(finishTime);
 
-    const editMeeting = (
-        <Button
-            size="small"
-            color="white"
-            onClick={() => {
-                setIsEditMeetingOpen(true);
-                handleClickAway();
-            }}
-        >
-            Edit meeting
-        </Button>
-    );
+    const handleEditMeeting = () => {
+        setIsEditMeetingOpen(true);
+        handleClickAway();
+    };
 
-    const deleteMeeting = (
-        <Button
-            size="small"
-            color="white"
-            onClick={() => {
-                setShowModal(true);
-                handleClickAway();
-            }}
-        >
-            Delete meeting
-        </Button>
-    );
-
-    const deleteModal = (
-        <ConfirmModal
-            header="Delete meeting"
-            text="Are you sure you want to delete meeting?"
-            leftButtonText="Yes"
-            rightButtonText="No"
-            setOpenModal={setShowModal}
-            onAccept={() => console.log('delete meeting')}
-        />
-    );
+    const handleDeleteMeeting = () => {
+        setShowModal(true);
+        handleClickAway();
+    };
 
     const handleClickAway = () => {
         setOpenDropdown(false);
@@ -91,7 +64,25 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                 className="cog cursor-pointer"
                                 onClick={() => setOpenDropdown(!openDropdown)}
                             />
-                            {openDropdown && <DropdownMenu items={[editMeeting, deleteMeeting]} />}
+                            {openDropdown && (
+                                <DropdownMenu
+                                    items={[
+                                        <Button key="edit" size="small" color="white" onClick={handleEditMeeting}>
+                                            Edit meeting
+                                        </Button>,
+                                        <Button
+                                            key="delete"
+                                            size="small"
+                                            color="white"
+                                            onClick={() => {
+                                                handleDeleteMeeting;
+                                            }}
+                                        >
+                                            Delete meeting
+                                        </Button>,
+                                    ]}
+                                />
+                            )}
                         </div>
                     </ClickAwayListener>
                 </div>
@@ -134,7 +125,16 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 setIsEditMeetingOpen={setIsEditMeetingOpen}
                 meeting={meeting}
             />
-            {showModal && deleteModal}
+            {showModal && (
+                <ConfirmModal
+                    header="Delete meeting"
+                    text="Are you sure you want to delete meeting?"
+                    leftButtonText="Yes"
+                    rightButtonText="No"
+                    setOpenModal={setShowModal}
+                    onAccept={() => console.log('delete meeting')}
+                />
+            )}
         </>
     );
 }
