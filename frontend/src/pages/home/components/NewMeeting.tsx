@@ -144,11 +144,10 @@ export default function NewMeeting({
         });
         setIsLoading(false);
         if (data) {
-            console.log('hello');
             meetingContext.addMeeting(data.meeting);
+            setFormValues(defaultValues);
+            setIsNewMeetingOpen(false);
         }
-        setFormValues(defaultValues);
-        setIsNewMeetingOpen(false);
     }
 
     function locationChange(e) {
