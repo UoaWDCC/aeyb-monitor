@@ -18,6 +18,7 @@ type UpcommingMeetingProps = {
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location, attendance } = meeting;
     const userContext = useUserContext();
+    const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -36,7 +37,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
         handleClickAway();
     };
 
-    const handleDeleteMeeting = () => {
+    const showDeleteModal = () => {
         setShowModal(true);
         handleClickAway();
     };
@@ -44,6 +45,30 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const handleClickAway = () => {
         setOpenDropdown(false);
     };
+
+    async function handleDeleteMeeting() {
+        setIsLoading(true);
+        const data = await userContext.fetcher('DELETE /api/meetings/:meetingId', undefined, {
+            meetingId: meeting.id,
+        });
+
+        setIsLoading(false);
+    }
+
+    if (isLoading) {
+        return (
+            <div className="fixed z-50 top-0 left-0 w-full h-full overflow-hidden bg-gray-800 opacity-50 flex items-center justify-center">
+                <div className="bg-white border py-2 px-5 rounded-lg flex flex-col items-center">
+                    <div className="loader-dots grid grid-cols-3 gap-2">
+                        <div className="bg-[#7d6ca3] rounded-full w-2 h-2"></div>
+                        <div className="bg-[#7d6ca3] rounded-full w-2 h-2"></div>
+                        <div className="bg-[#7d6ca3] rounded-full w-2 h-2"></div>
+                    </div>
+                    <div className="text-gray-500 text-xs font-light mt-2 text-center">Please wait...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -79,7 +104,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                             size="small"
                                             color="white"
                                             onClick={() => {
-                                                handleDeleteMeeting();
+                                                showDeleteModal();
                                             }}
                                         >
                                             Delete meeting
@@ -139,7 +164,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                     leftButtonText="Yes"
                     rightButtonText="No"
                     setOpenModal={setShowModal}
-                    onAccept={() => console.log('delete meeting')}
+                    onAccept={handleDeleteMeeting}
                 />
             )}
         </>
