@@ -95,14 +95,16 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
                             <div className="mb-5">
                                 <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
-                                {nth(startDate.getDate())} at {startDate.getHours() % 12}:
+                                {nth(startDate.getDate())} {startDate.toLocaleString('default', { month: 'long' })} at{' '}
+                                {startDate.getHours() % 12}:
                                 {startDate.getMinutes() < 10 ? '0' + startDate.getMinutes() : startDate.getMinutes()}{' '}
                                 {startDate.getHours() >= 12 ? 'PM' : 'AM'}
                             </div>
 
                             <div className="mb-5">
                                 <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
-                                {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
+                                {nth(finishDate.getDate())} {finishDate.toLocaleString('default', { month: 'long' })} at{' '}
+                                {finishDate.getHours() % 12}:
                                 {finishDate.getMinutes() < 10 ? '0' + finishDate.getMinutes() : finishDate.getMinutes()}{' '}
                                 {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
                             </div>

@@ -122,8 +122,8 @@ export default function NewMeeting({
 
         if (data) {
             meetingContext.addMeeting(data.meeting);
-            setFormValues(defaultValues);
             setIsNewMeetingOpen(false);
+            setFormValues(defaultValues);
         }
     }
 
@@ -145,8 +145,8 @@ export default function NewMeeting({
         setIsLoading(false);
         if (data) {
             meetingContext.addMeeting(data.meeting);
-            setFormValues(defaultValues);
             setIsNewMeetingOpen(false);
+            setFormValues(defaultValues);
         }
     }
 
