@@ -8,7 +8,7 @@ import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 import Button from '../../../utility_components/Button';
 import ClickAwayListener from '@mui/base/ClickAwayListener';
 import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
-import EditMeeting from './EditMeeting';
+import NewMeeting from './NewMeeting';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -120,10 +120,11 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                     )}
                 </div>
             </div>
-            <EditMeeting
-                isEditMeetingOpen={isEditMeetingOpen}
-                setIsEditMeetingOpen={setIsEditMeetingOpen}
-                meeting={meeting}
+            <NewMeeting
+                isNewMeetingOpen={isEditMeetingOpen}
+                setIsNewMeetingOpen={setIsEditMeetingOpen}
+                isEditMeeting={true}
+                meetingdto={meeting}
             />
             {showModal && (
                 <ConfirmModal

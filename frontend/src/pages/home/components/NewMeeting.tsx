@@ -7,7 +7,7 @@ import { useUserContext } from '../../../contexts/UserContext';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
-import { MeetingType } from '@shared/dtos/MeetingDTO';
+import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
 import LocationDTO from '@shared/dtos/LocationDTO';
 import AttendanceDTO from '@shared/dtos/AttendanceDTO';
 import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
@@ -35,8 +35,15 @@ type FormValuesType = {
 type NewMeetingProps = {
     isNewMeetingOpen: boolean;
     setIsNewMeetingOpen: (value: boolean) => void;
+    isEditMeeting: boolean;
+    meetingdto?: MeetingDTO;
 };
-export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: NewMeetingProps) {
+export default function NewMeeting({
+    isNewMeetingOpen,
+    setIsNewMeetingOpen,
+    isEditMeeting,
+    meetingdto,
+}: NewMeetingProps) {
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
 
@@ -113,6 +120,25 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
             setIsNewMeetingOpen(false);
         }
     }
+
+    async function editMeeting() {
+        const meetingRequest: AddMeetingRequest = {
+            ...formValues,
+            startTime: formValues.startTime.getTime(),
+            finishTime: formValues.finishTime.getTime(),
+        };
+
+        setIsLoading(true);
+        const data = await userContext.fetcher('POST /api/meetings', meetingRequest);
+        setIsLoading(false);
+
+        if (data) {
+            meetingContext.addMeeting(data.meeting);
+            setFormValues(defaultValues);
+            setIsNewMeetingOpen(false);
+        }
+    }
+
     function locationChange(e) {
         const objKey = e.target.name;
         const objType = e.target.value;
@@ -137,7 +163,7 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
     return (
         <>
             {isNewMeetingOpen ? (
-                <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0 ">
+                <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0 z-20">
                     <div className="opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20"></div>
                     <div className="text-5xl bg-white p-10 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative">
                         <button
@@ -146,7 +172,7 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
                         >
                             <FontAwesomeIcon icon={faClose} />
                         </button>
-                        <h1 className="my-5">Create new meeting</h1>
+                        <h1 className="my-5">{isEditMeeting ? 'Edit Meeting' : 'Create new meeting'}</h1>
 
                         <form className="flex flex-col items-center text-lg w-3/4" onSubmit={handleSubmit}>
                             <input
@@ -154,7 +180,7 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
                                 name="name"
                                 type="text"
                                 placeholder="Meeting Name"
-                                value={formValues.name}
+                                value={isEditMeeting ? meetingdto.name : formValues.name}
                                 onChange={handleInputChange}
                                 required={true}
                             />
@@ -163,19 +189,25 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
                                 name="location"
                                 type="text"
                                 placeholder="Location"
-                                value={formValues.location.location}
+                                value={isEditMeeting ? meetingdto.location.location : formValues.location.location}
                                 onChange={locationChange}
                                 required={true}
                             />
-                            <DatePickerUtil value={formValues.startTime} handleChange={handleStartChange} />
-                            <DatePickerUtil value={formValues.finishTime} handleChange={handleFinishChange} />
+                            <DatePickerUtil
+                                value={isEditMeeting ? new Date(meetingdto.startTime) : formValues.startTime}
+                                handleChange={handleStartChange}
+                            />
+                            <DatePickerUtil
+                                value={isEditMeeting ? new Date(meetingdto.finishTime) : formValues.finishTime}
+                                handleChange={handleFinishChange}
+                            />
 
                             <textarea
                                 className=" my-2 w-full border-[#7d6ca3] border-2 p-2 rounded-md resize-none"
                                 name="description"
                                 placeholder="Desciption"
                                 rows={5}
-                                value={formValues.description}
+                                value={isEditMeeting ? meetingdto.description : formValues.description}
                                 onChange={handleInputChange}
                             />
                             <button
@@ -192,12 +224,16 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
             )}
             {showModal && (
                 <ConfirmModal
-                    header="New Meeting"
-                    text="Are you sure you want to create a new meeting?"
+                    header={isEditMeeting ? 'Edit Meeting' : 'Create New Meeting'}
+                    text={
+                        isEditMeeting
+                            ? 'Are you sure you want to edit meeting'
+                            : 'Are you sure you want to create a new meeting?'
+                    }
                     leftButtonText="Yes"
                     rightButtonText="No"
                     setOpenModal={setShowModal}
-                    onAccept={createMeeting}
+                    onAccept={isEditMeeting ? editMeeting : createMeeting}
                 />
             )}
         </>
