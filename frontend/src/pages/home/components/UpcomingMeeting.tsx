@@ -9,6 +9,7 @@ import Button from '../../../utility_components/Button';
 import ClickAwayListener from '@mui/base/ClickAwayListener';
 import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
 import NewMeeting from './NewMeeting';
+import { useUserContext } from '../../../contexts/UserContext';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -16,6 +17,7 @@ type UpcommingMeetingProps = {
 
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location, attendance } = meeting;
+    const userContext = useUserContext();
     const [isOpen, setIsOpen] = useState(false);
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -49,12 +51,14 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 <div className="Header flex justify-between">
                     <div className="meetingTitle capitalize">
                         {name}
-                        <FontAwesomeIcon
-                            icon={faChevronDown}
-                            className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
-                            size="sm"
-                            onClick={openMeeting}
-                        />
+                        {userContext.hasPermission('MANAGE_MEETINGS') && (
+                            <FontAwesomeIcon
+                                icon={faChevronDown}
+                                className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
+                                size="sm"
+                                onClick={openMeeting}
+                            />
+                        )}
                     </div>
                     <ClickAwayListener onClickAway={handleClickAway}>
                         <div>
