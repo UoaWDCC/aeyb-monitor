@@ -20,6 +20,19 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ options, label, p
                     onChange(newValues as RoleDTO[]);
                 }
             }}
+            sx={{
+                '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                        borderColor: 'transparent',
+                    },
+                    '&:hover fieldset': {
+                        borderColor: 'transparent',
+                    },
+                    '& fieldset': {
+                        borderColor: 'transparent',
+                    },
+                },
+            }}
             options={options}
             getOptionLabel={(option: RoleDTO) => option.name}
             getOptionDisabled={(option: RoleDTO) => value.some((val) => val.id === option.id)}
