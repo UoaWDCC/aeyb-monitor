@@ -1,26 +1,36 @@
-import React from 'react'
-import DatePicker from "react-datepicker";
-
+import DatePicker from 'react-datepicker';
 
 type DatePickerUtilProps = {
-    value: Date,
-    handleChange: (date: Date) => void
-}
+    id: string;
+    label: string;
+    value: Date;
+    handleChange: (date: Date) => void;
+    showTimeSelect?: boolean;
+};
 
-export default function DatePickerUtil({ value, handleChange }: DatePickerUtilProps) {
+export default function DatePickerUtil({
+    id,
+    label,
+    value,
+    handleChange,
+    showTimeSelect = false,
+}: DatePickerUtilProps) {
     return (
-        <div className='my-2 w-fit px-2'>
+        <div className="w-full my-2">
+            <label className="block text-gray-700 mb-1 w-full" htmlFor={id}>
+                {label}
+            </label>
             <DatePicker
-                className='border-[#7d6ca3] border-2 rounded-md px-5 min-w-[260px]'
+                id={id}
+                className="focus:outline-none rounded-md w-full pl-2 py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
                 selected={value}
-                showTimeSelect
+                showTimeSelect={showTimeSelect}
+                showTimeSelectOnly={showTimeSelect}
                 timeFormat="HH:mm"
-                timeIntervals={30}
-                timeCaption="time"
-                dateFormat="d MMMM, yyyy h:mm aa"
-                minDate={new Date()}
+                timeIntervals={15}
+                dateFormat={showTimeSelect ? 'h:mm aa' : 'd MMMM, yyyy'}
                 onChange={handleChange}
             />
         </div>
-    )
+    );
 }
