@@ -8,6 +8,7 @@ import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 import Button from '../../../utility_components/Button';
 import ClickAwayListener from '@mui/base/ClickAwayListener';
 import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
+import EditMeeting from './EditMeeting';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -16,14 +17,12 @@ type UpcommingMeetingProps = {
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location, attendance } = meeting;
     const [isOpen, setIsOpen] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [editedDescription, setEditedDescription] = useState(description);
 
     const openMeeting = () => {
         setIsOpen(!isOpen);
-        console.log(`opening the "${meeting.name}" meeting`);
     };
 
     const days = ['Sunday ', 'Monday ', 'Tuesday ', 'Wednesday ', 'Thursday ', 'Friday ', 'Saturday '];
@@ -35,9 +34,8 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
             size="small"
             color="white"
             onClick={() => {
-                setIsEditing(true);
+                setIsEditMeetingOpen(true);
                 handleClickAway();
-                setIsOpen(true);
             }}
         >
             Edit meeting
@@ -64,7 +62,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
             leftButtonText="Yes"
             rightButtonText="No"
             setOpenModal={setShowModal}
-            onAccept={() => console.log('hello')}
+            onAccept={() => console.log('delete meeting')}
         />
     );
 
@@ -81,7 +79,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
             <div className="upcomingMeeting relative">
                 <div className="Header flex justify-between">
                     <div className="meetingTitle capitalize">
-                        {meeting.name}
+                        {name}
                         <FontAwesomeIcon
                             icon={faChevronDown}
                             className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
@@ -103,71 +101,43 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 </div>
                 <div className={`wrapper ${isOpen ? 'open' : ''}`}>
                     {isOpen ? (
-                        isEditing ? (
-                            <div className="meetingDetails break-words">
-                                <div className="mb-5">
-                                    <strong>Description: </strong>
-                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>Start Time: </strong>
-                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>End Time: </strong>
-                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>Location: </strong>
-                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>Attendees: </strong>
-                                    <input type="text" onChange={(e) => setEditedDescription(e.target.value)} />
-                                </div>
+                        <div className="meetingDetails break-words">
+                            <div className="mb-5">
+                                <strong>Description: </strong> {description}
                             </div>
-                        ) : (
-                            <div className="meetingDetails break-words">
-                                <div className="mb-5">
-                                    <strong>Description: </strong> {description}
-                                </div>
 
-                                <div className="mb-5">
-                                    <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
-                                    {nth(startDate.getDate())} at {startDate.getHours() % 12}:
-                                    {startDate.getMinutes() < 10
-                                        ? '0' + startDate.getMinutes()
-                                        : startDate.getMinutes()}{' '}
-                                    {startDate.getHours() >= 12 ? 'PM' : 'AM'}
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
-                                    {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
-                                    {finishDate.getMinutes() < 10
-                                        ? '0' + finishDate.getMinutes()
-                                        : finishDate.getMinutes()}{' '}
-                                    {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>Location: </strong> {location.location}
-                                </div>
-
-                                <div className="mb-5">
-                                    <strong>Attendees: </strong>
-                                </div>
+                            <div className="mb-5">
+                                <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
+                                {nth(startDate.getDate())} at {startDate.getHours() % 12}:
+                                {startDate.getMinutes() < 10 ? '0' + startDate.getMinutes() : startDate.getMinutes()}{' '}
+                                {startDate.getHours() >= 12 ? 'PM' : 'AM'}
                             </div>
-                        )
+
+                            <div className="mb-5">
+                                <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
+                                {nth(finishDate.getDate())} at {finishDate.getHours() % 12}:
+                                {finishDate.getMinutes() < 10 ? '0' + finishDate.getMinutes() : finishDate.getMinutes()}{' '}
+                                {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
+                            </div>
+
+                            <div className="mb-5">
+                                <strong>Location: </strong> {location.location}
+                            </div>
+
+                            <div className="mb-5">
+                                <strong>Attendees: </strong>
+                            </div>
+                        </div>
                     ) : (
                         <div className="dDays">Opens in {getRelativeTime(startTime)}</div>
                     )}
                 </div>
             </div>
+            <EditMeeting
+                isEditMeetingOpen={isEditMeetingOpen}
+                setIsEditMeetingOpen={setIsEditMeetingOpen}
+                meeting={meeting}
+            />
             {showModal && deleteModal}
         </>
     );
