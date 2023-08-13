@@ -76,7 +76,11 @@ export default function Homepage() {
                     </div>
                 </div>
             </div>
-            <NewMeeting isNewMeetingOpen={isNewMeetingOpen} setIsNewMeetingOpen={setIsNewMeetingOpen} />
+            <NewMeeting
+                isNewMeetingOpen={isNewMeetingOpen}
+                setIsNewMeetingOpen={setIsNewMeetingOpen}
+                isEditMeeting={false}
+            />
             <ScrollToTop />
         </>
     );

@@ -4,23 +4,13 @@ import { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
-import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
+import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
 import { addOneHour, roundToHour } from '../../../utils/timeUtil';
 import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
 import LocationDTO from '@shared/dtos/LocationDTO';
 import AttendanceDTO from '@shared/dtos/AttendanceDTO';
 import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
-
-const defaultValues: FormValuesType = {
-    name: '',
-    type: 'meeting',
-    location: { location: '', type: 'inPerson' },
-    description: '',
-    startTime: roundToHour(new Date()),
-    finishTime: addOneHour(roundToHour(new Date())),
-    attendance: [],
-};
 
 type FormValuesType = {
     type: MeetingType;
@@ -44,6 +34,22 @@ export default function NewMeeting({
     isEditMeeting,
     meetingdto,
 }: NewMeetingProps) {
+    const defaultValues: FormValuesType = isEditMeeting
+        ? {
+              ...meetingdto,
+              startTime: new Date(meetingdto.startTime),
+              finishTime: new Date(meetingdto.finishTime),
+          }
+        : {
+              name: '',
+              type: 'meeting',
+              location: { location: '', type: 'inPerson' },
+              description: '',
+              startTime: roundToHour(new Date()),
+              finishTime: addOneHour(roundToHour(new Date())),
+              attendance: [],
+          };
+
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
 
@@ -122,21 +128,27 @@ export default function NewMeeting({
     }
 
     async function editMeeting() {
-        const meetingRequest: AddMeetingRequest = {
+        const meetingRequest: UpdateMeetingRequest = {
             ...formValues,
             startTime: formValues.startTime.getTime(),
             finishTime: formValues.finishTime.getTime(),
+            location: {
+                ...formValues.location,
+                id: meetingdto.location.id,
+            },
         };
 
         setIsLoading(true);
-        const data = await userContext.fetcher('POST /api/meetings', meetingRequest);
+        const data = await userContext.fetcher('PATCH /api/meetings/:meetingId', meetingRequest, {
+            meetingId: meetingdto.id,
+        });
         setIsLoading(false);
-
         if (data) {
+            console.log('hello');
             meetingContext.addMeeting(data.meeting);
-            setFormValues(defaultValues);
-            setIsNewMeetingOpen(false);
         }
+        setFormValues(defaultValues);
+        setIsNewMeetingOpen(false);
     }
 
     function locationChange(e) {
@@ -180,7 +192,7 @@ export default function NewMeeting({
                                 name="name"
                                 type="text"
                                 placeholder="Meeting Name"
-                                value={isEditMeeting ? meetingdto.name : formValues.name}
+                                value={formValues.name}
                                 onChange={handleInputChange}
                                 required={true}
                             />
@@ -189,25 +201,18 @@ export default function NewMeeting({
                                 name="location"
                                 type="text"
                                 placeholder="Location"
-                                value={isEditMeeting ? meetingdto.location.location : formValues.location.location}
+                                value={formValues.location.location}
                                 onChange={locationChange}
                                 required={true}
                             />
-                            <DatePickerUtil
-                                value={isEditMeeting ? new Date(meetingdto.startTime) : formValues.startTime}
-                                handleChange={handleStartChange}
-                            />
-                            <DatePickerUtil
-                                value={isEditMeeting ? new Date(meetingdto.finishTime) : formValues.finishTime}
-                                handleChange={handleFinishChange}
-                            />
-
+                            <DatePickerUtil value={formValues.startTime} handleChange={handleStartChange} />
+                            <DatePickerUtil value={formValues.finishTime} handleChange={handleFinishChange} />
                             <textarea
                                 className=" my-2 w-full border-[#7d6ca3] border-2 p-2 rounded-md resize-none"
                                 name="description"
                                 placeholder="Desciption"
                                 rows={5}
-                                value={isEditMeeting ? meetingdto.description : formValues.description}
+                                value={formValues.description}
                                 onChange={handleInputChange}
                             />
                             <button

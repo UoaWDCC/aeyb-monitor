@@ -75,7 +75,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                             size="small"
                                             color="white"
                                             onClick={() => {
-                                                handleDeleteMeeting;
+                                                handleDeleteMeeting();
                                             }}
                                         >
                                             Delete meeting
