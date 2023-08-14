@@ -10,6 +10,7 @@ import ClickAwayListener from '@mui/base/ClickAwayListener';
 import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
 import NewMeeting from './NewMeeting';
 import { useUserContext } from '../../../contexts/UserContext';
+import { useMeetingContext } from '../../../contexts/MeetingContext';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
@@ -18,6 +19,7 @@ type UpcommingMeetingProps = {
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const { name, startTime, finishTime, description, location, attendance } = meeting;
     const userContext = useUserContext();
+    const meetingContext = useMeetingContext();
     const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false);
@@ -48,12 +50,13 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
     async function handleDeleteMeeting() {
         setIsLoading(true);
-        await userContext.fetcher('DELETE /api/meetings/:meetingId', undefined, { meetingId: meeting.id });
+        await userContext.fetcher('DELETE /api/meetings/:meetingId', undefined, {
+            meetingId: meeting.id,
+        });
 
-        if (meeting) {
-            console.log('removed', meeting.id);
-            // userContext.removeMeeting(meeting.id);
-        }
+        meetingContext.removeMeeting(meeting.id);
+        setIsEditMeetingOpen(false);
+
         setIsLoading(false);
     }
 

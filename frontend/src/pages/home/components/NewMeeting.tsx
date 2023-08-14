@@ -57,9 +57,6 @@ export default function NewMeeting({
           }
         : defaultValues;
 
-    if (isEditMeeting) {
-        console.log(meetingInfo);
-    }
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
 
@@ -137,7 +134,7 @@ export default function NewMeeting({
         setFormValues(defaultValues);
     }
 
-    async function handleSubmit(event) {
+    function handleSubmit(event) {
         event.preventDefault();
 
         if (formValues.startTime.getTime() < Date.now()) {
@@ -202,8 +199,9 @@ export default function NewMeeting({
             meetingId: meetingInfo.id,
         });
         setIsLoading(false);
+
         if (data) {
-            meetingContext.addMeeting(data.meeting);
+            meetingContext.updateMeeting(data.meeting);
             setIsNewMeetingOpen(false);
             setFormValues(defaultValues);
         }
@@ -297,6 +295,7 @@ export default function NewMeeting({
                                             id="duration"
                                             name="duration"
                                             className="focus:outline-none rounded-md w-full py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
+                                            defaultValue={formValues.duration}
                                             onChange={handleDurationChange}
                                         >
                                             {[...Array(5).keys()]
