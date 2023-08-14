@@ -13,7 +13,7 @@ import AutocompleteInput from './AutocompleteRoleInput';
 import { GetAllRolesData } from '../../../../../shared/responses/RoleResponsesData';
 import RoleDTO from '../../../../../shared/dtos/RoleDTO';
 import LoadingDots from '../../../utility_components/Loading/LoadingDots';
-import { durationToNumber } from '../../../utils/durationUtil';
+import { durationToNumber, getCombinedTime, numberToDuration } from '../../../utils/durationUtil';
 
 type FormValuesType = {
     type: MeetingType;
@@ -116,12 +116,9 @@ export default function NewMeeting({
     };
 
     const handleDurationChange = (e) => {
-        const { value } = e.target;
-        const newDuration = durationToNumber(value);
-
         setFormValues({
             ...formValues,
-            duration: newDuration,
+            duration: durationToNumber(e.target.value),
         });
     };
 
@@ -151,19 +148,19 @@ export default function NewMeeting({
     }
 
     async function createMeeting() {
-        const combinedStart = new Date(formValues.startDate);
-        combinedStart.setHours(formValues.startTime.getHours(), formValues.startTime.getMinutes());
-
-        const combinedFinish = new Date(combinedStart);
-        combinedFinish.setMinutes(combinedFinish.getMinutes() + formValues.duration);
+        const { startTime, finishTime } = getCombinedTime(
+            formValues.startDate,
+            formValues.startTime,
+            formValues.duration,
+        );
 
         const meetingRequest: AddMeetingRequest = {
             name: formValues.name,
             type: formValues.type,
             location: formValues.location,
             description: formValues.description,
-            startTime: combinedStart.getTime(),
-            finishTime: combinedFinish.getTime(),
+            startTime: startTime,
+            finishTime: finishTime,
             roles: selectedRoles,
         };
 
@@ -179,11 +176,16 @@ export default function NewMeeting({
     }
 
     async function editMeeting() {
+        const { startTime, finishTime } = getCombinedTime(
+            formValues.startDate,
+            formValues.startTime,
+            formValues.duration,
+        );
+
         const meetingRequest: UpdateMeetingRequest = {
             ...formValues,
-            startTime: formValues.startTime.getTime(),
-
-            finishTime: new Date(formValues.startDate.getTime() + formValues.duration * 60000).getTime(),
+            startTime: startTime,
+            finishTime: finishTime,
             location: {
                 ...formValues.location,
                 id: meetingInfo.location.id,
@@ -280,6 +282,7 @@ export default function NewMeeting({
                                         name="duration"
                                         className="focus:outline-none rounded-md w-full py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
                                         onChange={handleDurationChange}
+                                        defaultValue={numberToDuration(formValues.duration)}
                                     >
                                         {[...Array(5).keys()]
                                             .map((hour) =>

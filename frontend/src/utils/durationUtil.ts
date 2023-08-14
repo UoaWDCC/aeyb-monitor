@@ -4,11 +4,15 @@ export function durationToNumber(value: string) {
 }
 
 export function numberToDuration(duration: number) {
-    const hours = Math.floor(duration / 60);
-    const minutes = duration % 60;
+    return `${Math.floor(duration / 60)}:${duration % 60}`;
+}
 
-    const hoursString = String(hours).padStart(1, '0');
-    const minutesString = String(minutes).padStart(2, '0');
+export function getCombinedTime(startDate, startTime, duration) {
+    const combinedStart = new Date(startDate);
+    combinedStart.setHours(startTime.getHours(), startTime.getMinutes());
 
-    return `${hoursString}h ${minutesString}m`;
+    const combinedFinish = new Date(combinedStart);
+    combinedFinish.setMinutes(combinedFinish.getMinutes() + duration);
+
+    return { startTime: combinedStart.getTime(), finishTime: combinedFinish.getTime() };
 }
