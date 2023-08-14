@@ -1,7 +1,7 @@
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import LoadingSpinner from '../utility_components/LoadingSpinner';
+import LoadingSpinner from '../utility_components/Loading/LoadingSpinner';
 import { UnimplementedFunction } from '../utils';
 import { useUserContext } from './UserContext';
 
