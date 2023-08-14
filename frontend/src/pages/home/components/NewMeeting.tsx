@@ -13,6 +13,7 @@ import AutocompleteInput from './AutocompleteRoleInput';
 import { GetAllRolesData } from '../../../../../shared/responses/RoleResponsesData';
 import RoleDTO from '../../../../../shared/dtos/RoleDTO';
 import LoadingDots from '../../../utility_components/Loading/LoadingDots';
+import { durationToNumber } from '../../../utils/durationUtil';
 
 type FormValuesType = {
     type: MeetingType;
@@ -115,14 +116,8 @@ export default function NewMeeting({
     };
 
     const handleDurationChange = (e) => {
-        const { name, value } = e.target;
-        let newDuration = formValues.duration;
-
-        if (name === 'durationHours') {
-            newDuration = parseInt(value) * 60 + (formValues.duration % 60);
-        } else if (name === 'durationMinutes') {
-            newDuration = Math.floor(formValues.duration / 60) * 60 + parseInt(value);
-        }
+        const { value } = e.target;
+        const newDuration = durationToNumber(value);
 
         setFormValues({
             ...formValues,
@@ -284,7 +279,6 @@ export default function NewMeeting({
                                         id="duration"
                                         name="duration"
                                         className="focus:outline-none rounded-md w-full py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
-                                        defaultValue={formValues.duration}
                                         onChange={handleDurationChange}
                                     >
                                         {[...Array(5).keys()]
