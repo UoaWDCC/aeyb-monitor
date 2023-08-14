@@ -8,7 +8,7 @@ export default function ScrollToTop() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.pageYOffset > 400) {
+            if (window.scrollY > 400) {
                 setShowScrollButton(true);
             } else {
                 setShowScrollButton(false);

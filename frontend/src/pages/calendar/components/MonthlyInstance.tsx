@@ -1,5 +1,6 @@
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import IonIcon from '@reacticons/ionicons';
+import { nth } from '../../../utils/timeUtil';
 
 interface MonthlyInstanceProps {
     meeting: MeetingDTO;
@@ -10,10 +11,6 @@ export default function MonthlyInstance({ meeting }: MonthlyInstanceProps) {
     const { name, startTime, description, location } = meeting;
     const days = ['Sunday ', 'Monday ', 'Tuesday ', 'Wednesday ', 'Thursday ', 'Friday ', 'Saturday '];
     const date = new Date(startTime);
-
-    function nth(n: number) {
-        return ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
-    }
 
     return (
         <div>

@@ -300,10 +300,17 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
  */
 const updateMeeting = asyncHandler(
     async (req: TypedRequest<UpdateMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
-        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const meeting = await Meeting.findByIdAndUpdate(
+            req.params.meetingId,
+            {
+                ...req.body,
+                creator: req.body.requester,
+            },
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);

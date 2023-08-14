@@ -19,3 +19,11 @@ export function getRelativeTime(time: number): string {
         return `${Math.round(difference / 60000)} minutes`;
     }
 }
+
+export function nth(n: number) {
+    return ['st', 'nd', 'rd'][((((n + 90) % 100) - 10) % 10) - 1] || 'th';
+}
+
+export function getTimeDifferenceInMinutes(startTime: number, finishTime: number): number {
+    return (new Date(finishTime).getTime() - new Date(startTime).getTime()) / 60000;
+}
