@@ -18,7 +18,7 @@ export default function ConfirmModal({
     onAccept,
 }: ConfirmModalProps) {
     return (
-        <div className="fixed inset-0 bg-gray-400 bg-opacity-75 flex items-center justify-center z-101">
+        <div className="fixed inset-0 bg-gray-400 bg-opacity-75 flex items-center justify-center z-50">
             <div className="bg-white rounded-xl shadow-lg p-12 w-">
                 <div className="flex justify-end">
                     <button
