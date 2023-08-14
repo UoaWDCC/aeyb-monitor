@@ -212,131 +212,129 @@ export default function NewMeeting({
         return <LoadingDots />;
     }
     return (
-        <>
-            {isNewMeetingOpen && (
-                <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0 z-99">
-                    <div className="opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20"></div>
-                    <div className="bg-white p-5 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative">
-                        <button
-                            className="rounded-md text-2xl text-black px-5 absolute top-0 right-0 mt-2 mr-2"
-                            onClick={handleExit}
-                        >
-                            <FontAwesomeIcon icon={faClose} />
-                        </button>
-                        <h1 className="my-5 text-xl">{isEditMeeting ? 'Edit meeting detail' : 'Create new meeting'}</h1>
+        isNewMeetingOpen && (
+            <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0 z-50">
+                <div className="opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20"></div>
+                <div className="bg-white p-5 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative">
+                    <button
+                        className="rounded-md text-2xl text-black px-5 absolute top-0 right-0 mt-2 mr-2"
+                        onClick={handleExit}
+                    >
+                        <FontAwesomeIcon icon={faClose} />
+                    </button>
+                    <h1 className="my-5 text-xl">{isEditMeeting ? 'Edit meeting detail' : 'Create new meeting'}</h1>
 
-                        <form className="text-lg w-full flex flex-col items-center" onSubmit={handleSubmit}>
-                            <label className="block text-gray-700 mb-1 w-full" htmlFor="name">
-                                Meeting Name
-                            </label>
-                            <div className="relative w-full my-2">
-                                <input
-                                    id="name"
-                                    className="focus:outline-none rounded-md w-full py-2 pl-3 pr-10 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
-                                    name="name"
-                                    type="text"
-                                    placeholder="Enter meeting name"
-                                    value={formValues.name}
-                                    onChange={handleInputChange}
-                                    required={true}
-                                />
-                            </div>
-
-                            <label className="block text-gray-700 mb-1 w-full" htmlFor="location">
-                                Location
-                            </label>
-                            <div className="relative w-full my-2">
-                                <input
-                                    id="location"
-                                    className="focus:outline-none rounded-md w-full py-2 pl-3 pr-10 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
-                                    name="location"
-                                    type="text"
-                                    placeholder="Enter location"
-                                    value={formValues.location.location}
-                                    onChange={locationChange}
-                                    required={true}
-                                />
-                            </div>
-
-                            <div className="flex w-full items-center">
-                                <div className="flex-none w-1/3 pl-1 pr-1">
-                                    <DatePickerUtil
-                                        id="startDate"
-                                        label="Start Date"
-                                        value={formValues.startDate}
-                                        handleChange={handleStartDateChange}
-                                    />
-                                </div>
-                                <div className="flex-none w-1/3 pl-1 pr-1">
-                                    <DatePickerUtil
-                                        id="startTime"
-                                        label="Start Time"
-                                        value={formValues.startTime}
-                                        handleChange={handleStartTimeChange}
-                                        showTimeSelect
-                                    />
-                                </div>
-                                <div className="flex-none w-1/3 pl-1 pr-1">
-                                    <div className="relative w-full my-2">
-                                        <label className="block text-gray-700 mb-1 w-full" htmlFor="duration">
-                                            Duration
-                                        </label>
-                                        <select
-                                            id="duration"
-                                            name="duration"
-                                            className="focus:outline-none rounded-md w-full py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
-                                            defaultValue={formValues.duration}
-                                            onChange={handleDurationChange}
-                                        >
-                                            {[...Array(5).keys()]
-                                                .map((hour) =>
-                                                    [0, 15, 30, 45].map((minute) => (
-                                                        <option key={`${hour}-${minute}`} value={`${hour}:${minute}`}>
-                                                            {hour}h {minute}m
-                                                        </option>
-                                                    )),
-                                                )
-                                                .flat()}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* magic */}
-                            <AutocompleteInput
-                                options={roles.roles.filter((role) => role.name !== 'Admin' && role.name !== 'Default')}
-                                label="Which group of people are you inviting?"
-                                value={selectedRoles}
-                                onChange={setSelectedRoles}
+                    <form className="text-lg w-full flex flex-col items-center" onSubmit={handleSubmit}>
+                        <label className="block text-gray-700 mb-1 w-full" htmlFor="name">
+                            Meeting Name
+                        </label>
+                        <div className="relative w-full my-2">
+                            <input
+                                id="name"
+                                className="focus:outline-none rounded-md w-full py-2 pl-3 pr-10 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
+                                name="name"
+                                type="text"
+                                placeholder="Enter meeting name"
+                                value={formValues.name}
+                                onChange={handleInputChange}
+                                required={true}
                             />
+                        </div>
 
-                            {/* Description */}
-                            <label className="block text-gray-700 mb-1 w-full" htmlFor="description">
-                                Description
-                            </label>
-                            <div className="relative w-full my-2">
-                                <textarea
-                                    id="description"
-                                    className="focus:outline-none rounded-md w-full py-2 pl-3 pr-10 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
-                                    name="description"
-                                    placeholder="Enter description"
-                                    rows={5}
-                                    value={formValues.description}
-                                    onChange={handleInputChange}
+                        <label className="block text-gray-700 mb-1 w-full" htmlFor="location">
+                            Location
+                        </label>
+                        <div className="relative w-full my-2">
+                            <input
+                                id="location"
+                                className="focus:outline-none rounded-md w-full py-2 pl-3 pr-10 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
+                                name="location"
+                                type="text"
+                                placeholder="Enter location"
+                                value={formValues.location.location}
+                                onChange={locationChange}
+                                required={true}
+                            />
+                        </div>
+
+                        <div className="flex w-full items-center">
+                            <div className="flex-none w-1/3 pl-1 pr-1">
+                                <DatePickerUtil
+                                    id="startDate"
+                                    label="Start Date"
+                                    value={formValues.startDate}
+                                    handleChange={handleStartDateChange}
                                 />
                             </div>
+                            <div className="flex-none w-1/3 pl-1 pr-1">
+                                <DatePickerUtil
+                                    id="startTime"
+                                    label="Start Time"
+                                    value={formValues.startTime}
+                                    handleChange={handleStartTimeChange}
+                                    showTimeSelect
+                                />
+                            </div>
+                            <div className="flex-none w-1/3 pl-1 pr-1">
+                                <div className="relative w-full my-2">
+                                    <label className="block text-gray-700 mb-1 w-full" htmlFor="duration">
+                                        Duration
+                                    </label>
+                                    <select
+                                        id="duration"
+                                        name="duration"
+                                        className="focus:outline-none rounded-md w-full py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
+                                        defaultValue={formValues.duration}
+                                        onChange={handleDurationChange}
+                                    >
+                                        {[...Array(5).keys()]
+                                            .map((hour) =>
+                                                [0, 15, 30, 45].map((minute) => (
+                                                    <option key={`${hour}-${minute}`} value={`${hour}:${minute}`}>
+                                                        {hour}h {minute}m
+                                                    </option>
+                                                )),
+                                            )
+                                            .flat()}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                            {/* Submit Button */}
-                            <button
-                                className="bg-[#7d6ca3] hover:bg-opacity-90 text-white py-2 px-4 rounded-md text-xl mt-4 transition-transform duration-200 transform hover:scale-95"
-                                type="submit"
-                            >
-                                {isEditMeeting ? 'Edit meeting detail' : 'Create new meeting'}
-                            </button>
-                        </form>
-                    </div>
+                        {/* magic */}
+                        <AutocompleteInput
+                            options={roles.roles.filter((role) => role.name !== 'Admin' && role.name !== 'Default')}
+                            label="Which group of people are you inviting?"
+                            value={selectedRoles}
+                            onChange={setSelectedRoles}
+                        />
+
+                        {/* Description */}
+                        <label className="block text-gray-700 mb-1 w-full" htmlFor="description">
+                            Description
+                        </label>
+                        <div className="relative w-full my-2">
+                            <textarea
+                                id="description"
+                                className="focus:outline-none rounded-md w-full py-2 pl-3 pr-10 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
+                                name="description"
+                                placeholder="Enter description"
+                                rows={5}
+                                value={formValues.description}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+
+                        {/* Submit Button */}
+                        <button
+                            className="bg-[#7d6ca3] hover:bg-opacity-90 text-white py-2 px-4 rounded-md text-xl mt-4 transition-transform duration-200 transform hover:scale-95"
+                            type="submit"
+                        >
+                            {isEditMeeting ? 'Edit meeting detail' : 'Create new meeting'}
+                        </button>
+                    </form>
                 </div>
-            )}
-        </>
+            </div>
+        )
     );
 }
