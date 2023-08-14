@@ -2,7 +2,6 @@ import MeetingDTO from '../dtos/MeetingDTO';
 import AttendanceDTO from '../dtos/AttendanceDTO';
 import LocationDTO from '../dtos/LocationDTO';
 import RoleDTO from '../dtos/RoleDTO';
-import { MeetingDocument } from '../../backend/src/models/MeetingModel';
 
 // export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator' | 'location'> & { location: Omit<LocationDTO, 'id'> };
 export type AddMeetingRequest = Omit<MeetingDTO, 'attendance' | 'id' | 'creator' | 'location'> & {
