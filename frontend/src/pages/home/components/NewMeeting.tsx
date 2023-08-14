@@ -107,10 +107,33 @@ export default function NewMeeting({
         });
     };
 
+    const locationChange = (e) => {
+        const objKey = e.target.name;
+        const objType = e.target.value;
+        handleNestedObjectChange('location', { objKey, objType });
+    };
+
+    const handleDurationChange = (e) => {
+        const { name, value } = e.target;
+        let newDuration = formValues.duration;
+
+        if (name === 'durationHours') {
+            newDuration = parseInt(value) * 60 + (formValues.duration % 60);
+        } else if (name === 'durationMinutes') {
+            newDuration = Math.floor(formValues.duration / 60) * 60 + parseInt(value);
+        }
+
+        setFormValues({
+            ...formValues,
+            duration: newDuration,
+        });
+    };
+
     function handleExit() {
         setIsNewMeetingOpen(false);
         setFormValues(defaultValues);
     }
+
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -124,7 +147,11 @@ export default function NewMeeting({
             return;
         }
 
-        createMeeting();
+        if (isEditMeeting) {
+            editMeeting();
+        } else {
+            createMeeting();
+        }
     }
 
     async function createMeeting() {
@@ -179,27 +206,6 @@ export default function NewMeeting({
         }
     }
 
-    function locationChange(e) {
-        const objKey = e.target.name;
-        const objType = e.target.value;
-        handleNestedObjectChange('location', { objKey, objType });
-    }
-    const handleDurationChange = (e) => {
-        const { name, value } = e.target;
-        let newDuration = formValues.duration;
-
-        if (name === 'durationHours') {
-            newDuration = parseInt(value) * 60 + (formValues.duration % 60);
-        } else if (name === 'durationMinutes') {
-            newDuration = Math.floor(formValues.duration / 60) * 60 + parseInt(value);
-        }
-
-        setFormValues({
-            ...formValues,
-            duration: newDuration,
-        });
-    };
-
     if (isLoading) {
         return (
             <div className="fixed z-50 top-0 left-0 w-full h-full overflow-hidden bg-gray-800 opacity-50 flex items-center justify-center">
@@ -216,7 +222,7 @@ export default function NewMeeting({
     }
     return (
         <>
-            {isNewMeetingOpen ? (
+            {isNewMeetingOpen && (
                 <div className="flex items-center justify-center fixed h-screen w-full top-0 left-0">
                     <div className="opacity-50 bg-gray-600 w-full h-full absolute top-0 left-0 z-20"></div>
                     <div className="bg-white p-5 opacity-100 z-30 rounded-lg w-1/2 flex flex-col items-center relative">
@@ -226,7 +232,7 @@ export default function NewMeeting({
                         >
                             <FontAwesomeIcon icon={faClose} />
                         </button>
-                        <h1 className="my-5 text-xl">Create new meeting</h1>
+                        <h1 className="my-5 text-xl">{isEditMeeting ? 'Edit meeting detail' : 'Create new meeting'}</h1>
 
                         <form className="text-lg w-full flex flex-col items-center" onSubmit={handleSubmit}>
                             <label className="block text-gray-700 mb-1 w-full" htmlFor="name">
@@ -333,13 +339,11 @@ export default function NewMeeting({
                                 className="bg-[#7d6ca3] hover:bg-opacity-90 text-white py-2 px-4 rounded-md text-xl mt-4 transition-transform duration-200 transform hover:scale-95"
                                 type="submit"
                             >
-                                Submit
+                                {isEditMeeting ? 'Edit meeting detail' : 'Create new meeting'}
                             </button>
                         </form>
                     </div>
                 </div>
-            ) : (
-                <div></div>
             )}
         </>
     );
