@@ -2,6 +2,7 @@ import MeetingDTO from '../dtos/MeetingDTO';
 import AttendanceDTO from '../dtos/AttendanceDTO';
 import LocationDTO from '../dtos/LocationDTO';
 import RoleDTO from '../dtos/RoleDTO';
+import { MeetingDocument } from '../../backend/src/models/MeetingModel';
 
 // export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator' | 'location'> & { location: Omit<LocationDTO, 'id'> };
 export type AddMeetingRequest = Omit<MeetingDTO, 'attendance' | 'id' | 'creator' | 'location'> & {
@@ -23,6 +24,7 @@ export type EndMeetingRequest = {
     finishTime: number;
 };
 
-export type createMeetingAttendanceListReq = {
-    attendanceList: AttendanceDTO[];
-};
+export type DeleteAttendanceReq = Omit<
+    MeetingDTO,
+    'type' | 'creator' | 'name' | 'startTime' | 'finishTime' | 'location' | 'attendance' | 'description'
+>;

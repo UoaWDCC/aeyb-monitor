@@ -5,7 +5,7 @@ import {
     UpdateAttendanceRequest,
     UpdateMeetingRequest,
     EndMeetingRequest,
-    createMeetingAttendanceListReq,
+    DeleteAttendanceReq,
 } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
 import { AddLocationRequest } from './requests/LocationRequests';
@@ -79,9 +79,7 @@ export default interface API {
         UpdateMeetingData,
         AttendanceIdParam
     >;
-    'POST /api/meetings/:meetingId/attendances': Endpoint<undefined, createMeetingAttendanceList>;
-    'DELETE /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, deleteMeetingAttendanceList>;
-    'PUT /api/meetings/:meetingId/attendances/users/:userId': Endpoint<undefined, updateMeetingAttendanceList>;
+    'DELETE /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, DeleteAttendanceReq>;
 
     // Feedback endpoints
     'GET /api/meetings/:meetingId/feedback': Endpoint<undefined, GetAllMeetingsData, AttendanceIdParam>;
