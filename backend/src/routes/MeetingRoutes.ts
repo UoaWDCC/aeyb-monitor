@@ -15,7 +15,6 @@ import {
     updateMeetingFeedback,
     getMeetingFeedback,
     endMeeting,
-    createMeetingAttendanceList,
     deleteMeetingAttendanceList,
 } from '../controllers/MeetingController';
 
@@ -43,8 +42,6 @@ MeetingRouter.route('/meetings/:meetingId/feedback/users/:userId')
 
 MeetingRouter.route('/attendance/:meetingId')
     .get(protect('VIEW_MEETINGS'), getMeetingAttendance)
-    .post(protect('MANAGE_MEETINGS'), createMeetingAttendanceList)
-    .put(protect('MANAGE_MEETINGS'), updateMeetingAttendanceList)
     .delete(protect('MANAGE_MEETINGS'), deleteMeetingAttendanceList);
 
 export default MeetingRouter;
