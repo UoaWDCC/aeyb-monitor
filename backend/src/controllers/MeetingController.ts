@@ -351,6 +351,20 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     res.sendStatus(204);
 });
 
+/**
+ * @desc delete the attendance list of a specific meeting
+ * @route DELETE /api/meetings/attendance/:meetingId
+ */
+const deleteMeetingAttendanceList = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
+    const meeting = await Meeting.findById(req.params.meetingId);
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+    }
+    meeting.attendance = [];
+    await meeting.save();
+    res.sendStatus(204);
+});
+
 export {
     getAllMeetings,
     getMeeting,
@@ -365,4 +379,5 @@ export {
     addMeetingFeedback,
     updateMeetingFeedback,
     endMeeting,
+    deleteMeetingAttendanceList,
 };
