@@ -299,12 +299,12 @@ export default function NewMeeting({
                         </div>
 
                         {/* magic */}
-                        <AutocompleteInput
+                        {/* <AutocompleteInput
                             options={roles.roles.filter((role) => role.name !== 'Admin' && role.name !== 'Default')}
                             label="Which group of people are you inviting?"
                             value={selectedRoles}
                             onChange={setSelectedRoles}
-                        />
+                        /> */}
 
                         {/* Description */}
                         <label className="block text-gray-700 mb-1 w-full" htmlFor="description">
