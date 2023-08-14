@@ -39,24 +39,27 @@ type NewMeetingProps = {
     isNewMeetingOpen: boolean;
     setIsNewMeetingOpen: (value: boolean) => void;
     isEditMeeting: boolean;
-    meetingdto?: MeetingDTO;
+    meetingInfo?: MeetingDTO;
 };
 export default function NewMeeting({
     isNewMeetingOpen,
     setIsNewMeetingOpen,
     isEditMeeting,
-    meetingdto,
+    meetingInfo,
 }: NewMeetingProps) {
     const form: FormValuesType = isEditMeeting
         ? {
-              ...meetingdto,
-              startTime: new Date(meetingdto.startTime),
-              startDate: new Date(meetingdto.finishTime),
+              ...meetingInfo,
+              startTime: new Date(meetingInfo.startTime),
+              startDate: new Date(meetingInfo.finishTime),
               duration: 60,
               roles: [],
           }
         : defaultValues;
 
+    if (isEditMeeting) {
+        console.log(meetingInfo);
+    }
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
 
@@ -190,13 +193,13 @@ export default function NewMeeting({
             finishTime: new Date(formValues.startDate.getTime() + formValues.duration * 60000).getTime(),
             location: {
                 ...formValues.location,
-                id: meetingdto.location.id,
+                id: meetingInfo.location.id,
             },
         };
 
         setIsLoading(true);
         const data = await userContext.fetcher('PATCH /api/meetings/:meetingId', meetingRequest, {
-            meetingId: meetingdto.id,
+            meetingId: meetingInfo.id,
         });
         setIsLoading(false);
         if (data) {

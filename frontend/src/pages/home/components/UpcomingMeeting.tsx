@@ -48,10 +48,12 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
     async function handleDeleteMeeting() {
         setIsLoading(true);
-        const data = await userContext.fetcher('DELETE /api/meetings/:meetingId', undefined, {
-            meetingId: meeting.id,
-        });
+        await userContext.fetcher('DELETE /api/meetings/:meetingId', undefined, { meetingId: meeting.id });
 
+        if (meeting) {
+            console.log('removed', meeting.id);
+            // userContext.removeMeeting(meeting.id);
+        }
         setIsLoading(false);
     }
 
@@ -155,7 +157,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 isNewMeetingOpen={isEditMeetingOpen}
                 setIsNewMeetingOpen={setIsEditMeetingOpen}
                 isEditMeeting={true}
-                meetingdto={meeting}
+                meetingInfo={meeting}
             />
             {showModal && (
                 <ConfirmModal
