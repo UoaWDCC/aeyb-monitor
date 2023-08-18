@@ -43,6 +43,7 @@ type NewMeetingProps = {
     isEditMeeting: boolean;
     meetingInfo?: MeetingDTO;
 };
+
 export default function NewMeeting({
     isNewMeetingOpen,
     setIsNewMeetingOpen,
