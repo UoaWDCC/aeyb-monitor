@@ -3,7 +3,7 @@ import UserDTO from '@shared/dtos/UserDTO';
 import { useUserContext } from '../../../contexts/UserContext';
 import { UserRoleRow } from './UserRoleRow';
 import { useEffect, useState } from 'react';
-import LoadingSpinner from '../../../utility_components/LoadingSpinner';
+import LoadingSpinner from '../../../utility_components/Loading/LoadingSpinner';
 
 export function ViewUserWindow() {
     const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +42,6 @@ export function ViewUserWindow() {
 
         setIsLoading(true);
         Promise.all([fetchRoles(), fetchUsers()]).finally(() => setIsLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function removeRole(role: RoleDTO, userId: string) {
@@ -80,11 +79,7 @@ export function ViewUserWindow() {
     }
 
     if (isLoading) {
-        return (
-            <div className="flex justify-center items-center w-full h-full">
-                <LoadingSpinner />
-            </div>
-        );
+        return <LoadingSpinner />;
     }
 
     return (

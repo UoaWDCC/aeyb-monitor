@@ -55,7 +55,7 @@ export default function Homepage() {
                     <div id="liveContainer">{renderLiveMeetings()}</div>
                     <div id="meetingContainer">
                         <div id="upcomingContainer" className="mContainer">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between items-center">
                                 {userContext.hasPermission('VIEW_MEETINGS') && (
                                     <p className="containerTtl">Upcoming meetings:</p>
                                 )}
@@ -76,7 +76,11 @@ export default function Homepage() {
                     </div>
                 </div>
             </div>
-            <NewMeeting isNewMeetingOpen={isNewMeetingOpen} setIsNewMeetingOpen={setIsNewMeetingOpen} />
+            <NewMeeting
+                isNewMeetingOpen={isNewMeetingOpen}
+                setIsNewMeetingOpen={setIsNewMeetingOpen}
+                isEditMeeting={false}
+            />
             <ScrollToTop />
         </>
     );

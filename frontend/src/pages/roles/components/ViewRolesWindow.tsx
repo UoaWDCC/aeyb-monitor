@@ -3,9 +3,8 @@ import { useUserContext } from '../../../contexts/UserContext';
 import TabManager from '../../../utility_components/tabs/TabManager';
 import { CreateNewRole } from './CreateNewRole';
 import { ViewPermissions } from './ViewPermissions';
-import UserDTO from '../../../../../shared/dtos/UserDTO';
 import { useEffect, useState } from 'react';
-import LoadingSpinner from '../../../utility_components/LoadingSpinner';
+import LoadingSpinner from '../../../utility_components/Loading/LoadingSpinner';
 
 export function ViewRolesWindow() {
     const userContext = useUserContext();
@@ -27,7 +26,6 @@ export function ViewRolesWindow() {
 
         setIsLoading(true);
         Promise.all([fetchRoles()]).finally(() => setIsLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const content = Object.keys(roles).map((id) => ({
         tabTitle: roles[id].name,
@@ -66,11 +64,7 @@ export function ViewRolesWindow() {
     }
 
     if (isLoading) {
-        return (
-            <div className="flex justify-center items-center w-full h-full">
-                <LoadingSpinner />
-            </div>
-        );
+        return <LoadingSpinner />;
     }
 
     return (

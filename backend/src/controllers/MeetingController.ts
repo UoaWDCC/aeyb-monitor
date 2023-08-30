@@ -21,6 +21,7 @@ import {
 } from '@shared/requests/MeetingRequests';
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 import { findMeeting, findUser, updateUserAttendanceForMeeting } from '../services/MeetingService';
+import User from '../models/UserModel';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -267,14 +268,28 @@ const getMeetingFeedbackForUser = asyncHandler(
 );
 
 /**
- * @desc 	Add a new meeting
- * @route 	POST /api/meetings
+ * @desc    Add a new meeting
+ * @route   POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
+    const roleIds = req.body.roles.map((role) => role.id);
+
+    const usersWithSpecifiedRoles = await User.find({
+        roles: { $in: roleIds },
+    }).populate('roles');
+
+    const transformedUsers = usersWithSpecifiedRoles.map((user) => ({
+        user: user._id,
+    }));
+
+    const { roles, ...rest } = req.body;
+
     const newMeeting = await Meeting.create({
-        ...req.body,
+        ...rest,
         creator: req.body.requester,
+        attendance: transformedUsers,
     });
+    console.log(newMeeting);
 
     res.ok({ meeting: await newMeeting.asPopulated() });
 });
@@ -285,10 +300,17 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
  */
 const updateMeeting = asyncHandler(
     async (req: TypedRequest<UpdateMeetingRequest, MeetingIdParam>, res: TypedResponse<UpdateMeetingData>) => {
-        const meeting = await Meeting.findByIdAndUpdate(req.params.meetingId, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const meeting = await Meeting.findByIdAndUpdate(
+            req.params.meetingId,
+            {
+                ...req.body,
+                creator: req.body.requester,
+            },
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
@@ -329,6 +351,20 @@ const deleteMeeting = asyncHandler(async (req: TypedRequestParams<MeetingIdParam
     res.sendStatus(204);
 });
 
+/**
+ * @desc delete the attendance list of a specific meeting
+ * @route DELETE /api/meetings/attendance/:meetingId
+ */
+const deleteMeetingAttendanceList = asyncHandler(async (req: TypedRequestParams<MeetingIdParam>, res: Response) => {
+    const meeting = await Meeting.findById(req.params.meetingId);
+    if (!meeting) {
+        return res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
+    }
+    meeting.attendance = [];
+    await meeting.save();
+    res.sendStatus(204);
+});
+
 export {
     getAllMeetings,
     getMeeting,
@@ -343,4 +379,5 @@ export {
     addMeetingFeedback,
     updateMeetingFeedback,
     endMeeting,
+    deleteMeetingAttendanceList,
 };

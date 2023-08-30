@@ -2,7 +2,7 @@ import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from 'src/contexts/UserContext';
-import LoadingSpinner from '../../utility_components/LoadingSpinner';
+import LoadingSpinner from '../../utility_components/Loading/LoadingSpinner';
 import AttendanceSelect from './components/AttendanceSelect';
 import Button from 'src/utility_components/Button';
 import Rating from './components/RadioGroupRating';
