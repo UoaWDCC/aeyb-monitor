@@ -4,12 +4,19 @@ import { useMeetingContext } from '../../contexts/MeetingContext';
 import { useUserContext } from '../../contexts/UserContext';
 import IonIcon from '@reacticons/ionicons';
 import Button from 'src/utility_components/Button';
+import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
+
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function CalendarPage() {
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
     const [month, setMonth] = useState(new Date());
     const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const [value, onChange] = useState<Value>(new Date());
 
     const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
     const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0);
@@ -51,9 +58,17 @@ export default function CalendarPage() {
                         <IonIcon name="chevron-back-outline" size="large" />
                     </Button>
 
-                    <p className="inline-block w-1/2 text-xl font-bold text-[#262B6C]">
-                        {months[month.getMonth()]} {month.getFullYear()}
-                    </p>
+                    <div className="inline-block w-1/2 text-xl font-bold">
+                        {/*{months[month.getMonth()]} {month.getFullYear()}*/}
+                        <DatePicker
+                            onChange={(date) => setMonth(date as Date)}
+                            value={month}
+                            maxDetail="year"
+                            format="MMM yyyy"
+                            clearIcon={null}
+                            calendarClassName="bg-[#262a6c] text-[#bdc3e3]"
+                        />
+                    </div>
 
                     <Button
                         size="custom"
