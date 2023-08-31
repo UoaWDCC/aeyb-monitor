@@ -1,9 +1,7 @@
-import LocationDTO from '@shared/dtos/LocationDTO';
-import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
 import { useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import RoleDTO from '../../../../../shared/dtos/RoleDTO';
 import { GetAllUsersData } from '../../../../../shared/responses/UserResponsesData';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';

@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ClickAwayListener } from '@mui/base';
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { useEffect, useState } from 'react';
-import UserDTO from '../../../../../shared/dtos/UserDTO';
 import { UpdateMeetingRequest } from '../../../../../shared/requests/MeetingRequests';
 import { GetAllUsersData } from '../../../../../shared/responses/UserResponsesData';
 import { useMeetingContext } from '../../../contexts/MeetingContext';

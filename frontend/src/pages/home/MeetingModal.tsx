@@ -3,13 +3,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import LocationDTO from '@shared/dtos/LocationDTO';
 import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import UserDTO from '../../../../shared/dtos/UserDTO';
 import { useUserContext } from '../../contexts/UserContext';
 import { durationToNumber, numberToDuration } from '../../utils/durationUtil';
 import { roundToHour } from '../../utils/timeUtil';
 import AutocompleteInput from './components/AutocompleteRoleInput';
-import dayjs from 'dayjs';
 
 export type TFormValues = {
     type: MeetingType;
@@ -80,13 +80,6 @@ export function MeetingModal({ isOpen, setIsOpen, users, onSubmit, meeting, isCr
             users: meeting ? meeting.attendance.map((a) => a.user) : [],
         });
     }, [meeting, isOpen]);
-
-    const addUserToMeeting = (users: UserDTO[]) => {
-        setFormValues({
-            ...formValues,
-            users,
-        });
-    };
 
     const modifyFormValues = <T extends keyof TFormValues>(key: T, newValue: TFormValues[T]) => {
         setFormValues({
@@ -211,7 +204,7 @@ export function MeetingModal({ isOpen, setIsOpen, users, onSubmit, meeting, isCr
                             options={selectableUsers}
                             label="Which group of people are you inviting?"
                             value={formValues.users}
-                            onChange={addUserToMeeting}
+                            onChange={(val) => modifyFormValues('users', val)}
                         />
                         <TextField
                             label="Description"
