@@ -128,7 +128,6 @@ export function MeetingModal({ isOpen, setIsOpen, users, onSubmit, meeting, isCr
                                     label="Start date"
                                     type="date"
                                     defaultValue={(() => {
-                                        const sd = formValues.startTime;
                                         return dayjs(formValues.startDate).format('YYYY-MM-DD');
                                     })()}
                                     onChange={(v) => modifyFormValues('startDate', new Date(v.target.value))}
@@ -180,9 +179,7 @@ export function MeetingModal({ isOpen, setIsOpen, users, onSubmit, meeting, isCr
                                                 labelText: `${(hour / 100).toFixed(2).slice(-2)}h ${(minute / 100)
                                                     .toFixed(2)
                                                     .slice(-2)}m`,
-                                                value: `${(hour / 100).toFixed(2).slice(-2)}:${(minute / 100)
-                                                    .toFixed(2)
-                                                    .slice(-2)}`,
+                                                value: numberToDuration(hour * 60 + minute),
                                             })),
                                         )
                                         .flat()}
