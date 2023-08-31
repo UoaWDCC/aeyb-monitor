@@ -22,7 +22,7 @@ export default function DatePickerUtil({
             </label>
             <DatePicker
                 id={id}
-                className="focus:outline-none rounded-md w-full pl-2 py-2 transition-colors duration-200 bg-gray-50 focus:bg-gray-100"
+                className="focus:outline-none rounded-md w-full pl-2 py-2 transition-colors duration-200 border border-gray-300 hover:border-gray-700 focus-visible:border-blue-600 active:border-blue-600"
                 selected={value}
                 showTimeSelect={showTimeSelect}
                 showTimeSelectOnly={showTimeSelect}

@@ -22,6 +22,8 @@ import {
 import { GetAllMeetingsQuery } from '@shared/queries/MeetingQueries';
 import { findMeeting, findUser, updateUserAttendanceForMeeting } from '../services/MeetingService';
 import User from '../models/UserModel';
+import Attendance from '../models/AttendanceModel';
+import UserDTO from '../../../shared/dtos/UserDTO';
 
 const paginationOptions = PaginationHandler.createOptions();
 
@@ -281,9 +283,11 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
         creator: req.body.requester,
         attendance: userIds,
     });
-    console.log(newMeeting);
 
-    res.ok({ meeting: await newMeeting.asPopulated() });
+    res.ok({
+        meeting: await
+            Meeting.findById(newMeeting._id).populate(['attendance', 'attendance.user'])
+    });
 });
 
 /**
@@ -301,14 +305,21 @@ const updateMeeting = asyncHandler(
             {
                 new: true,
                 runValidators: true,
+                "$push": { "attendance": { "$each": req.body.users.map(u => ({ user: u.id })) } }
             },
         );
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        meeting.attendance = req.body.users.map(u => ({ user: u.id }));
+        await meeting.save();
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
         }
-        res.ok({ meeting: await meeting.asPopulated() });
+
+        res.ok({ meeting: await Meeting.findById(meeting._id).populate(['attendance', 'attendance.user']) });
     },
 );
 

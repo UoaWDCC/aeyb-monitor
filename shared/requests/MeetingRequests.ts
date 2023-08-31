@@ -5,11 +5,13 @@ import UserDTO from '../dtos/UserDTO';
 
 // export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator' | 'location'> & { location: Omit<LocationDTO, 'id'> };
 export type AddMeetingRequest = Omit<MeetingDTO, 'attendance' | 'id' | 'creator' | 'location'> & {
-  location: Omit<LocationDTO, 'id'>;
-  users: UserDTO[];
+    location: Omit<LocationDTO, 'id'>;
+    users: UserDTO[];
 };
 
-export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>>;
+export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>> & {
+    users: UserDTO[]
+};
 
 export type UpdateAttendanceRequest = Omit<AttendanceDTO, 'user'>;
 
@@ -20,10 +22,10 @@ export type UpdateAbsenceRequest = Partial<Omit<AttendanceDTO, 'feedback' | 'rat
 export type AddFeedBackRequest = Partial<Omit<AttendanceDTO, 'canAttend' | 'reason' | 'didAttend'>>;
 
 export type EndMeetingRequest = {
-  finishTime: number;
+    finishTime: number;
 };
 
 export type DeleteAttendanceReq = Omit<
-  MeetingDTO,
-  'type' | 'creator' | 'name' | 'startTime' | 'finishTime' | 'location' | 'attendance' | 'description'
+    MeetingDTO,
+    'type' | 'creator' | 'name' | 'startTime' | 'finishTime' | 'location' | 'attendance' | 'description'
 >;

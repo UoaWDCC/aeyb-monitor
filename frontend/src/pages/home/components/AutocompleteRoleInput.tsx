@@ -33,6 +33,16 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ options, label, p
                     },
                 },
             }}
+            renderOption={(props, option) => {
+                return (
+                    <li {...props} key={option.id}>
+                        {option.name}
+                    </li>
+                );
+            }}
+            isOptionEqualToValue={(option, value) => {
+                return option.id === value.id;
+            }}
             options={options}
             getOptionLabel={(option: UserDTO) => option.name}
             getOptionDisabled={(option: UserDTO) => value.some((val) => val.id === option.id)}

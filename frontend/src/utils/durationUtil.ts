@@ -4,7 +4,7 @@ export function durationToNumber(value: string) {
 }
 
 export function numberToDuration(duration: number) {
-    return `${Math.floor(duration / 60)}:${duration % 60}`;
+    return `${(Math.floor(duration / 60) / 100).toFixed(2).slice(-2)}:${((duration % 60) / 100).toFixed(2).slice(-2)}`;
 }
 
 export function getCombinedTime(startDate, startTime, duration) {
