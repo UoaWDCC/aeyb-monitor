@@ -220,6 +220,8 @@ const giveRoles = asyncHandler(
         // Update user roles ensuring no duplicates
         const user = await User.findByIdAndUpdateRoles(
             req.params.userId,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             { $addToSet: { roles: { $each: req.body.roleIds } } },
             { new: true },
         );

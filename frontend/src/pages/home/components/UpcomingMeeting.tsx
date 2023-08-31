@@ -18,7 +18,7 @@ type UpcommingMeetingProps = {
 };
 
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
-    const { name, startTime, finishTime, description, location, attendance } = meeting;
+    const { name, startTime, finishTime, description, location, attendance: attendances } = meeting;
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [showModal, setShowModal] = useState(false);
-
+    console.log(meetingContext.meetings[meeting.id].attendance);
     const openMeeting = () => {
         setIsOpen(!isOpen);
     };
@@ -139,6 +139,11 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
                             <div className="mb-5">
                                 <strong>Attendees: </strong>
+                                <ul>
+                                    {meetingContext.meetings[meeting.id].attendance.map((attendance) => (
+                                        <li key={attendance.user.id}>{attendance.user.name}</li>
+                                    ))}
+                                </ul>
                             </div>
                         </div>
                     ) : (

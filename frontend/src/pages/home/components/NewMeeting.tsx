@@ -1,19 +1,19 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LocationDTO from '@shared/dtos/LocationDTO';
+import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
+import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
 import { useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
+import RoleDTO from '../../../../../shared/dtos/RoleDTO';
+import { GetAllUsersData } from '../../../../../shared/responses/UserResponsesData';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
-import { AddMeetingRequest, UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
 import DatePickerUtil from '../../../utility_components/DatePickerUtil';
-import { getTimeDifferenceInMinutes, roundToHour } from '../../../utils/timeUtil';
-import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
-import LocationDTO from '@shared/dtos/LocationDTO';
-import AutocompleteInput from './AutocompleteRoleInput';
-import { GetAllRolesData } from '../../../../../shared/responses/RoleResponsesData';
-import RoleDTO from '../../../../../shared/dtos/RoleDTO';
 import LoadingDots from '../../../utility_components/Loading/LoadingDots';
 import { durationToNumber, getCombinedTime, numberToDuration } from '../../../utils/durationUtil';
+import { getTimeDifferenceInMinutes, roundToHour } from '../../../utils/timeUtil';
+import AutocompleteInput from './AutocompleteRoleInput';
 
 type FormValuesType = {
     type: MeetingType;
@@ -64,19 +64,20 @@ export default function NewMeeting({
 
     const [formValues, setFormValues] = useState<FormValuesType>(form);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedRoles, setSelectedRoles] = useState([]);
-    const [roles, setRoles] = useState<GetAllRolesData>();
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [users, setUsers] = useState<GetAllUsersData>();
 
     useEffect(() => {
         const getRoles = async () => {
-            const data = await userContext.fetcher('GET /api/roles');
+            const data = await userContext.fetcher('GET /api/users');
             if (!data) {
                 return;
             }
-            setRoles(data);
+            setUsers(data);
         };
         getRoles();
-    });
+    }, []);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormValues({
@@ -145,6 +146,8 @@ export default function NewMeeting({
         } else {
             createMeeting();
         }
+
+        setSelectedUsers([]);
     }
 
     async function createMeeting() {
@@ -161,7 +164,7 @@ export default function NewMeeting({
             description: formValues.description,
             startTime: startTime,
             finishTime: finishTime,
-            roles: selectedRoles,
+            users: selectedUsers,
         };
 
         setIsLoading(true);
@@ -299,12 +302,12 @@ export default function NewMeeting({
                         </div>
 
                         {/* magic */}
-                        {/* <AutocompleteInput
-                            options={roles.roles.filter((role) => role.name !== 'Admin' && role.name !== 'Default')}
+                        <AutocompleteInput
+                            options={users.users.filter((user) => user.id != userContext.user.id)}
                             label="Which group of people are you inviting?"
-                            value={selectedRoles}
-                            onChange={setSelectedRoles}
-                        /> */}
+                            value={selectedUsers}
+                            onChange={setSelectedUsers}
+                        />
 
                         {/* Description */}
                         <label className="block text-gray-700 mb-1 w-full" htmlFor="description">

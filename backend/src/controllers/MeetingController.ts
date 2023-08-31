@@ -31,7 +31,7 @@ const paginationOptions = PaginationHandler.createOptions();
  */
 const getAllMeetings = asyncHandler(
     async (req: TypedRequestQuery<GetAllMeetingsQuery>, res: TypedResponse<GetAllMeetingsData>) => {
-        let query = Meeting.find();
+        let query = Meeting.find().populate("attendance").populate("attendance.user");
 
         const filterHandlers: Record<string, (value: string) => void> = {
             before: (value) => (query = query.where('time').lt(Number.parseInt(value))),
@@ -272,22 +272,14 @@ const getMeetingFeedbackForUser = asyncHandler(
  * @route   POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
-    const roleIds = req.body.roles.map((role) => role.id);
+    const userIds = req.body.users.map(user => ({ user: user.id }));
 
-    const usersWithSpecifiedRoles = await User.find({
-        roles: { $in: roleIds },
-    }).populate('roles');
-
-    const transformedUsers = usersWithSpecifiedRoles.map((user) => ({
-        user: user._id,
-    }));
-
-    const { roles, ...rest } = req.body;
+    const { users: _, ...rest } = req.body;
 
     const newMeeting = await Meeting.create({
         ...rest,
         creator: req.body.requester,
-        attendance: transformedUsers,
+        attendance: userIds,
     });
     console.log(newMeeting);
 
