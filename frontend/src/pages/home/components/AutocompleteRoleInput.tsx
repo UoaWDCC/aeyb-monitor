@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
-import UserDTO from '../../../../../shared/dtos/UserDTO';
+import UserDTO from '@shared/dtos/UserDTO';
 
 type AutocompleteInputProps = {
     options: UserDTO[];

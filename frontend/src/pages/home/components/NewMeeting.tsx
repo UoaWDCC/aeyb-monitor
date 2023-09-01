@@ -1,8 +1,8 @@
 import MeetingDTO from '@shared/dtos/MeetingDTO';
 import { AddMeetingRequest } from '@shared/requests/MeetingRequests';
+import { GetAllUsersData } from '@shared/responses/UserResponsesData';
 import { useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { GetAllUsersData } from '../../../../../shared/responses/UserResponsesData';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import LoadingDots from '../../../utility_components/Loading/LoadingDots';

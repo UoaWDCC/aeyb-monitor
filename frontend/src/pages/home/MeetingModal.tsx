@@ -6,7 +6,7 @@ import LocationDTO from '@shared/dtos/LocationDTO';
 import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import UserDTO from '../../../../shared/dtos/UserDTO';
+import UserDTO from '@shared/dtos/UserDTO';
 import { useUserContext } from '../../contexts/UserContext';
 import { durationToNumber, numberToDuration } from '../../utils/durationUtil';
 import { roundToHour } from '../../utils/timeUtil';
