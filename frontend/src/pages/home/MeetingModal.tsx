@@ -1,5 +1,6 @@
-import { Autocomplete, Box, Button, Modal, SxProps, TextField, Typography } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { Autocomplete, Box, Button, IconButton, Modal, SxProps, TextField, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import LocationDTO from '@shared/dtos/LocationDTO';
 import MeetingDTO, { MeetingType } from '@shared/dtos/MeetingDTO';
@@ -92,12 +93,37 @@ export function MeetingModal({ isOpen, setIsOpen, users, onSubmit, meeting, isCr
         <Modal open={isOpen} onClose={() => setIsOpen(false)}>
             <form
                 onSubmit={(e) => {
-                    onSubmit(formValues);
                     e.preventDefault();
+                    const tmpDate = new Date();
+                    tmpDate.setFullYear(
+                        formValues.startDate.getFullYear(),
+                        formValues.startDate.getMonth(),
+                        formValues.startDate.getDate(),
+                    );
+                    tmpDate.setHours(formValues.startTime.getHours(), formValues.startTime.getMinutes(), 0);
+
+                    if (tmpDate.getTime() < Date.now()) {
+                        alert('Start time cannot be in the past');
+                        return;
+                    }
+
+                    if (formValues.duration <= 0) {
+                        alert('Duration must be positive');
+                        return;
+                    }
+
+                    onSubmit(formValues);
+
                     (e.target as HTMLFormElement).reset();
                 }}
             >
                 <Box sx={style}>
+                    <IconButton
+                        onClick={() => setIsOpen(false)}
+                        sx={{ position: 'absolute', top: '1rem', right: '1rem' }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
                     <Typography variant="h6" component="h2">
                         {isCreate ? 'Create new meeting' : 'Edit meeting detail'}
                     </Typography>
@@ -127,40 +153,27 @@ export function MeetingModal({ isOpen, setIsOpen, users, onSubmit, meeting, isCr
                                 <TextField
                                     label="Start date"
                                     type="date"
-                                    defaultValue={(() => {
-                                        return dayjs(formValues.startDate).format('YYYY-MM-DD');
-                                    })()}
+                                    defaultValue={dayjs(formValues.startDate).format('YYYY-MM-DD')}
                                     onChange={(v) => modifyFormValues('startDate', new Date(v.target.value))}
                                     required
-                                    sx={{ flexGrow: 1 }}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
+                                    sx={{ flex: 1 }}
                                 />
-                                <TextField
+                                <TimePicker
                                     label="Start time"
-                                    type="time"
-                                    defaultValue={(() => {
-                                        return dayjs(formValues.startTime).format('hh:mm');
-                                    })()}
+                                    defaultValue={dayjs(formValues.startTime)}
                                     onChange={(v) => {
-                                        const time = v.target.value.split(':');
-                                        const date = new Date();
-                                        date.setHours(+time[0]);
-                                        date.setMinutes(+time[1]);
-                                        modifyFormValues('startTime', date);
+                                        modifyFormValues('startTime', v.toDate());
                                     }}
-                                    required
-                                    sx={{ flexGrow: 1 }}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    inputProps={{
-                                        step: 300, // 5 min
+                                    sx={{ flex: 1 }}
+                                    minutesStep={5}
+                                    slotProps={{
+                                        textField: {
+                                            required: true,
+                                        },
                                     }}
                                 />
                                 <Autocomplete
-                                    sx={{ flexGrow: 1 }}
+                                    sx={{ flex: 1 }}
                                     value={(() => ({
                                         value: numberToDuration(formValues.duration),
                                         labelText: (() => {

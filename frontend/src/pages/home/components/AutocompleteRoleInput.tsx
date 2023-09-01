@@ -47,7 +47,13 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ options, label, p
             getOptionLabel={(option: UserDTO) => option.name}
             getOptionDisabled={(option: UserDTO) => value.some((val) => val.id === option.id)}
             renderInput={(params) => (
-                <TextField {...params} label={label} placeholder={placeholder} variant="outlined" />
+                <TextField
+                    {...params}
+                    label={label}
+                    placeholder={placeholder}
+                    required={value.length == 0}
+                    variant="outlined"
+                />
             )}
         />
     );

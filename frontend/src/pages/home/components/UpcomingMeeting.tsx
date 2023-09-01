@@ -76,20 +76,6 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
         setIsLoading(false);
     }
 
-    function handleSubmit(formValues: TFormValues) {
-        if (formValues.startTime.getTime() < Date.now()) {
-            alert('Start time cannot be in the past');
-            return;
-        }
-
-        if (formValues.duration <= 0) {
-            alert('Duration must be positive');
-            return;
-        }
-
-        editMeeting(formValues);
-    }
-
     async function editMeeting(formValues: TFormValues) {
         const { startTime, finishTime } = getCombinedTime(
             formValues.startDate,
@@ -196,7 +182,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
                             <div className="mb-5">
                                 <strong>Attendees: </strong>
-                                <ul>
+                                <ul className="list-disc list-inside">
                                     {meetingContext.meetings[meeting.id].attendance.map((attendance) => {
                                         return <li key={attendance.user.id}>{attendance.user.name}</li>;
                                     })}
@@ -208,13 +194,16 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                     )}
                 </div>
             </div>
-            <MeetingModal
-                isOpen={isEditMeetingOpen}
-                setIsOpen={setIsEditMeetingOpen}
-                users={users ? users.users : []}
-                onSubmit={handleSubmit}
-                meeting={meeting}
-            />
+            {/* Force recreate modal */}
+            {isEditMeetingOpen && (
+                <MeetingModal
+                    isOpen={isEditMeetingOpen}
+                    setIsOpen={setIsEditMeetingOpen}
+                    users={users ? users.users : []}
+                    onSubmit={editMeeting}
+                    meeting={meeting}
+                />
+            )}
             {showModal && (
                 <ConfirmModal
                     header="Delete meeting"

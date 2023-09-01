@@ -32,20 +32,6 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
         getRoles();
     }, []);
 
-    function handleSubmit(formValues: TFormValues) {
-        if (formValues.startTime.getTime() < Date.now()) {
-            alert('Start time cannot be in the past');
-            return;
-        }
-
-        if (formValues.duration <= 0) {
-            alert('Duration must be positive');
-            return;
-        }
-
-        createMeeting(formValues);
-    }
-
     async function createMeeting(formValues: TFormValues) {
         const { startTime, finishTime } = getCombinedTime(
             formValues.startDate,
@@ -82,7 +68,7 @@ export default function NewMeeting({ isNewMeetingOpen, setIsNewMeetingOpen }: Ne
             {isNewMeetingOpen && (
                 <MeetingModal
                     isOpen={isNewMeetingOpen}
-                    onSubmit={handleSubmit}
+                    onSubmit={createMeeting}
                     setIsOpen={setIsNewMeetingOpen}
                     users={users ? users.users : []}
                     isCreate
