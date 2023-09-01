@@ -1,12 +1,12 @@
 import { Autocomplete, TextField } from '@mui/material';
-import RoleDTO from '../../../../../shared/dtos/RoleDTO';
+import UserDTO from '@shared/dtos/UserDTO';
 
 type AutocompleteInputProps = {
-    options: RoleDTO[];
+    options: UserDTO[];
     label: string;
     placeholder?: string;
-    onChange: (value: RoleDTO[]) => void;
-    value: RoleDTO[];
+    onChange: (value: UserDTO[]) => void;
+    value: UserDTO[];
 };
 
 const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ options, label, placeholder, onChange, value }) => {
@@ -17,7 +17,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ options, label, p
             value={value}
             onChange={(event, newValues) => {
                 if (newValues.every((val) => typeof val !== 'string')) {
-                    onChange(newValues as RoleDTO[]);
+                    onChange(newValues as UserDTO[]);
                 }
             }}
             sx={{
@@ -33,11 +33,27 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ options, label, p
                     },
                 },
             }}
+            renderOption={(props, option) => {
+                return (
+                    <li {...props} key={option.id}>
+                        {option.name}
+                    </li>
+                );
+            }}
+            isOptionEqualToValue={(option, value) => {
+                return option.id === value.id;
+            }}
             options={options}
-            getOptionLabel={(option: RoleDTO) => option.name}
-            getOptionDisabled={(option: RoleDTO) => value.some((val) => val.id === option.id)}
+            getOptionLabel={(option: UserDTO) => option.name}
+            getOptionDisabled={(option: UserDTO) => value.some((val) => val.id === option.id)}
             renderInput={(params) => (
-                <TextField {...params} label={label} placeholder={placeholder} variant="outlined" />
+                <TextField
+                    {...params}
+                    label={label}
+                    placeholder={placeholder}
+                    required={value.length == 0}
+                    variant="outlined"
+                />
             )}
         />
     );

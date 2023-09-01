@@ -1,24 +1,27 @@
-import MeetingDTO from '@shared/dtos/MeetingDTO';
-import './meeting.css';
-import { getRelativeTime, nth } from '../../../utils/timeUtil';
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faCog } from '@fortawesome/free-solid-svg-icons';
-import { DropdownMenu } from '../../../utility_components/DropdownMenu';
-import Button from '../../../utility_components/Button';
-import ClickAwayListener from '@mui/base/ClickAwayListener';
-import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
-import NewMeeting from './NewMeeting';
-import { useUserContext } from '../../../contexts/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ClickAwayListener } from '@mui/base';
+import MeetingDTO from '@shared/dtos/MeetingDTO';
+import { UpdateMeetingRequest } from '@shared/requests/MeetingRequests';
+import { GetAllUsersData } from '@shared/responses/UserResponsesData';
+import { useEffect, useState } from 'react';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
+import { useUserContext } from '../../../contexts/UserContext';
+import Button from '../../../utility_components/Button';
+import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
+import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 import LoadingDots from '../../../utility_components/Loading/LoadingDots';
+import { getCombinedTime } from '../../../utils/durationUtil';
+import { getRelativeTime, nth } from '../../../utils/timeUtil';
+import { MeetingModal, TFormValues } from '../MeetingModal';
+import './meeting.css';
 
 type UpcommingMeetingProps = {
     meeting: MeetingDTO;
 };
 
 export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
-    const { name, startTime, finishTime, description, location, attendance } = meeting;
+    const { name, startTime, finishTime, description, location, attendance: _ } = meeting;
     const userContext = useUserContext();
     const meetingContext = useMeetingContext();
     const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +29,18 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
     const [isEditMeetingOpen, setIsEditMeetingOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [users, setUsers] = useState<GetAllUsersData>();
+
+    useEffect(() => {
+        const getRoles = async () => {
+            const data = await userContext.fetcher('GET /api/users');
+            if (!data) {
+                return;
+            }
+            setUsers(data);
+        };
+        getRoles();
+    }, []);
 
     const openMeeting = () => {
         setIsOpen(!isOpen);
@@ -59,6 +74,34 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
         setIsEditMeetingOpen(false);
 
         setIsLoading(false);
+    }
+
+    async function editMeeting(formValues: TFormValues) {
+        const { startTime, finishTime } = getCombinedTime(
+            formValues.startDate,
+            formValues.startTime,
+            formValues.duration,
+        );
+        const meetingRequest: UpdateMeetingRequest = {
+            ...formValues,
+            startTime: startTime,
+            finishTime: finishTime,
+            location: {
+                ...formValues.location,
+                id: meeting.location.id,
+            },
+        };
+
+        setIsLoading(true);
+        const data = await userContext.fetcher('PATCH /api/meetings/:meetingId', meetingRequest, {
+            meetingId: meeting.id,
+        });
+        setIsLoading(false);
+
+        if (data) {
+            meetingContext.updateMeeting(data.meeting);
+            setIsEditMeetingOpen(false);
+        }
     }
 
     if (isLoading) {
@@ -139,6 +182,11 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
                             <div className="mb-5">
                                 <strong>Attendees: </strong>
+                                <ul className="list-disc list-inside">
+                                    {meetingContext.meetings[meeting.id].attendance.map((attendance) => {
+                                        return <li key={attendance.user.id}>{attendance.user.name}</li>;
+                                    })}
+                                </ul>
                             </div>
                         </div>
                     ) : (
@@ -146,12 +194,16 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                     )}
                 </div>
             </div>
-            <NewMeeting
-                isNewMeetingOpen={isEditMeetingOpen}
-                setIsNewMeetingOpen={setIsEditMeetingOpen}
-                isEditMeeting={true}
-                meetingInfo={meeting}
-            />
+            {/* Force recreate modal */}
+            {isEditMeetingOpen && (
+                <MeetingModal
+                    isOpen={isEditMeetingOpen}
+                    setIsOpen={setIsEditMeetingOpen}
+                    users={users ? users.users : []}
+                    onSubmit={editMeeting}
+                    meeting={meeting}
+                />
+            )}
             {showModal && (
                 <ConfirmModal
                     header="Delete meeting"

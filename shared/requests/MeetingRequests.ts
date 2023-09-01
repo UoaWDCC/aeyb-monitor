@@ -1,15 +1,17 @@
-import MeetingDTO from '../dtos/MeetingDTO';
 import AttendanceDTO from '../dtos/AttendanceDTO';
 import LocationDTO from '../dtos/LocationDTO';
-import RoleDTO from '../dtos/RoleDTO';
+import MeetingDTO from '../dtos/MeetingDTO';
+import UserDTO from '../dtos/UserDTO';
 
 // export type AddMeetingRequest = Omit<MeetingDTO, 'id' | 'creator' | 'location'> & { location: Omit<LocationDTO, 'id'> };
 export type AddMeetingRequest = Omit<MeetingDTO, 'attendance' | 'id' | 'creator' | 'location'> & {
     location: Omit<LocationDTO, 'id'>;
-    roles: RoleDTO[];
+    users: UserDTO[];
 };
 
-export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>>;
+export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>> & {
+    users: UserDTO[]
+};
 
 export type UpdateAttendanceRequest = Omit<AttendanceDTO, 'user'>;
 
