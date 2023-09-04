@@ -6,14 +6,13 @@ import AttendanceModal from '../../../../utility_components/AttendanceModal';
 import { useUserContext } from '../../../../contexts/UserContext';
 import ConfirmModal from '../../../../utility_components/ConfirmModal';
 import { useMeetingContext } from '../../../../contexts/MeetingContext';
+import MeetingDTO from '../../../../../../shared/dtos/MeetingDTO';
 
 type LiveMeetingProps = {
-    id: string;
-    name: string;
-    startTime: number;
-    finishTime: number;
+    meeting: MeetingDTO;
 };
-export default function LiveMeeting({ id, name, startTime, finishTime }: LiveMeetingProps) {
+export default function LiveMeeting({ meeting }: LiveMeetingProps) {
+    const { id, name, startTime, finishTime } = meeting;
     const [timeLeft, setTimeLeft] = useState(getRelativeTime(finishTime));
     const [isConfModalOpen, setIsConfModalOpen] = useState(false);
     const [isAttModalOpen, setIsAttModalOpen] = useState(false);
@@ -63,7 +62,7 @@ export default function LiveMeeting({ id, name, startTime, finishTime }: LiveMee
                     </div>
                 </div>
             </div>
-            <AttendanceModal isOpen={isAttModalOpen} setIsOpen={setIsAttModalOpen} />
+            <AttendanceModal isOpen={isAttModalOpen} setIsOpen={setIsAttModalOpen} meeting={meeting} />
             {isConfModalOpen && (
                 <ConfirmModal
                     header="End Meeting"
