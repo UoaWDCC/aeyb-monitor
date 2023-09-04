@@ -33,7 +33,7 @@ const paginationOptions = PaginationHandler.createOptions();
  */
 const getAllMeetings = asyncHandler(
     async (req: TypedRequestQuery<GetAllMeetingsQuery>, res: TypedResponse<GetAllMeetingsData>) => {
-        let query = Meeting.find().populate("attendance").populate("attendance.user");
+        let query = Meeting.find().populate('attendance').populate('attendance.user');
 
         const filterHandlers: Record<string, (value: string) => void> = {
             before: (value) => (query = query.where('time').lt(Number.parseInt(value))),
@@ -274,7 +274,7 @@ const getMeetingFeedbackForUser = asyncHandler(
  * @route   POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
-    const userIds = req.body.users.map(user => ({ user: user.id }));
+    const userIds = req.body.users.map((user) => ({ user: user.id }));
 
     const { users: _, ...rest } = req.body;
 
@@ -285,8 +285,7 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
     });
 
     res.ok({
-        meeting: await
-            Meeting.findById(newMeeting._id).populate(['attendance', 'attendance.user'])
+        meeting: await Meeting.findById(newMeeting._id).populate(['attendance', 'attendance.user']),
     });
 });
 
@@ -305,19 +304,18 @@ const updateMeeting = asyncHandler(
             {
                 new: true,
                 runValidators: true,
-                "$push": { "attendance": { "$each": req.body.users.map(u => ({ user: u.id })) } }
             },
         );
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        meeting.attendance = req.body.users.map(u => ({ user: u.id }));
-        await meeting.save();
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
         }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        meeting.attendance = req.body.users.map((u) => ({ user: u.id }));
+        await meeting.save();
 
         res.ok({ meeting: await Meeting.findById(meeting._id).populate(['attendance', 'attendance.user']) });
     },
