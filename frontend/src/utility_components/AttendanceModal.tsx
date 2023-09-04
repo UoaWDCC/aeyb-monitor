@@ -32,15 +32,11 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }: Attendan
     const [attendance, setAttendance] = useState<AttendanceDTO[]>(meeting.attendance.map((attendee) => attendee));
 
     const handleConfirm = async () => {
-        console.log('og', meeting.attendance);
-        console.log('new', attendance);
-
-        const meetingRequest: UpdateMeetingRequest = {
-            ...meeting,
-            attendance: attendance,
-            users: meeting ? meeting.attendance.map((a) => a.user) : [],
+        const attendanceReqPayload = {
+            // TODO: make a decision on how to handle attendance
+            attendances: attendance,
         };
-        const data = await userContext.fetcher('PATCH /api/meetings/:meetingId', meetingRequest, {
+        const data = await userContext.fetcher('', attendanceReqPayload, {
             meetingId: meeting.id,
         });
         if (data) {
