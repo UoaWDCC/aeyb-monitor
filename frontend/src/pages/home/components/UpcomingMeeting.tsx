@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useMeetingContext } from '../../../contexts/MeetingContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import Button from '../../../utility_components/Button';
-import ConfirmModal from '../../../utility_components/ConfirmModal/ConfirmModal';
+import ConfirmModal from '../../../utility_components/ConfirmModal';
 import { DropdownMenu } from '../../../utility_components/DropdownMenu';
 import LoadingDots from '../../../utility_components/Loading/LoadingDots';
 import { getCombinedTime } from '../../../utils/durationUtil';
