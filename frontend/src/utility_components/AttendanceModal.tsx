@@ -71,7 +71,7 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }: Attendan
         >
             <Paper style={{ backgroundColor: 'white', padding: '16px', width: '70%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h6">{meeting.name}</Typography>
+                    <Typography variant="h6">Attendance for: {meeting.name}</Typography>
                     <IconButton color="inherit" onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
