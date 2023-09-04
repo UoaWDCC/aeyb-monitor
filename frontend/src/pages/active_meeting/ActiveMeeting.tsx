@@ -7,7 +7,7 @@ import AttendanceSelect from './components/AttendanceSelect';
 import Button from 'src/utility_components/Button';
 import Rating from './components/RadioGroupRating';
 import UserList from './components/UserList';
-import ConfirmModal from '../../utility_components/ConfirmModal/ConfirmModal';
+import ConfirmModal from '../../utility_components/ConfirmModal';
 
 export enum AttendanceType {
     NotAttended,
