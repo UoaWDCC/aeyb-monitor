@@ -17,14 +17,20 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
+import MeetingDTO from '../../../shared/dtos/MeetingDTO';
 
-export default function AttendanceModal({ isOpen, setIsOpen, meeting }) {
+type AttendanceModalProps = {
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+    meeting: MeetingDTO;
+};
+export default function AttendanceModal({ isOpen, setIsOpen, meeting }: AttendanceModalProps) {
     const [attendance, setAttendance] = useState([]);
 
     useEffect(() => {
         setAttendance(
             meeting.attendance.map((attendee) => {
-                return { status: attendee.status, note: attendee.note ? attendee.note : '' };
+                return { status: attendee.didAttend, notes: attendee.notes ? attendee.notes : '' };
             }),
         );
     }, []);
@@ -37,9 +43,14 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }) {
         setIsOpen(false);
     };
 
-    const handleRadioChange = (index, value) => {
+    const handleRadioChange = (index: number, value: string) => {
         attendance[index].status = value === 'present' ? true : false;
-        setAttendance(attendance);
+        setAttendance([...attendance]);
+    };
+
+    const handleNoteChange = (index: number, value: string) => {
+        attendance[index].notes = value;
+        setAttendance([...attendance]);
     };
 
     return (
@@ -71,7 +82,7 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }) {
                                     <TableCell>
                                         <RadioGroup
                                             row
-                                            // value={attendance[index].status ? 'present' : 'absent' || ''}
+                                            value={attendance[index]?.status === true ? 'present' : 'absent'}
                                             onChange={(e) => handleRadioChange(index, e.target.value)}
                                         >
                                             <FormControlLabel value="present" control={<Radio />} label="Present" />
@@ -79,7 +90,14 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }) {
                                         </RadioGroup>
                                     </TableCell>
                                     <TableCell>
-                                        <TextField variant="outlined" size="small" fullWidth placeholder="Status" />
+                                        <TextField
+                                            variant="outlined"
+                                            size="small"
+                                            fullWidth
+                                            placeholder="Status"
+                                            value={attendance[index]?.notes}
+                                            onChange={(e) => handleNoteChange(index, e.target.value)}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -90,7 +108,7 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }) {
                     <Button variant="contained" color="primary" onClick={handleConfirm}>
                         Confirm
                     </Button>
-                    <Button variant="outlined" color="primary" style={{ marginRight: '8px' }} onClick={handleClose}>
+                    <Button variant="outlined" color="primary" style={{ marginLeft: '8px' }} onClick={handleClose}>
                         Close
                     </Button>
                 </div>
