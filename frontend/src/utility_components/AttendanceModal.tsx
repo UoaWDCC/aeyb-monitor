@@ -16,8 +16,11 @@ import {
     IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MeetingDTO from '../../../shared/dtos/MeetingDTO';
+import { useUserContext } from '../contexts/UserContext';
+import { UpdateMeetingRequest } from '../../../shared/requests/MeetingRequests';
+import AttendanceDTO from '../../../shared/dtos/AttendanceDTO';
 
 type AttendanceModalProps = {
     isOpen: boolean;
@@ -25,18 +28,25 @@ type AttendanceModalProps = {
     meeting: MeetingDTO;
 };
 export default function AttendanceModal({ isOpen, setIsOpen, meeting }: AttendanceModalProps) {
-    const [attendance, setAttendance] = useState([]);
+    const userContext = useUserContext();
+    const [attendance, setAttendance] = useState<AttendanceDTO[]>(meeting.attendance.map((attendee) => attendee));
 
-    useEffect(() => {
-        setAttendance(
-            meeting.attendance.map((attendee) => {
-                return { status: attendee.didAttend, notes: attendee.notes ? attendee.notes : '' };
-            }),
-        );
-    }, []);
+    const handleConfirm = async () => {
+        console.log('og', meeting.attendance);
+        console.log('new', attendance);
 
-    const handleConfirm = () => {
-        console.log(attendance);
+        const meetingRequest: UpdateMeetingRequest = {
+            ...meeting,
+            attendance: attendance,
+            users: meeting ? meeting.attendance.map((a) => a.user) : [],
+        };
+        const data = await userContext.fetcher('PATCH /api/meetings/:meetingId', meetingRequest, {
+            meetingId: meeting.id,
+        });
+        if (data) {
+            console.log('data', data);
+            handleClose();
+        }
     };
 
     const handleClose = () => {
@@ -44,7 +54,7 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }: Attendan
     };
 
     const handleRadioChange = (index: number, value: string) => {
-        attendance[index].status = value === 'present' ? true : false;
+        attendance[index].didAttend = value === 'present' ? true : false;
         setAttendance([...attendance]);
     };
 
@@ -59,51 +69,53 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }: Attendan
             onClose={handleClose}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-            <Paper style={{ backgroundColor: 'white', padding: '16px', width: '80%' }}>
+            <Paper style={{ backgroundColor: 'white', padding: '16px', width: '70%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="h6">{meeting.name}</Typography>
                     <IconButton color="inherit" onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
                 </div>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Attendance</TableCell>
-                                <TableCell>Status</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {meeting.attendance.map((attendee, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{attendee.user.name}</TableCell>
-                                    <TableCell>
-                                        <RadioGroup
-                                            row
-                                            value={attendance[index]?.status === true ? 'present' : 'absent'}
-                                            onChange={(e) => handleRadioChange(index, e.target.value)}
-                                        >
-                                            <FormControlLabel value="present" control={<Radio />} label="Present" />
-                                            <FormControlLabel value="absent" control={<Radio />} label="Absent" />
-                                        </RadioGroup>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            placeholder="Status"
-                                            value={attendance[index]?.notes}
-                                            onChange={(e) => handleNoteChange(index, e.target.value)}
-                                        />
-                                    </TableCell>
+                <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Attendance</TableCell>
+                                    <TableCell>Notes</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {meeting.attendance.map((attendee, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{attendee.user.name}</TableCell>
+                                        <TableCell>
+                                            <RadioGroup
+                                                row
+                                                value={attendance[index]?.didAttend === true ? 'present' : 'absent'}
+                                                onChange={(e) => handleRadioChange(index, e.target.value)}
+                                            >
+                                                <FormControlLabel value="present" control={<Radio />} label="Present" />
+                                                <FormControlLabel value="absent" control={<Radio />} label="Absent" />
+                                            </RadioGroup>
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                variant="outlined"
+                                                size="small"
+                                                fullWidth
+                                                placeholder="Notes"
+                                                value={attendance[index]?.notes}
+                                                onChange={(e) => handleNoteChange(index, e.target.value)}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
                     <Button variant="contained" color="primary" onClick={handleConfirm}>
                         Confirm
