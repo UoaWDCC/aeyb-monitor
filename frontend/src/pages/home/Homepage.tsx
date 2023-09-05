@@ -22,9 +22,7 @@ export default function Homepage() {
             Object.values(meetingContext.meetings)
                 .filter((meeting) => meeting.startTime <= now && meeting.finishTime >= now)
                 .sort((a, b) => a.startTime - b.startTime)
-                .map(({ id, name, startTime, finishTime }) => (
-                    <LiveMeeting key={id} id={id} name={name} startTime={startTime} finishTime={finishTime} />
-                ))
+                .map((meeting) => <LiveMeeting key={meeting.id} meeting={meeting} />)
         );
     };
 
@@ -43,7 +41,7 @@ export default function Homepage() {
             userContext.hasPermission('VIEW_MEETINGS') &&
             Object.values(meetingContext.meetings)
                 .filter((meeting) => meeting.finishTime <= now)
-                .sort((a, b) => a.startTime - b.startTime)
+                .sort((a, b) => b.startTime - a.startTime)
                 .map((meeting) => <PostMeeting key={meeting.id} meeting={meeting} />)
         );
     };

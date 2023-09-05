@@ -6,6 +6,7 @@ import {
     UpdateMeetingRequest,
     EndMeetingRequest,
     DeleteAttendanceReq,
+    UpdateAttendancesRequest,
 } from './requests/MeetingRequests';
 import { AddRoleRequest, UpdateRoleRequest } from './requests/RoleRequests';
 import { AddLocationRequest } from './requests/LocationRequests';
@@ -79,6 +80,7 @@ export default interface API {
         UpdateMeetingData,
         AttendanceIdParam
     >;
+    'PATCH /api/meetings/:meetingId/attendances': Endpoint<UpdateAttendancesRequest, UpdateMeetingData, MeetingIdParam>;
     'DELETE /api/meetings/:meetingId/attendances/:userId': Endpoint<undefined, DeleteAttendanceReq>;
 
     // Feedback endpoints

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { AttendanceIdParam, MeetingIdParam } from '@shared/params';
+import { AttendanceIdParam, AttendancesIdParam, MeetingIdParam } from '@shared/params';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,
@@ -16,6 +16,7 @@ import {
 import {
     AddMeetingRequest,
     UpdateAttendanceRequest,
+    UpdateAttendancesRequest,
     UpdateMeetingRequest,
     EndMeetingRequest,
 } from '@shared/requests/MeetingRequests';
@@ -33,7 +34,7 @@ const paginationOptions = PaginationHandler.createOptions();
  */
 const getAllMeetings = asyncHandler(
     async (req: TypedRequestQuery<GetAllMeetingsQuery>, res: TypedResponse<GetAllMeetingsData>) => {
-        let query = Meeting.find().populate("attendance").populate("attendance.user");
+        let query = Meeting.find().populate('attendance').populate('attendance.user');
 
         const filterHandlers: Record<string, (value: string) => void> = {
             before: (value) => (query = query.where('time').lt(Number.parseInt(value))),
@@ -117,7 +118,7 @@ const getMeetingAttendanceForUser = asyncHandler(
 );
 
 /**
- * @desc    Modify attendance for a specific meeting
+ * @desc    Modify attendance for a specific meeting for a specific user
  * @route   PATCH /api/meetings/:meetingId/attendances/users/:userId
  */
 const modifyMeetingAttendance = asyncHandler(
@@ -140,8 +141,6 @@ const modifyMeetingAttendance = asyncHandler(
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { requester, ...updateData } = req.body;
-        const attendanceData = { user: userId, ...updateData };
-
         const updatedMeeting = await updateUserAttendanceForMeeting(meetingId, userId, updateQuery);
 
         if (updatedMeeting) {
@@ -149,6 +148,7 @@ const modifyMeetingAttendance = asyncHandler(
             return;
         }
 
+        const attendanceData = { user: userId, ...updateData };
         const updatedMeetingWithNewUser = await updateUserAttendanceForMeeting(meetingId, userId, attendanceData);
 
         if (updatedMeetingWithNewUser) {
@@ -156,6 +156,32 @@ const modifyMeetingAttendance = asyncHandler(
             return;
         }
 
+        res.error(500, 'Something went wrong.');
+    },
+);
+
+/**
+ * @desc    Modify attendance for a specific meeting for a specific user
+ * @route   PATCH /api/meetings/:meetingId/attendances
+ */
+const modifyMeetingAttendances = asyncHandler(
+    async (req: TypedRequest<UpdateAttendancesRequest, AttendancesIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        const { meetingId } = req.params;
+
+        const meeting = await findMeeting(meetingId, res);
+        if (!meeting) {
+            return;
+        }
+
+        meeting.attendance = req.body.attendance.map((attendance) => {
+            return { ...attendance, user: attendance.user.id };
+        });
+
+        const saved = await meeting.save();
+        if (saved) {
+            res.ok({ meeting: await meeting.asPopulated() });
+            return;
+        }
         res.error(500, 'Something went wrong.');
     },
 );
@@ -274,7 +300,7 @@ const getMeetingFeedbackForUser = asyncHandler(
  * @route   POST /api/meetings
  */
 const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res: TypedResponse<AddMeetingData>) => {
-    const userIds = req.body.users.map(user => ({ user: user.id }));
+    const userIds = req.body.users.map((user) => ({ user: user.id }));
 
     const { users: _, ...rest } = req.body;
 
@@ -285,8 +311,7 @@ const addMeeting = asyncHandler(async (req: TypedRequest<AddMeetingRequest>, res
     });
 
     res.ok({
-        meeting: await
-            Meeting.findById(newMeeting._id).populate(['attendance', 'attendance.user'])
+        meeting: await Meeting.findById(newMeeting._id).populate(['attendance', 'attendance.user']),
     });
 });
 
@@ -305,19 +330,18 @@ const updateMeeting = asyncHandler(
             {
                 new: true,
                 runValidators: true,
-                "$push": { "attendance": { "$each": req.body.users.map(u => ({ user: u.id })) } }
             },
         );
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        meeting.attendance = req.body.users.map(u => ({ user: u.id }));
-        await meeting.save();
 
         if (!meeting) {
             res.notFound(`There is no meeting with the id ${req.params.meetingId}`);
             return;
         }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        meeting.attendance = req.body.users.map((u) => ({ user: u.id }));
+        await meeting.save();
 
         res.ok({ meeting: await Meeting.findById(meeting._id).populate(['attendance', 'attendance.user']) });
     },
@@ -377,6 +401,7 @@ export {
     getMeetingAttendance,
     getMeetingAttendanceForUser,
     modifyMeetingAttendance,
+    modifyMeetingAttendances,
     getMeetingFeedback,
     getMeetingFeedbackForUser,
     addMeetingFeedback,

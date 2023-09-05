@@ -18,3 +18,7 @@ export interface AttendanceIdParam {
     meetingId: string;
     userId: string;
 }
+
+export interface AttendancesIdParam {
+    meetingId: string;
+}

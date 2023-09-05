@@ -9,6 +9,7 @@ import {
     updateMeeting,
     getMeetingAttendance,
     modifyMeetingAttendance,
+    modifyMeetingAttendances,
     getMeetingAttendanceForUser,
     getMeetingFeedbackForUser,
     addMeetingFeedback,
@@ -28,7 +29,9 @@ MeetingRouter.route('/:meetingId')
     .patch(protect('MANAGE_MEETINGS'), updateMeeting);
 MeetingRouter.route('/:meetingId/end').patch(protect('MANAGE_MEETINGS'), endMeeting);
 
-MeetingRouter.route('/:meetingId/attendances').get(protect('VIEW_MEETINGS'), getMeetingAttendance);
+MeetingRouter.route('/:meetingId/attendances')
+    .get(protect('VIEW_MEETINGS'), getMeetingAttendance)
+    .patch(protect('MANAGE_MEETINGS'), modifyMeetingAttendances);
 MeetingRouter.route('/:meetingId/attendances/users/:userId')
     .get(protect('VIEW_MEETINGS'), getMeetingAttendanceForUser)
     .patch(protect('MANAGE_MEETINGS'), modifyMeetingAttendance);
