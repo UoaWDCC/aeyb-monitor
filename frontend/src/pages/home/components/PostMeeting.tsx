@@ -34,7 +34,7 @@ export default function PostMeeting({ meeting }: PostMeetingProps) {
             <div className="relative">
                 <div className="meetingTitle capitalize">{meeting.name}</div>
                 {userContext.hasPermission('MANAGE_MEETINGS') && (
-                    <Button onClick={openAttendanceModal} extraStyles="absolute right-0 top-0">
+                    <Button color="#FFD866" onClick={openAttendanceModal} extraStyles="absolute right-0 top-0 ">
                         Attendance
                     </Button>
                 )}

@@ -56,8 +56,10 @@ export default function LiveMeeting({ meeting }: LiveMeetingProps) {
                     {name}
                     {userContext.hasPermission('MANAGE_MEETINGS') && (
                         <div className="absolute right-0 top-0">
-                            <Button onClick={openAttendanceModal}>Attendance</Button>
-                            <Button color="#ff0201" onClick={() => setIsConfModalOpen(true)} extraStyles="ml-2">
+                            <Button color="white" onClick={openAttendanceModal} extraStyles="border-2 border-[#ff3534]">
+                                Attendance
+                            </Button>
+                            <Button color="#FF3534" onClick={() => setIsConfModalOpen(true)} extraStyles="ml-2">
                                 End Meeting
                             </Button>
                         </div>

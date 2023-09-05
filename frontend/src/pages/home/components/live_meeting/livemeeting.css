@@ -9,10 +9,6 @@
     @apply bg-red-100;
 }
 
-.liveMeeting:active {
-    background-color: rgb(254, 247, 247);
-}
-
 .liveMeeting > div {
     margin: 1.5%;
     margin-left: 2.5%;
