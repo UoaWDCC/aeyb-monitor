@@ -141,8 +141,6 @@ const modifyMeetingAttendance = asyncHandler(
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { requester, ...updateData } = req.body;
-        const attendanceData = { user: userId, ...updateData };
-
         const updatedMeeting = await updateUserAttendanceForMeeting(meetingId, userId, updateQuery);
 
         if (updatedMeeting) {
@@ -150,6 +148,7 @@ const modifyMeetingAttendance = asyncHandler(
             return;
         }
 
+        const attendanceData = { user: userId, ...updateData };
         const updatedMeetingWithNewUser = await updateUserAttendanceForMeeting(meetingId, userId, attendanceData);
 
         if (updatedMeetingWithNewUser) {
@@ -167,7 +166,23 @@ const modifyMeetingAttendance = asyncHandler(
  */
 const modifyMeetingAttendances = asyncHandler(
     async (req: TypedRequest<UpdateAttendancesRequest, AttendancesIdParam>, res: TypedResponse<UpdateMeetingData>) => {
-        res.ok({ meeting: null });
+        const { meetingId } = req.params;
+
+        const meeting = await findMeeting(meetingId, res);
+        if (!meeting) {
+            return;
+        }
+
+        meeting.attendance = req.body.attendance.map((attendance) => {
+            return { ...attendance, user: attendance.user.id };
+        });
+
+        const saved = await meeting.save();
+        if (saved) {
+            res.ok({ meeting: await meeting.asPopulated() });
+            return;
+        }
+        res.error(500, 'Something went wrong.');
     },
 );
 

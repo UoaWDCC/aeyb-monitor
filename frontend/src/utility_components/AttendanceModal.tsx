@@ -32,12 +32,12 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }: Attendan
     const [attendance, setAttendance] = useState<AttendanceDTO[]>(meeting.attendance);
 
     const handleConfirm = async () => {
-        const attendanceReqPayload: UpdateAttendancesRequest = attendance;
+        const attendanceReqPayload: UpdateAttendancesRequest = { attendance };
         const data = await userContext.fetcher('PATCH /api/meetings/:meetingId/attendances', attendanceReqPayload, {
             meetingId: meeting.id,
         });
         if (data) {
-            console.log('data', data);
+            console.log('data', data.meeting?.attendance);
             handleClose();
         }
     };
@@ -82,7 +82,7 @@ export default function AttendanceModal({ isOpen, setIsOpen, meeting }: Attendan
                             <TableBody>
                                 {meeting.attendance.map((attendee, index) => (
                                     <TableRow key={index}>
-                                        <TableCell>{attendee.user.name}</TableCell>
+                                        <TableCell>{attendee.user?.name}</TableCell>
                                         <TableCell>
                                             <RadioGroup
                                                 row

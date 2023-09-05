@@ -15,7 +15,7 @@ export type UpdateMeetingRequest = Partial<Omit<MeetingDTO, 'id' | 'creator'>> &
 
 export type UpdateAttendanceRequest = Omit<AttendanceDTO, 'user'>;
 
-export type UpdateAttendancesRequest = AttendanceDTO[];
+export type UpdateAttendancesRequest = { attendance: AttendanceDTO[] };
 
 export type UpdateFeedbackRequest = Omit<AttendanceDTO, 'user' | 'didAttend'>;
 
