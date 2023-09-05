@@ -2,7 +2,7 @@ import { Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import Meeting from '../models/MeetingModel';
 import { TypedRequest, TypedRequestParams, TypedRequestQuery, TypedResponse } from '../types/UtilTypes';
-import { AttendanceIdParam, MeetingIdParam } from '@shared/params';
+import { AttendanceIdParam, AttendancesIdParam, MeetingIdParam } from '@shared/params';
 import PaginationHandler from '../classes/PaginationHandler';
 import {
     AddMeetingData,
@@ -16,6 +16,7 @@ import {
 import {
     AddMeetingRequest,
     UpdateAttendanceRequest,
+    UpdateAttendancesRequest,
     UpdateMeetingRequest,
     EndMeetingRequest,
 } from '@shared/requests/MeetingRequests';
@@ -117,7 +118,7 @@ const getMeetingAttendanceForUser = asyncHandler(
 );
 
 /**
- * @desc    Modify attendance for a specific meeting
+ * @desc    Modify attendance for a specific meeting for a specific user
  * @route   PATCH /api/meetings/:meetingId/attendances/users/:userId
  */
 const modifyMeetingAttendance = asyncHandler(
@@ -157,6 +158,16 @@ const modifyMeetingAttendance = asyncHandler(
         }
 
         res.error(500, 'Something went wrong.');
+    },
+);
+
+/**
+ * @desc    Modify attendance for a specific meeting for a specific user
+ * @route   PATCH /api/meetings/:meetingId/attendances
+ */
+const modifyMeetingAttendances = asyncHandler(
+    async (req: TypedRequest<UpdateAttendancesRequest, AttendancesIdParam>, res: TypedResponse<UpdateMeetingData>) => {
+        res.ok({ meeting: null });
     },
 );
 
@@ -375,6 +386,7 @@ export {
     getMeetingAttendance,
     getMeetingAttendanceForUser,
     modifyMeetingAttendance,
+    modifyMeetingAttendances,
     getMeetingFeedback,
     getMeetingFeedbackForUser,
     addMeetingFeedback,
