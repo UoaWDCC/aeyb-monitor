@@ -19,7 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
 import MeetingDTO from '../../../shared/dtos/MeetingDTO';
 import { useUserContext } from '../contexts/UserContext';
-import { UpdateMeetingRequest } from '../../../shared/requests/MeetingRequests';
+import { UpdateAttendancesRequest } from '../../../shared/requests/MeetingRequests';
 import AttendanceDTO from '../../../shared/dtos/AttendanceDTO';
 
 type AttendanceModalProps = {
@@ -29,14 +29,11 @@ type AttendanceModalProps = {
 };
 export default function AttendanceModal({ isOpen, setIsOpen, meeting }: AttendanceModalProps) {
     const userContext = useUserContext();
-    const [attendance, setAttendance] = useState<AttendanceDTO[]>(meeting.attendance.map((attendee) => attendee));
+    const [attendance, setAttendance] = useState<AttendanceDTO[]>(meeting.attendance);
 
     const handleConfirm = async () => {
-        const attendanceReqPayload = {
-            // TODO: make a decision on how to handle attendance
-            attendances: attendance,
-        };
-        const data = await userContext.fetcher('', attendanceReqPayload, {
+        const attendanceReqPayload: UpdateAttendancesRequest = attendance;
+        const data = await userContext.fetcher('PATCH /api/meetings/:meetingId/attendances', attendanceReqPayload, {
             meetingId: meeting.id,
         });
         if (data) {
