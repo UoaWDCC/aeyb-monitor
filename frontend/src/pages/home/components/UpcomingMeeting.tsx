@@ -110,14 +110,14 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
 
     return (
         <>
-            <div className='upcomingMeeting relative'>
-                <div className='Header flex justify-between'>
-                    <div className='meetingTitle capitalize'>
+            <div className="upcomingMeeting relative">
+                <div className="Header flex justify-between">
+                    <div className="meetingTitle capitalize">
                         {name}
                         <FontAwesomeIcon
                             icon={faChevronDown}
                             className={`cursor-pointer ${isOpen ? 'toggle-up' : 'toggle-down'} ml-5`}
-                            size='sm'
+                            size="sm"
                             onClick={openMeeting}
                         />
                     </div>
@@ -126,21 +126,21 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                             {userContext.hasPermission('MANAGE_MEETINGS') && (
                                 <FontAwesomeIcon
                                     icon={faCog}
-                                    size='lg'
-                                    className='cog cursor-pointer'
+                                    size="lg"
+                                    className="cog cursor-pointer"
                                     onClick={() => setOpenDropdown(!openDropdown)}
                                 />
                             )}
                             {openDropdown && (
                                 <DropdownMenu
                                     items={[
-                                        <Button key='edit' size='small' color='white' onClick={handleEditMeeting}>
+                                        <Button key="edit" size="small" color="white" onClick={handleEditMeeting}>
                                             Edit meeting
                                         </Button>,
                                         <Button
-                                            key='delete'
-                                            size='small'
-                                            color='white'
+                                            key="delete"
+                                            size="small"
+                                            color="white"
                                             onClick={() => {
                                                 showDeleteModal();
                                             }}
@@ -155,12 +155,12 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                 </div>
                 <div className={`wrapper ${isOpen ? 'open' : ''}`}>
                     {isOpen ? (
-                        <div className='meetingDetails break-words'>
-                            <div className='mb-5'>
+                        <div className="meetingDetails break-words">
+                            <div className="mb-5">
                                 <strong>Description: </strong> {description}
                             </div>
 
-                            <div className='mb-5'>
+                            <div className="mb-5">
                                 <strong>Start Time: </strong> {days[startDate.getDay()]} {startDate.getDate()}
                                 {nth(startDate.getDate())} {startDate.toLocaleString('default', { month: 'long' })} at{' '}
                                 {startDate.getHours() % 12}:
@@ -168,7 +168,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                 {startDate.getHours() >= 12 ? 'PM' : 'AM'}
                             </div>
 
-                            <div className='mb-5'>
+                            <div className="mb-5">
                                 <strong>End Time: </strong> {days[finishDate.getDay()]} {finishDate.getDate()}
                                 {nth(finishDate.getDate())} {finishDate.toLocaleString('default', { month: 'long' })} at{' '}
                                 {finishDate.getHours() % 12}:
@@ -176,10 +176,15 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                 {finishDate.getHours() >= 12 ? 'PM' : 'AM'}
                             </div>
 
-                            <div className='mb-5'>
+                            <div className="mb-5">
                                 <strong>Location: </strong>
                                 {location.location.startsWith('http') ? (
-                                    <a href={location.location} target='_blank' rel='noopener noreferrer'>
+                                    <a
+                                        href={location.location}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ color: 'blue' }}
+                                    >
                                         {location.location}
                                     </a>
                                 ) : (
@@ -187,10 +192,9 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                                 )}
                             </div>
 
-
-                            <div className='mb-5'>
+                            <div className="mb-5">
                                 <strong>Attendees: </strong>
-                                <ul className='list-disc list-inside'>
+                                <ul className="list-disc list-inside">
                                     {meetingContext.meetings[meeting.id].attendance.map((attendance) => {
                                         return <li key={attendance.user.id}>{attendance.user.name}</li>;
                                     })}
@@ -198,7 +202,7 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                             </div>
                         </div>
                     ) : (
-                        <div className='dDays'>Opens in {getRelativeTime(startTime)}</div>
+                        <div className="dDays">Opens in {getRelativeTime(startTime)}</div>
                     )}
                 </div>
             </div>
@@ -214,10 +218,10 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
             )}
             {showModal && (
                 <ConfirmModal
-                    header='Delete meeting'
-                    text='Are you sure you want to delete meeting?'
-                    leftButtonText='Yes'
-                    rightButtonText='No'
+                    header="Delete meeting"
+                    text="Are you sure you want to delete meeting?"
+                    leftButtonText="Yes"
+                    rightButtonText="No"
                     setOpenModal={setShowModal}
                     onAccept={handleDeleteMeeting}
                 />
