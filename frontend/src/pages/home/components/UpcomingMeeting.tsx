@@ -177,8 +177,16 @@ export default function UpcomingMeeting({ meeting }: UpcommingMeetingProps) {
                             </div>
 
                             <div className="mb-5">
-                                <strong>Location: </strong> {location.location}
+                                <strong>Location: </strong>
+                                {location.location.startsWith('http') ? (
+                                    <a href={location.location} target="_blank" rel="noopener noreferrer">
+                                        {location.location}
+                                    </a>
+                                ) : (
+                                    location.location
+                                )}
                             </div>
+
 
                             <div className="mb-5">
                                 <strong>Attendees: </strong>
