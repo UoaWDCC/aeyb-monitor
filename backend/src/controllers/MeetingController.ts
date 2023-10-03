@@ -121,7 +121,7 @@ const getMeetingAttendanceForUser = asyncHandler(
  * @desc    Modify attendance for a specific meeting for a specific user
  * @route   PATCH /api/meetings/:meetingId/attendances/users/:userId
  */
-const modifyMeetingAttendance = asyncHandler(
+const updateMeetingAttendance = asyncHandler(
     async (req: TypedRequest<UpdateAttendanceRequest, AttendanceIdParam>, res: TypedResponse<UpdateMeetingData>) => {
         const { userId, meetingId } = req.params;
 
@@ -164,7 +164,7 @@ const modifyMeetingAttendance = asyncHandler(
  * @desc    Modify attendance for a specific meeting for a specific user
  * @route   PATCH /api/meetings/:meetingId/attendances
  */
-const modifyMeetingAttendances = asyncHandler(
+const updateMeetingAttendances = asyncHandler(
     async (req: TypedRequest<UpdateAttendancesRequest, AttendancesIdParam>, res: TypedResponse<UpdateMeetingData>) => {
         const { meetingId } = req.params;
 
@@ -400,8 +400,8 @@ export {
     updateMeeting,
     getMeetingAttendance,
     getMeetingAttendanceForUser,
-    modifyMeetingAttendance,
-    modifyMeetingAttendances,
+    updateMeetingAttendance,
+    updateMeetingAttendances,
     getMeetingFeedback,
     getMeetingFeedbackForUser,
     addMeetingFeedback,
