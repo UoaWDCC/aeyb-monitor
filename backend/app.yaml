@@ -1,0 +1,6 @@
+runtime: nodejs18
+
+entrypoint: 'PORT=8080 npm start'
+
+includes:
+    - gae_env.yaml
