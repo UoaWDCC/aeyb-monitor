@@ -1,6 +1,7 @@
 {
     "name": "aeyb",
     "version": "0.1.0",
+    "private": true,
     "description": "aeyb fullstack",
     "scripts": {
         "removeModules": "rm -rf node_modules && cd frontend && rm -rf node_modules && cd ../backend && rm -rf node_modules",

@@ -2,6 +2,7 @@
     "name": "aeyb-backend",
     "version": "0.1.0",
     "description": "AEYB backend",
+    "private": true,
     "main": "dist/index.js",
     "scripts": {
         "dev": "concurrently -c \"magenta,blue\" -n build,server \"npm run build -- --watch\" \"npm run build && nodemon ./dist/index.js\"",
