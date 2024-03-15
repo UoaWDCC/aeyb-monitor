@@ -28,15 +28,4 @@ To setup prettier in VSCode:
 
 ## Developers and Team Members
 
-| Name             | Role               |
-| ---------------- | ------------------ |
-| Vishva Dave      | Frontend Developer |
-| Dhruvkanth Puli  | Frontend Developer |
-| Eric Jiang       | Frontend Developer |
-| Vandan Bhatt     | Frontend Developer |
-| Chris Valenzuela | Backend Developer  |
-| Timothy Looi     | Backend Developer  |
-| Kevin Jin        | Backend Developer  |
-| Richard Cheng    | Backend Developer  |
-| Tyler Kim        | Tech Lead          |
-| Jacob Tan        | Project Manager    |
+
